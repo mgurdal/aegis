@@ -1,8 +1,7 @@
 # aiohttp_auth
 
-[![codefactor grade](https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge?style=flat-square)](https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge?style=flat-square)
-
 [![Python 3.6](https://img.shields.io/badge/python-3.6-brightgreen.svg?style=flat-square)](https://www.python.org/downloads/release/python-360?style=flat-square)
+[![codefactor grade](https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge?style=flat-square)](https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge?style=flat-square)
 
 
 **aiohttp_auth** adds authentication protection and endpoints to [aiohttp](https://github.com/aio-libs/aiohttp). 
