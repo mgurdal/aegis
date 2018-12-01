@@ -1,20 +1,22 @@
-# Soda Project
+# aiohttp_auth
 
-[![Backers on Open Collective](https://opencollective.com/standard-readme/backers/badge.svg?style=flat-square)](#backers) [![Sponsors on Open Collective](https://opencollective.com/standard-readme/sponsors/badge.svg?style=flat-square)](#sponsors) 
-
-
-[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
-
-[![codefactor grade](https://www.codefactor.io/repository/github/mgurdal/soda/badge?style=flat-square)](https://www.codefactor.io/repository/github/mgurdal/soda/badge?style=flat-square)
+[![codefactor grade](https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge?style=flat-square)](https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge?style=flat-square)
 
 [![Python 3.6](https://img.shields.io/badge/python-3.6-brightgreen.svg?style=flat-square)](https://www.python.org/downloads/release/python-360?style=flat-square)
+
+
+**aiohttp_auth** adds authentication protection and endpoints to [aiohttp](https://github.com/aio-libs/aiohttp). 
+
+**aiohttp_auth** allows you to **protect endpoints** and also provides **authentication scoping**.
+
+------
 
 ### Installation
 ```bash
 pip install aiohttp_auth
 ```
 
-### Standard example
+### Simple Example
 ```python
 # examples/server_simple.py
 from aiohttp import web
@@ -27,9 +29,6 @@ DATABASE = {
 
 
 async def login(request: web.Request):
-    """
-        Define your login route
-    """
     payload = await request.json()
 
     user_id = payload['user_id']
@@ -58,13 +57,19 @@ async def protected(request):
     return web.json_response({'hello': 'user'})
 
 
-app = web.Application(middlewares=[user_middleware, ])
+def create_app():
+    app = web.Application()
 
-app.router.add_post('/login', login)
-app.router.add_get('/public', public)
-app.router.add_get('/protected', protected)
+    app.router.add_post('/login', login)
+    app.router.add_get('/public', public)
+    app.router.add_get('/protected', protected)
 
-auth.setup(app, jwt_secret='secret_key')
-web.run_app(app)
+    auth.setup(app, jwt_secret='secret_key')
+    return app
+
+
+if __name__ == '__main__':
+    app = create_app()
+    web.run_app(app)
 
 ```
