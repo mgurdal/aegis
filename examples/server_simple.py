@@ -35,12 +35,18 @@ async def public(request):
 async def protected(request):
     return web.json_response({'hello': 'user'})
 
-if __name__ == '__main__':
-    app = web.Application(middlewares=[user_middleware, ])
+
+def create_app():
+    app = web.Application()
 
     app.router.add_post('/login', login)
     app.router.add_get('/public', public)
     app.router.add_get('/protected', protected)
 
     auth.setup(app, jwt_secret='secret_key')
+    return app
+
+
+if __name__ == '__main__':
+    app = create_app()
     web.run_app(app)
