@@ -73,3 +73,10 @@ if __name__ == '__main__':
     web.run_app(app)
 
 ```
+----
+### TODO
+
+- [ ] unit tests
+- [ ] documentation
+- [ ] CD/CI
+- [ ] Web Page
