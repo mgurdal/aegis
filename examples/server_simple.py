@@ -3,7 +3,7 @@ from aiohttp_auth import auth
 
 
 DATABASE = {
-    5: {'id': 5, 'scopes': ('regular_user', )}
+    5: {'user_id': 5, 'scopes': ('regular_user', )}
 }
 
 
@@ -13,7 +13,8 @@ async def login(request: web.Request):
     user_id = payload['user_id']
     # use auth.login to generate a JWT token
     # with some unique user information
-    token = await auth.login(request, user_id)
+    user = DATABASE[user_id]
+    token = await auth.login(request, user)
 
     return web.json_response({'token': token})
 
