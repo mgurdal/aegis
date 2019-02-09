@@ -43,3 +43,20 @@ async def test_scopes_returns_403_if_not_has_permisions():
         assert json.loads(response.body) == {
             'message': 'Forbidden', "errors": []
         }
+
+
+async def test_scopes_awaits_view_on_happy_path():
+    with patch('aiohttp_auth.auth.check_permissions') as check_permissions:
+        check_permissions.return_value = True
+
+        @auth.scopes('test_scope')
+        async def test_view(request):
+            return web.json_response({})
+
+        stub_request = make_mocked_request(
+            'GET', '/', headers={'authorization': 'x'}
+        )
+        response = await test_view(stub_request)
+
+        assert response.status == 200
+        assert json.loads(response.body) == {}
