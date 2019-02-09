@@ -23,8 +23,25 @@ async def generate_jwt(request: web.Request, payload: dict) -> str:
     return token
 
 
-def scopes(*scopes: Union[set, tuple]) -> web.json_response:
-    assert scopes, 'Cannot be used without any scope!'
+def check_permissions(request: web.Request, scopes: Union[set, tuple]) -> bool:
+    # if a user injected into request by the auth_middleware
+    user = getattr(request, 'user', None)
+    has_permission = False
+    if user:
+        # if a non-anonymous user tries to reach to
+        # a scoped endpoint
+        user_is_anonymous = user['scopes'] == ('anonymous_user',)
+        if not user_is_anonymous:
+            user_scopes = set(request.user['scopes'])
+            required_scopes = set(scopes)
+            if user_scopes.intersection(required_scopes):
+                has_permission = True
+
+    return has_permission
+
+
+def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
+    assert required_scopes, 'Cannot be used without any scope!'
 
     def request_handler(func: Callable) -> Callable:
         async def wrapper(request_or_view: Union[web.Request, web.View]):
@@ -35,23 +52,11 @@ def scopes(*scopes: Union[set, tuple]) -> web.json_response:
             else:
                 raise TypeError(F"Invalid Type '{type(request_or_view)}'")
 
-            has_permission = False
-            if scopes:
-                # if a user injected into request by the auth_middleware
-                user = getattr(request, 'user', None)
-                if user:
-                    # if a non-anonymous user tries to reach to
-                    # a scoped endpoint
-                    user_is_anonymous = user['scopes'] == ('anonymous_user',)
-                    if not user_is_anonymous:
-                        user_scopes = set(request.user['scopes'])
-                        required_scopes = set(scopes)
-                        if user_scopes.intersection(required_scopes):
-                            has_permission = True
+            has_permission = check_permissions(request, required_scopes)
 
             if not has_permission:
                 return json_response(
-                    {'status': 403, 'message': 'Forbidden'},
+                    {'message': 'Forbidden', "errors": []},
                     status=403
                 )
             else:
