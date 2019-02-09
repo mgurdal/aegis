@@ -64,7 +64,10 @@ def scopes(*scopes: Union[set, tuple]) -> web.json_response:
 def middleware(user_injector: Callable) -> web.middleware:
     @web.middleware
     async def wrapper(request: web.Request, handler: Callable):
-        jwt_token = request.headers.get('authorization', None)
+        if 'aiohttp_auth' not in request.app:
+            raise AttributeError('Please initialize aiohttp_auth first.')
+
+        jwt_token = request.headers.get('authorization')
         if jwt_token:
             try:
                 jwt_token = jwt_token.replace('Bearer ', '')
