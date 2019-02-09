@@ -6,7 +6,7 @@ from aiohttp import web
 from aiohttp.web import json_response
 
 
-async def login(request: web.Request, payload: dict) -> str:
+async def generate_jwt(request: web.Request, payload: dict) -> str:
     delta_seconds = request.app['aiohttp_auth'].duration
     jwt_data = {
         **payload,
