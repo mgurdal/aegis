@@ -43,14 +43,10 @@ def check_permissions(request: web.Request, scopes: Union[set, tuple]) -> bool:
 def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
     assert required_scopes, 'Cannot be used without any scope!'
 
-    def request_handler(func: Callable) -> Callable:
-        async def wrapper(request_or_view: Union[web.Request, web.View]):
-            if isinstance(request_or_view, web.View):
-                request = request_or_view.request
-            elif isinstance(request_or_view, web.Request):
-                request = request_or_view
-            else:
-                raise TypeError(F"Invalid Type '{type(request_or_view)}'")
+    def request_handler(view: Callable) -> Callable:
+        async def wrapper(request: web.Request):
+            if not isinstance(request, web.Request):
+                raise TypeError(F"Invalid Type '{type(request)}'")
 
             has_permission = check_permissions(request, required_scopes)
 
@@ -60,7 +56,7 @@ def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
                     status=403
                 )
             else:
-                return await func(request_or_view)
+                return await view(request)
 
         return wrapper
     return request_handler
