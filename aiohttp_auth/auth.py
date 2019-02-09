@@ -71,7 +71,7 @@ def middleware(user_injector: Callable) -> web.middleware:
         if jwt_token:
             try:
                 jwt_token = jwt_token.replace('Bearer ', '')
-                payload = jwt.decode(
+                jwt.decode(
                     jwt_token,
                     request.app['aiohttp_auth'].jwt_secret,
                     algorithms=[request.app['aiohttp_auth'].jwt_algorithm]
