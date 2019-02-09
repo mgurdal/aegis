@@ -76,18 +76,25 @@ def middleware(user_injector: Callable) -> web.middleware:
                     request.app['aiohttp_auth'].jwt_secret,
                     algorithms=[request.app['aiohttp_auth'].jwt_algorithm]
                 )
-            except (jwt.DecodeError, jwt.ExpiredSignatureError):
+                user = await user_injector(request)
+                request.user = user
+                return await handler(request)
+            except jwt.DecodeError:
                 return json_response(
-                    {"status": 401, 'message': 'Invalid Token'},
+                    {'message': 'Invalid Token', "errors": []},
                     status=401
                 )
-            request = await user_injector(request, payload)
+            except jwt.ExpiredSignatureError:
+                return json_response(
+                    {'message': 'Token Has Expired', "errors": []},
+                    status=401
+                )
         else:
-            anonymous_user = {
-                'scopes': ('anonymous_user', )
-            }
-            request.user = anonymous_user
-        return await handler(request)
+            return json_response(
+                {
+                    "message": "Please enter your API key.",
+                    "errors": []
+                }, status=401)
     return wrapper
 
 
