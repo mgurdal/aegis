@@ -23,17 +23,15 @@ from aiohttp_auth import auth
 
 
 DATABASE = {
-    5: {'user_id': 5, 'scopes': ('regular_user', )}
+    'david': {'user_id': 5, 'scopes': ('regular_user', )}
 }
 
 
-@auth.middleware
-async def user_middleware(request, jwt_payload: dict):
-    # Use the JWT payload to initialize the user
-    user_id = jwt_payload['user_id']
-    user = DATABASE[user_id]
-    request.user = user
-    return request
+async def authenticate(request):
+    payload = await request.json()
+    user = DATABASE.get(payload['username'])
+
+    return user
 
 
 async def public(request):
@@ -42,8 +40,7 @@ async def public(request):
 
 @auth.scopes('regular_user')
 async def protected(request):
-    user = request.user
-    return web.json_response({'hello': user})
+    return web.json_response({'hello': 'user'})
 
 
 def create_app():
@@ -52,7 +49,7 @@ def create_app():
     app.router.add_get('/public', public)
     app.router.add_get('/protected', protected)
 
-    auth.setup(app, jwt_secret='secret_key')
+    auth.setup(app, authenticate, jwt_secret="test")
     return app
 
 
@@ -64,7 +61,9 @@ if __name__ == '__main__':
 ----
 ### TODO
 
-- [ ] unit tests
+- [X] unit tests
 - [ ] documentation
 - [ ] CD/CI
 - [ ] Web Page
+
+
