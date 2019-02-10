@@ -96,7 +96,19 @@ async def auth_middleware(request: web.Request, handler: Callable):
                     "message": "Please enter your API key.",
                     "errors": []
                 }, status=401)
-    return wrapper
+    else:
+        return await handler(request)
+
+
+def make_auth_route(authenticator):
+    async def auth_route(request: web.Request):
+        user = await authenticator(request)
+        # use auth.login to generate a JWT token
+        # with some unique user information
+        token = await generate_jwt(request, user)
+
+        return web.json_response({'access_token': token})
+    return auth_route
 
 
 class JWTAuth:
@@ -106,6 +118,10 @@ class JWTAuth:
         self.duration = duration
 
 
-def setup(app, jwt_secret, duration=259200, jwt_algorithm='HS256'):
-    app['aiohttp_auth'] = JWTAuth(jwt_secret, duration, jwt_algorithm)
+def setup(app, authenticator, jwt_secret: str):
+    app['aiohttp_auth'] = JWTAuth(jwt_secret)
+    app.middlewares.append(auth_middleware)
+
+    auth_route = make_auth_route(authenticator)
+    app.router.add_post('/auth', auth_route)
     return app
