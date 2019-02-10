@@ -1,3 +1,5 @@
+import functools
+
 import jwt
 from datetime import datetime, timedelta
 
@@ -44,6 +46,7 @@ def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
     assert required_scopes, 'Cannot be used without any scope!'
 
     def request_handler(view: Callable) -> Callable:
+        @functools.wraps(view)
         async def wrapper(request: web.Request):
             if not isinstance(request, web.Request):
                 raise TypeError(F"Invalid Type '{type(request)}'")
@@ -57,40 +60,37 @@ def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
                 )
             else:
                 return await view(request)
-
+        wrapper.__name__ = F"{wrapper.__name__}_scoped"
         return wrapper
     return request_handler
 
-
-def middleware(user_injector: Callable) -> web.middleware:
-    @web.middleware
-    async def wrapper(request: web.Request, handler: Callable):
-        if 'aiohttp_auth' not in request.app:
-            raise AttributeError('Please initialize aiohttp_auth first.')
-
-        jwt_token = request.headers.get('authorization')
-        if jwt_token:
-            try:
-                jwt_token = jwt_token.replace('Bearer ', '')
-                jwt.decode(
-                    jwt_token,
-                    request.app['aiohttp_auth'].jwt_secret,
-                    algorithms=[request.app['aiohttp_auth'].jwt_algorithm]
-                )
-                user = await user_injector(request)
-                request.user = user
-                return await handler(request)
-            except jwt.DecodeError:
-                return json_response(
-                    {'message': 'Invalid Token', "errors": []},
-                    status=401
-                )
-            except jwt.ExpiredSignatureError:
-                return json_response(
-                    {'message': 'Token Has Expired', "errors": []},
-                    status=401
-                )
-        else:
+@web.middleware
+async def auth_middleware(request: web.Request, handler: Callable):
+    if 'aiohttp_auth' not in request.app:
+        raise AttributeError('Please initialize aiohttp_auth first.')
+    jwt_token = request.headers.get('authorization')
+    if jwt_token:
+        try:
+            jwt_token = jwt_token.replace('Bearer ', '')
+            user = jwt.decode(
+                jwt_token,
+                request.app['aiohttp_auth'].jwt_secret,
+                algorithms=[request.app['aiohttp_auth'].jwt_algorithm]
+            )
+            request.user = user
+            return await handler(request)
+        except jwt.DecodeError:
+            return json_response(
+                {'message': 'Invalid Token', "errors": []},
+                status=401
+            )
+        except jwt.ExpiredSignatureError:
+            return json_response(
+                {'message': 'Token Has Expired', "errors": []},
+                status=401
+            )
+        # TODO: handle user defined exceptions
+    elif handler.__name__.endswith('_scoped'):
             return json_response(
                 {
                     "message": "Please enter your API key.",
@@ -100,7 +100,7 @@ def middleware(user_injector: Callable) -> web.middleware:
 
 
 class JWTAuth:
-    def __init__(self, jwt_secret: str, duration: int, jwt_algorithm: str):
+    def __init__(self, jwt_secret: str, duration=259200, jwt_algorithm='HS256'):
         self.jwt_secret = jwt_secret
         self.jwt_algorithm = jwt_algorithm
         self.duration = duration
