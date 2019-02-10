@@ -64,6 +64,7 @@ def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
         return wrapper
     return request_handler
 
+
 @web.middleware
 async def auth_middleware(request: web.Request, handler: Callable):
     if 'aiohttp_auth' not in request.app:
@@ -112,7 +113,7 @@ def make_auth_route(authenticator):
 
 
 class JWTAuth:
-    def __init__(self, jwt_secret: str, duration=259200, jwt_algorithm='HS256'):
+    def __init__(self, jwt_secret: str, duration=25e3, jwt_algorithm='HS256'):
         self.jwt_secret = jwt_secret
         self.jwt_algorithm = jwt_algorithm
         self.duration = duration
