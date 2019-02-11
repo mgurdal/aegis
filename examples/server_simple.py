@@ -1,7 +1,6 @@
 from aiohttp import web
 from aiohttp_auth import auth
 
-
 DATABASE = {
     'david': {'user_id': 5, 'scopes': ('regular_user', )}
 }

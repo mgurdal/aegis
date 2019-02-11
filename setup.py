@@ -8,9 +8,10 @@ import io
 import os
 import sys
 from shutil import rmtree
-from setuptools import find_packages, setup, Command
-from aiohttp_auth import __version__
 
+from setuptools import Command, find_packages, setup
+
+from aiohttp_auth import __version__
 
 # Package meta-data.
 NAME = 'aiohttp_auth'
@@ -25,7 +26,7 @@ REQUIRED = ['aiohttp', ]
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+with io.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = '\n' + f.read()
 
 # Load the package's __version__.py module as a dictionary.
@@ -86,7 +87,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=find_packages(exclude=('tests', 'test')),
+    packages=find_packages(exclude=('tests', 'tests')),
     install_requires=REQUIRED,
     include_package_data=True,
     license='',
