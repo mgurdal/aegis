@@ -1,4 +1,6 @@
 pytest-aiohttp==0.3.0
-pytest-cov==2.6.0
+pytest-cov==2.6.1
 flake8==3.6.0
 isort==4.3.4
+PyJWT==1.7.1
+asynctest==0.11.1
