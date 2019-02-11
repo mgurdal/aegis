@@ -1,9 +1,9 @@
 import functools
+from datetime import datetime, timedelta
+from typing import Callable, Union
 
 import jwt
-from datetime import datetime, timedelta
 
-from typing import Callable, Union
 from aiohttp import web
 from aiohttp.web import json_response
 
@@ -90,7 +90,6 @@ async def auth_middleware(request: web.Request, handler: Callable):
                 {'message': 'Token Has Expired', "errors": []},
                 status=401
             )
-        # TODO: handle user defined exceptions
     elif handler.__name__.endswith('_scoped'):
             return json_response(
                 {
