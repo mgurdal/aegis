@@ -1,0 +1,17 @@
+sudo: required
+language: python
+
+
+python:
+  - 3.6
+
+os:
+  - linux
+
+
+install:
+  - pip install -r requirements/ci.txt
+  - pip install codecov
+
+script:
+  - make cov
