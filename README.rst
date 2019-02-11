@@ -6,7 +6,7 @@
 
 **aiohttp_auth** adds authentication protection and endpoints to [aiohttp](https://github.com/aio-libs/aiohttp). 
 
-**aiohttp_auth** allows you to **protect endpoints** and also provides **authentication scoping**.
+**aiohttp_auth** allows to **protect endpoints** and also provides **authentication scoping**.
 
 ------
 
@@ -49,7 +49,7 @@ def create_app():
     app.router.add_get('/public', public)
     app.router.add_get('/protected', protected)
 
-    auth.setup(app, authenticate, jwt_secret="test")
+    auth.setup(app, authenticate, jwt_secret=tests)
     return app
 
 
@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
 - [X] unit tests
 - [ ] documentation
-- [ ] CD/CI
+- [X] CD/CI
 - [ ] Web Page
 
 
