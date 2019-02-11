@@ -9,9 +9,8 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import Command, find_packages, setup
-
 from aiohttp_auth import __version__
+from setuptools import Command, find_packages, setup
 
 # Package meta-data.
 NAME = 'aiohttp_auth'
