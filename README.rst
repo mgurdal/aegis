@@ -63,7 +63,7 @@ Simple Example
         app.router.add_get('/public', public)
         app.router.add_get('/protected', protected)
 
-        auth.setup(app, authenticate, jwt_secret=tests)
+        auth.setup(app, authenticate, jwt_secret="secret_token")
         return app
 
 
