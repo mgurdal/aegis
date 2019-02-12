@@ -1,6 +1,8 @@
 sudo: required
 language: python
 
+env:
+  - CODECOV_TOKEN="dae68ca2-47f6-48c9-b556-84aa19cb4558"
 
 python:
   - 3.6
