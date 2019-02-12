@@ -3,6 +3,14 @@ aiohttp\_auth
 
 |Python 3.6| |travis-badge| |codefactor grade|
 
+.. |Python 3.6| image:: https://img.shields.io/badge/python-3.6-brightgreen.svg
+   :target: https://www.python.org/downloads/release/python-360
+.. |codefactor grade| image:: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge
+   :target: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge
+.. |travis-badge| image:: https://travis-ci.org/mgurdal/aiohttp_auth.svg?branch=master
+   :target: https://travis-ci.org/mgurdal/aiohttp_auth
+
+
 **aiohttp\_auth** adds authentication protection and endpoints to
 `aiohttp <https://github.com/aio-libs/aiohttp>`__.
 
@@ -72,10 +80,3 @@ TODO
 -  [ ] documentation
 -  [X] CD/CI
 -  [ ] Web Page
-
-.. |Python 3.6| image:: https://img.shields.io/badge/python-3.6-brightgreen.svg?style=flat-square
-   :target: https://www.python.org/downloads/release/python-360?style=flat-square
-.. |codefactor grade| image:: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge?style=flat-square
-   :target: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge?style=flat-square
-.. |travis-badge| image:: https://travis-ci.org/mgurdal/aiohttp_auth.svg?branch=master
-.. _travis-badge: https://travis-ci.org/mgurdal/aiohttp_auth
