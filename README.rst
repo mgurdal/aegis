@@ -1,7 +1,7 @@
 aiohttp\_auth
 =============
 
-|Python 3.6|_ |travis-badge|_ |codefactor grade|_
+|Python 3.6||travis-badge||codefactor grade|
 
 **aiohttp\_auth** adds authentication protection and endpoints to
 `aiohttp <https://github.com/aio-libs/aiohttp>`__.
