@@ -77,5 +77,5 @@ TODO
    :target: https://www.python.org/downloads/release/python-360?style=flat-square
 .. |codefactor grade| image:: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge?style=flat-square
    :target: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge?style=flat-square
-.. build:: https://travis-ci.org/mgurdal/aiohttp_auth.svg?branch=master
+.. |build|:: https://travis-ci.org/mgurdal/aiohttp_auth.svg?branch=master
     :target: https://travis-ci.org/mgurdal/aiohttp_auth
