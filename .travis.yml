@@ -12,6 +12,7 @@ os:
 install:
   - pip install -r requirements/ci.txt
   - pip install codecov
+  - pip install --upgrade pytest
 
 script:
   - make cov
