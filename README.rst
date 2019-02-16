@@ -44,7 +44,6 @@ Simple Example
     async def authenticate(request):
         payload = await request.json()
         user = DATABASE.get(payload['username'])
-
         return user
 
 
@@ -59,10 +58,8 @@ Simple Example
 
     def create_app():
         app = web.Application()
-
         app.router.add_get('/public', public)
         app.router.add_get('/protected', protected)
-
         auth.setup(app, authenticate, jwt_secret="secret_token")
         return app
 
