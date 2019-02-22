@@ -10,10 +10,6 @@ aiohttp\_auth
 .. |travis-badge| image:: https://travis-ci.org/mgurdal/aiohttp_auth.svg?branch=master
    :target: https://travis-ci.org/mgurdal/aiohttp_auth
 
-
-**aiohttp\_auth** adds authentication protection and endpoints to
-`aiohttp <https://github.com/aio-libs/aiohttp>`__.
-
 **aiohttp\_auth** allows to **protect endpoints** and also provides
 **authentication scoping**.
 
