@@ -1,12 +1,14 @@
 aiohttp\_auth
 =============
 
-|Python 3.6| |travis-badge| |codefactor grade|
+|Python 3.6| |travis-badge| |codefactor grade| |coveralls|
 
 .. |Python 3.6| image:: https://img.shields.io/badge/python-3.6-brightgreen.svg
    :target: https://www.python.org/downloads/release/python-360
 .. |codefactor grade| image:: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge
    :target: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge
+.. |coveralls| image:: https://coveralls.io/repos/github/mgurdal/aiohttp_auth/badge.svg?branch=master
+   :target: https://coveralls.io/github/mgurdal/aiohttp_auth?branch=master
 .. |travis-badge| image:: https://travis-ci.org/mgurdal/aiohttp_auth.svg?branch=master
    :target: https://travis-ci.org/mgurdal/aiohttp_auth
 
