@@ -4,3 +4,4 @@ flake8==3.6.0
 isort==4.3.4
 PyJWT==1.7.1
 asynctest==0.11.1
+python-coveralls==2.9.1
