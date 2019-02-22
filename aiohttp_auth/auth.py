@@ -110,6 +110,21 @@ def make_auth_route(authenticator):
     return auth_route
 
 
+def make_me_route():
+    async def me_route(request: web.Request):
+        user_authenticated = hasattr(request, 'user')
+        if user_authenticated:
+            user = request.user
+            # remove expiration date
+            user.pop('exp')
+            return json_response(request.user)
+        else:
+            return web.json_response({
+                "message": "Please login."
+            }, status=403)
+    return me_route
+
+
 class JWTAuth:
     def __init__(self, jwt_secret: str, duration=25e3, jwt_algorithm='HS256'):
         self.jwt_secret = jwt_secret
@@ -120,7 +135,8 @@ class JWTAuth:
 def setup(app, authenticator, jwt_secret: str):
     app['aiohttp_auth'] = JWTAuth(jwt_secret)
     app.middlewares.append(auth_middleware)
-
     auth_route = make_auth_route(authenticator)
+    me_route = make_me_route()
     app.router.add_post('/auth', auth_route)
+    app.router.add_get('/me', me_route)
     return app
