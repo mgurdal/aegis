@@ -53,10 +53,15 @@ def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
             has_permission = check_permissions(request, required_scopes)
 
             if not has_permission:
-                return json_response(
-                    {'message': 'Forbidden', "errors": []},
-                    status=403
-                )
+                url = request.rel_url
+                detail = F"User scope does not meet access requests for {url}"
+                message = {
+                    "type": "https://aiohttp_auth.com/probs/wrong_permission",
+                    "title": "You do not have access to this url.",
+                    "detail": detail,
+                    "instance": F"{url}",
+                }
+                return json_response(message, status=403)
             else:
                 return await view(request)
         wrapper.__name__ = F"{wrapper.__name__}_scoped"

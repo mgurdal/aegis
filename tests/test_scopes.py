@@ -40,7 +40,10 @@ async def test_scopes_returns_403_if_not_has_permisions():
 
         assert response.status == 403
         assert json.loads(response.body) == {
-            'message': 'Forbidden', "errors": []
+            "type": "https://aiohttp_auth.com/probs/wrong_permission",
+            "title": "You do not have access to this url.",
+            "detail": F"User scope does not meet access requests for /",
+            "instance": "/",
         }
 
 
