@@ -7,11 +7,11 @@ aiohttp\_auth
    :target: https://www.python.org/downloads/release/python-360
 .. |codefactor grade| image:: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge
    :target: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge
-.. |coveralls| image:: https://coveralls.io/repos/github/mgurdal/aiohttp_auth/badge.svg?branch=master
-   :target: https://coveralls.io/github/mgurdal/aiohttp_auth?branch=master
 .. |travis-badge| image:: https://travis-ci.org/mgurdal/aiohttp_auth.svg?branch=master
    :target: https://travis-ci.org/mgurdal/aiohttp_auth
-
+.. |coveralls| image:: https://coveralls.io/repos/github/mgurdal/aiohttp_auth/badge.svg?branch=master
+   :target: https://coveralls.io/github/mgurdal/aiohttp_auth?branch=master
+   
 **aiohttp\_auth** allows to **protect endpoints** and also provides
 **authentication scoping**.
 
@@ -20,9 +20,6 @@ aiohttp\_auth
 Installation
 ~~~~~~~~~~~~
 
-.. code:: bash
-
-    pip install https://github.com/mgurdal/aiohttp_auth
 
 Simple Example
 ~~~~~~~~~~~~~~
