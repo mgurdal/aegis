@@ -72,23 +72,85 @@
 							<li><a href="work.html">Read The Docs</a></li>
 							<li><a href="blog.html">Blog</a></li>
 							<li><a href="about.html">About</a></li>
-							<li><a href="contact.html">Examples</a></li>
+							<li><a href="contact.html">Developer</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="row">
+						<div id="pure_example" class="white-popup mfp-hide popup_code">
+					
+							<pre>
+										<p><a href="https://github.com/mgurdal/aiohttp_auth" class="btn-view">
+								Go to Project
+							</a></p>
+
+								<code class="language-python">
+								from aiohttp import web
+								from aiohttp_auth import auth
+
+								DATABASE = {
+								    'david': {'id': 5, 'scopes': ('regular_user',)}
+								}
+
+								async def authenticate(request):
+								    payload = await request.json()
+								    user = DATABASE.get(payload['username'])
+								    return user
+
+
+								async def public(request):
+								    return web.json_response({'hello': 'anonymous'})
+
+
+								@auth.scopes('regular_user')
+								async def protected(request):
+								    return web.json_response({'hello': 'user'})
+
+
+								def create_app():
+								    app = web.Application()
+
+								    app.router.add_get('/public', public)
+								    app.router.add_get('/protected', protected)
+
+								    auth.setup(app, authenticate, jwt_secret="test")
+								    return app
+
+
+								if __name__ == '__main__':
+								    app = create_app()
+								    web.run_app(app)
+							</code>
+						</pre>
+					</div>
 					<div class="col-md-12">
-						<h2 class="head-title">Examples</h2>
-						<a href="images/work-1.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-1.jpg);">
+						<h2 class="head-title">Examples
+							<br/>
+							<small> To Get Started Fast</small>
+						</h2>
+						
+						<a href="#pure_example" class="gallery image-popup-link text-center">
+							<h4>Simple</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
-						<a href="images/work-2.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-2.jpg);">
+						<a href="#" class="gallery image-popup-link text-center" >
+							<h4>Pure Postgres</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
-						<a href="images/work-3.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-3.jpg);">
+						<a href="#" class="gallery image-popup-link text-center">
+							<h4>Cassandra</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
-						<a href="images/work-4.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-4.jpg);">
+						<a href="#" class="gallery image-popup-link text-center">
+							<h4>MongoDB</h4>
+							<span><i class="icon-search3"></i></span>
+						</a>
+						<a href="#" class="gallery image-popup-link text-center">
+							<h4>MongoDB</h4>
+							<span><i class="icon-search3"></i></span>
+						</a>
+							<a href="#" class="gallery image-popup-link text-center">
+							<h4>SqlAlchemy</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
 					</div>
@@ -120,9 +182,9 @@
 									<pre><code class="language-python">
 										from aiohttp_auth import auth
 
+
 										async def public(request):
 										    return web.json_response({'hello': 'anonymous'})
-
 
 										@auth.scopes('regular_user')
 										async def protected(request):
@@ -229,8 +291,8 @@
 				</div>
 			</div>
 		</div>
-	
-	</div>
+		
+
 
 	<!-- jQuery -->
 	<script src="js/jquery.min.js"></script>

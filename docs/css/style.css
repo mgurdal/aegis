@@ -34,13 +34,13 @@ body {
     overflow-y: hidden; }
 
 a {
-  color: #F9CE00;
+  color: gray;
   -webkit-transition: 0.5s;
   -o-transition: 0.5s;
   transition: 0.5s; }
   a:hover {
     text-decoration: underline;
-    color: #F9CE00; }
+    color: gray; }
   a:focus, a:active {
     outline: none; }
 
@@ -202,7 +202,7 @@ h1, h2, h3, h4, h5, h6 {
           outline: none;
           text-decoration: none; }
       #colorlib-main-nav ul li.active a {
-        color: #F9CE00; }
+        color: gray; }
   #colorlib-main-nav .form-group {
     margin-bottom: 40px;
     position: relative;
@@ -236,7 +236,7 @@ h1, h2, h3, h4, h5, h6 {
     -moz-border-radius: 0;
     -ms-border-radius: 0;
     border-radius: 0;
-    background: #F9CE00;
+    background: gray;
     color: #fff;
     border: none;
     padding: 16px; }
@@ -453,7 +453,7 @@ header {
     #colorlib-hero .owl-theme .owl-controls .owl-nav [class*=owl-] i {
       border: none; }
     #colorlib-hero .owl-theme .owl-controls .owl-nav [class*=owl-]:hover {
-      background: #F9CE00;
+      background: gray;
       border: none; }
   #colorlib-hero .owl-carousel .owl-controls .owl-nav .owl-next,
   #colorlib-hero .owl-carousel .owl-controls .owl-nav .owl-prev {
@@ -811,18 +811,18 @@ header {
     outline: none !important; }
 
 .btn-primary {
-  background: #F9CE00;
+  background: gray;
   color: #fff;
-  border: 2px solid #F9CE00; }
+  border: 2px solid gray; }
   .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
-    background: #ffd614 !important;
-    border-color: #ffd614 !important; }
+    background: #aaa !important;
+    border-color: #aaa !important; }
   .btn-primary.btn-outline {
     background: transparent;
     color: #4d4d4d;
     border: 1px solid #d9d9d9; }
     .btn-primary.btn-outline:hover, .btn-primary.btn-outline:focus, .btn-primary.btn-outline:active {
-      background: #F9CE00;
+      background: gray;
       color: #fff; }
 
 .btn-success {
@@ -1090,7 +1090,7 @@ input[type="text"] {
 
 .colorlib-social-icons i {
   font-size: 24px;
-  color: #F9CE00; }
+  color: gray; }
 
 #colorlib-subscribe {
   padding: 5em 0; }
@@ -1194,12 +1194,19 @@ input[type="text"] {
 .big-code {
     height: 100%;
     display: flex;
-    margin-top: 3em;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+} 
+.popup_code {
+    height: 100%;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+ 
 
-#pip_input {
-  cursor: pointer;
+.owl-direction {
+  background: gray;
 }
