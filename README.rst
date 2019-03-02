@@ -71,7 +71,7 @@ Simple Example
 TODO
 ~~~~
 
--  [X] unit tests
--  [ ] documentation
--  [X] CD/CI
--  [ ] Web Page
+- [X] unit tests
+- [ ] documentation
+- [X] CD/CI
+- [X] Web Page
