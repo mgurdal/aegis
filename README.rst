@@ -1,7 +1,7 @@
 aiohttp\_auth
 =============
 
-|Python 3.6| |travis-badge| |codefactor grade| |coveralls|
+|Python 3.6| |travis-badge| |coveralls| |codefactor grade|
 
 .. |Python 3.6| image:: https://img.shields.io/badge/python-3.6-brightgreen.svg
    :target: https://www.python.org/downloads/release/python-360
