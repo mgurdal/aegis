@@ -17,10 +17,6 @@ aiohttp\_auth
 
 --------------
 
-Installation
-~~~~~~~~~~~~
-
-
 Simple Example
 ~~~~~~~~~~~~~~
 
