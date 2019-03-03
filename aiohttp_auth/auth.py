@@ -64,8 +64,10 @@ def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
                 return json_response(message, status=403)
             else:
                 return await view(request)
+
         wrapper.__name__ = F"{wrapper.__name__}_scoped"
         return wrapper
+
     return request_handler
 
 
@@ -95,11 +97,11 @@ async def auth_middleware(request: web.Request, handler: Callable):
                 status=401
             )
     elif handler.__name__.endswith('_scoped'):
-            return json_response(
-                {
-                    "message": "Please enter your API key.",
-                    "errors": []
-                }, status=401)
+        return json_response(
+            {
+                "message": "Please enter your API key.",
+                "errors": []
+            }, status=401)
     else:
         return await handler(request)
 
@@ -112,6 +114,7 @@ def make_auth_route(authenticator):
         token = await generate_jwt(request, user)
 
         return web.json_response({'access_token': token})
+
     return auth_route
 
 
@@ -127,6 +130,7 @@ def make_me_route():
             return web.json_response({
                 "message": "Please login."
             }, status=403)
+
     return me_route
 
 
