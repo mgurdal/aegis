@@ -48,6 +48,7 @@
 	<script src="js/respond.min.js"></script>
 	<![endif]-->
 
+	<link rel="stylesheet" href="css/prism.css">
 	</head>
 	<body>
 
@@ -55,38 +56,82 @@
 		<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle active"><i></i></a>
 		<div class="js-fullheight colorlib-table">
 			<div class="colorlib-table-cell js-fullheight">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="form-group">
-							<input type="text" class="form-control" id="search" placeholder="Enter any key to search...">
-							<button type="submit" class="btn btn-primary"><i class="icon-search3"></i></button>
-						</div>
-					</div>
-				</div>
+
 				<div class="row">
 					<div class="col-md-12">
 						<ul>
-							<li><a href="index.html">Home</a></li>
-							<li class="active"><a href="work.html">Work</a></li>
-							<li><a href="blog.html">Blog</a></li>
-							<li><a href="about.html">About</a></li>
-							<li><a href="contact.html">Contact</a></li>
+							<li class="active"><a href="index.html">Home</a></li>
+							<li><a href="work.html">Documentation</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="row">
+						<div id="pure_example" class="white-popup mfp-hide popup_code">
+					
+							<pre>
+								<code class="language-python">
+								from aiohttp import web
+								from aiohttp_auth import auth
+
+								DATABASE = {
+								    'david': {'id': 5, 'scopes': ('regular_user',)}
+								}
+
+								async def authenticate(request):
+								    payload = await request.json()
+								    user = DATABASE.get(payload['username'])
+								    return user
+
+
+								async def public(request):
+								    return web.json_response({'hello': 'anonymous'})
+
+
+								@auth.scopes('regular_user')
+								async def protected(request):
+								    return web.json_response({'hello': 'user'})
+
+
+								def create_app():
+								    app = web.Application()
+
+								    app.router.add_get('/public', public)
+								    app.router.add_get('/protected', protected)
+
+								    auth.setup(app, authenticate, jwt_secret="test")
+								    return app
+
+
+								if __name__ == '__main__':
+								    app = create_app()
+								    web.run_app(app)
+							</code>
+						</pre>
+					</div>
 					<div class="col-md-12">
-						<h2 class="head-title">Gallery</h2>
-						<a href="images/work-1.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-1.jpg);">
+						<h2 class="head-title">Examples
+							<br/>
+							<small> To Get Started Fast</small>
+						</h2>
+						
+						<a href="#pure_example" class="gallery image-popup-link text-center">
+							<h4>Simple</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
-						<a href="images/work-2.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-2.jpg);">
+						<a href="#" class="gallery image-popup-link text-center" >
+							<h4>Postgres</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
-						<a href="images/work-3.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-3.jpg);">
+						<a href="#" class="gallery image-popup-link text-center">
+							<h4>Cassandra</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
-						<a href="images/work-4.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-4.jpg);">
+						<a href="#" class="gallery image-popup-link text-center">
+							<h4>MongoDB</h4>
+							<span><i class="icon-search3"></i></span>
+						</a>
+						<a href="#" class="gallery image-popup-link text-center">
+							<h4>SqlAlchemy</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
 					</div>
@@ -101,7 +146,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="colorlib-navbar-brand">
-							<a class="colorlib-logo" href="index.html">Bato</a>
+							<a class="colorlib-logo" href="index.html">aiohttp_auth</a>
 						</div>
 						<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
 					</div>
@@ -112,28 +157,20 @@
 		<div id="colorlib-work">
 			<div class="container">
 				<div class="row text-center">
-					<h2 class="bold">Works</h2>
+					<h2 class="bold">Docs</h2>
 				</div>
 				<div class="row">
-					<div class="col-md-12">
-						<div class="work-entry-flex animate-box js-fullheight">
-							<div class="col-three-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 col-md-push-10 no-gutters">
-										<div class="work-img js-fullheight" style="background-image: url(images/work-1.jpg);">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-one-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 col-md-pull-12 no-gutters">
-										<div class="display-t js-fullheight">
-											<div class="display-tc js-fullheight">
-												<div class="text-inner text-inner-right">
-													<h2><a href="work-single.html">Application and practice of creating durable images</a></h2>
-													<p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-													<p><a href="work-single.html" class="btn-view">View Photo</a></p>
+						<div class="col-md-12">
+							<div class="work-entry-flex animate-box js-fullheight">
+								<div class="col-md-12 js-fullheight">
+									<div class="row no-gutters">
+										<div class="col-md-12 no-gutters">
+											<div class="display-t js-fullheight">
+												<div class="display-tc js-fullheight">
+													<div class="text-inner text-inner-right">
+														<h2>We do not have any documentation yet,</h2>
+														<p>but it is comming soon</p>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -141,179 +178,6 @@
 								</div>
 							</div>
 						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="work-entry-flex animate-box js-fullheight">
-							<div class="col-three-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 no-gutters">
-										<div class="work-img js-fullheight" style="background-image: url(images/work-2.jpg);">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-one-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 no-gutters">
-										<div class="display-t js-fullheight">
-											<div class="display-tc js-fullheight">
-												<div class="text-inner text-inner-left">
-													<h2><a href="work-single.html">Application and practice of creating durable images</a></h2>
-													<p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-													<p><a href="work-single.html" class="btn-view">View Photo</a></p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="work-entry-flex animate-box js-fullheight">
-							<div class="col-three-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 col-md-push-10 no-gutters">
-										<div class="work-img js-fullheight" style="background-image: url(images/work-3.jpg);">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-one-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 col-md-pull-12 no-gutters">
-										<div class="display-t js-fullheight">
-											<div class="display-tc js-fullheight">
-												<div class="text-inner text-inner-right">
-													<h2><a href="work-single.html">Application and practice of creating durable images</a></h2>
-													<p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-													<p><a href="work-single.html" class="btn-view">View Photo</a></p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="work-entry-flex animate-box js-fullheight">
-							<div class="col-three-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 no-gutters">
-										<div class="work-img js-fullheight" style="background-image: url(images/work-4.jpg);">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-one-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 no-gutters">
-										<div class="display-t js-fullheight">
-											<div class="display-tc js-fullheight">
-												<div class="text-inner text-inner-left">
-													<h2><a href="work-single.html">Application and practice of creating durable images</a></h2>
-													<p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-													<p><a href="work-single.html" class="btn-view">View Photo</a></p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="work-entry-flex animate-box js-fullheight">
-							<div class="col-three-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 col-md-push-10 no-gutters">
-										<div class="work-img js-fullheight" style="background-image: url(images/work-5.jpg);">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-one-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 col-md-pull-12 no-gutters">
-										<div class="display-t js-fullheight">
-											<div class="display-tc js-fullheight">
-												<div class="text-inner text-inner-right">
-													<h2><a href="work-single.html">Application and practice of creating durable images</a></h2>
-													<p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-													<p><a href="work-single.html" class="btn-view">View Photo</a></p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="work-entry-flex animate-box js-fullheight">
-							<div class="col-three-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 no-gutters">
-										<div class="work-img js-fullheight" style="background-image: url(images/work-6.jpg);">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-one-forth js-fullheight">
-								<div class="row no-gutters">
-									<div class="col-md-12 no-gutters">
-										<div class="display-t js-fullheight">
-											<div class="display-tc js-fullheight">
-												<div class="text-inner text-inner-left">
-													<h2><a href="work-single.html">Application and practice of creating durable images</a></h2>
-													<p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-													<p><a href="work-single.html" class="btn-view">View Photo</a></p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<div id="colorlib-subscribe">
-			<div class="overlay"></div>
-			<div class="container">
-				<div class="row">
-					<div class="col-md-8 col-md-offset-2 text-center colorlib-heading animate-box">
-						<h2>Subscribe Newsletter</h2>
-						<p>Subscribe our newsletter and get latest update</p>
-					</div>
-				</div>
-				<div class="row animate-box">
-					<div class="col-md-6 col-md-offset-3">
-						<div class="row">
-							<div class="col-md-12">
-							<form class="form-inline qbstp-header-subscribe">
-								<div class="col-three-forth">
-									<div class="form-group">
-										<input type="text" class="form-control" id="email" placeholder="Enter your email">
-									</div>
-								</div>
-								<div class="col-one-third">
-									<div class="form-group">
-										<button type="submit" class="btn btn-primary">Subscribe Now</button>
-									</div>
-								</div>
-							</form>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -325,23 +189,12 @@
 						<div class="col-md-4 col-pb-sm text-center">
 							<div class="row">
 								<div class="col-md-10">
-									<h2>Office</h2>
-									<p>291 South 21th Street, <br> Suite 721 New York NY 10016</p>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-4 col-pb-sm text-center">
-							<h2>Get in Touch</h2>
-							<p><a href="#">noah@info.com</a></p>
 						</div>
 						<div class="col-md-4 col-pb-sm text-center">
-							<h2>Social</h2>
-							<p class="colorlib-social-icons">
-								<a href="#"><i class="icon-facebook4"></i></a>
-								<a href="#"><i class="icon-twitter3"></i></a>
-								<a href="#"><i class="icon-googleplus"></i></a>
-								<a href="#"><i class="icon-dribbble2"></i></a>
-							</p>
 						</div>
 					</div>
 					<div class="row">
@@ -350,7 +203,6 @@
 								<span class="block"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --><br></span> 
-								<span class="block">Demo Images: <a href="http://unsplash.co/" target="_blank">Unsplash</a></span>
 							</p>
 						</div>
 					</div>
@@ -377,6 +229,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<!-- Main JS (Do not remove) -->
 	<script src="js/main.js"></script>
 
+	<script src="js/prism.js"></script>
 	</body>
 </html>
 

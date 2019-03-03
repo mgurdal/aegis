@@ -3,7 +3,7 @@
 	<head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Bato Template</title>
+	<title>aiohttp_auth | Contact </title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="" />
 	<meta name="keywords" content="" />
@@ -66,27 +66,81 @@
 				<div class="row">
 					<div class="col-md-12">
 						<ul>
-							<li><a href="index.html">Home</a></li>
-							<li><a href="work.html">Work</a></li>
-							<li><a href="blog.html">Blog</a></li>
-							<li><a href="about.html">About</a></li>
-							<li class="active"><a href="contact.html">Contact</a></li>
+							<li class="active"><a href="index.html">Home</a></li>
+							<li><a href="work.html">Documentation</a></li>
+							<li><a href="contact.html">Developer</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="row">
+						<div id="pure_example" class="white-popup mfp-hide popup_code">
+					
+							<pre>
+
+
+								<code class="language-python">
+								from aiohttp import web
+								from aiohttp_auth import auth
+
+								DATABASE = {
+								    'david': {'id': 5, 'scopes': ('regular_user',)}
+								}
+
+								async def authenticate(request):
+								    payload = await request.json()
+								    user = DATABASE.get(payload['username'])
+								    return user
+
+
+								async def public(request):
+								    return web.json_response({'hello': 'anonymous'})
+
+
+								@auth.scopes('regular_user')
+								async def protected(request):
+								    return web.json_response({'hello': 'user'})
+
+
+								def create_app():
+								    app = web.Application()
+
+								    app.router.add_get('/public', public)
+								    app.router.add_get('/protected', protected)
+
+								    auth.setup(app, authenticate, jwt_secret="test")
+								    return app
+
+
+								if __name__ == '__main__':
+								    app = create_app()
+								    web.run_app(app)
+							</code>
+						</pre>
+					</div>
 					<div class="col-md-12">
-						<h2 class="head-title">Gallery</h2>
-						<a href="images/work-1.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-1.jpg);">
+						<h2 class="head-title">Examples
+							<br/>
+							<small> To Get Started Fast</small>
+						</h2>
+						
+						<a href="#pure_example" class="gallery image-popup-link text-center">
+							<h4>Simple</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
-						<a href="images/work-2.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-2.jpg);">
+						<a href="#" class="gallery image-popup-link text-center" >
+							<h4>Postgres</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
-						<a href="images/work-3.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-3.jpg);">
+						<a href="#" class="gallery image-popup-link text-center">
+							<h4>Cassandra</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
-						<a href="images/work-4.jpg" class="gallery image-popup-link text-center" style="background-image: url(images/work-4.jpg);">
+						<a href="#" class="gallery image-popup-link text-center">
+							<h4>MongoDB</h4>
+							<span><i class="icon-search3"></i></span>
+						</a>
+						<a href="#" class="gallery image-popup-link text-center">
+							<h4>SqlAlchemy</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
 					</div>
@@ -101,7 +155,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="colorlib-navbar-brand">
-							<a class="colorlib-logo" href="index.html">Bato</a>
+							<a class="colorlib-logo" href="index.html">AIOHTTP_AUTH</a>
 						</div>
 						<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
 					</div>
@@ -120,7 +174,7 @@
 							<div class="col-md-4 animate-box">
 								<h3>My Address</h3>
 								<ul class="contact-info">
-									<li><span><i class="icon-map5"></i></span>88 West 21th Street, Suite 721 New York NY 10016</li>
+
 									<li><span><i class="icon-phone4"></i></span>+ 1235 2355 98</li>
 									<li><span><i class="icon-envelope2"></i></span><a href="#">info@yoursite.com</a></li>
 									<li><span><i class="icon-globe3"></i></span><a href="#">www.yoursite.com</a></li>
