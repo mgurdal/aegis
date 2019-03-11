@@ -24,6 +24,25 @@ async def generate_jwt(request: web.Request, payload: dict) -> str:
     return token
 
 
+def login_required(func):
+    def wrapper(request):
+        if not isinstance(request, web.Request):
+            raise TypeError(F"Invalid Type '{type(request)}'")
+
+        if not hasattr(request, 'user'):
+            detail = ("You did not specify the required token information "
+                      "in headers or you provided it incorrectly.")
+            url = request.rel_url
+            return web.json_response({
+                "type": "https://mgurdal.github.io/aiohttp_auth/docs.html",
+                "title": "Authentication Required",
+                "detail": detail,
+                "instance": F"{url}",
+            }, status=401)
+        return func(request)
+    return wrapper
+
+
 def check_permissions(request: web.Request, scopes: Union[set, tuple]) -> bool:
     # if a user injected into request by the auth_middleware
     user = getattr(request, 'user', None)
@@ -56,7 +75,7 @@ def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
                 url = request.rel_url
                 detail = F"User scope does not meet access requests for {url}"
                 message = {
-                    "type": "https://aiohttp_auth.com/probs/wrong_permission",
+                    "type": "https://mgurdal.github.io/aiohttp_auth/docs.html",
                     "title": "You do not have access to this url.",
                     "detail": detail,
                     "instance": F"{url}",
