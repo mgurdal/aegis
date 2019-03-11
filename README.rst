@@ -22,19 +22,16 @@ Simple Example
 
 .. code:: python
 
-    # examples/server_simple.py
+    # examples/login_required_simple.py
     from aiohttp import web
     from aiohttp_auth import auth
 
 
-    DATABASE = {
-        'david': {'user_id': 5, 'scopes': ('regular_user', )}
-    }
-
-
     async def authenticate(request):
-        payload = await request.json()
-        user = DATABASE.get(payload['username'])
+        user = {
+        'user_id': 5,
+        'name': 'K Lars Lohn'
+        }
         return user
 
 
@@ -58,13 +55,3 @@ Simple Example
     if __name__ == '__main__':
         app = create_app()
         web.run_app(app)
-
---------------
-
-TODO
-~~~~
-
-- [X] unit tests
-- [ ] documentation
-- [X] CD/CI
-- [X] Web Page
