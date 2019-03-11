@@ -17,6 +17,16 @@ aiohttp\_auth
 
 --------------
 
+Installation
+~~~~~~~~~~~~~~
+
+.. code:: bash
+
+    git clone https://github.com/mgurdal/aiohttp_auth.git
+    cd aiohttp_auth
+    python3 setup.py sdist
+    python3 -m pip install  dist/aiohttp_auth-0.0.2.tar.gz
+
 Simple Example
 ~~~~~~~~~~~~~~
 
