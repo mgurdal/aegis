@@ -39,8 +39,8 @@ Simple Example
 
     async def authenticate(request):
         user = {
-        'user_id': 5,
-        'name': 'K Lars Lohn'
+            'user_id': 5,
+            'name': 'K Lars Lohn'
         }
         return user
 
