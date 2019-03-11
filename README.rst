@@ -49,7 +49,7 @@ Simple Example
         return web.json_response({'hello': 'anonymous'})
 
 
-    @auth.scopes('regular_user')
+    @auth.login_required
     async def protected(request):
         return web.json_response({'hello': 'user'})
 
