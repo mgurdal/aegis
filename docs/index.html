@@ -61,7 +61,7 @@
 					<div class="col-md-12">
 						<ul>
 							<li class="active"><a href="index.html">Home</a></li>
-							<li><a href="work.html">Documentation</a></li>
+							<li><a href="docs.html">Documentation</a></li>
 							<!--
 							<li><a href="blog.html">Blog</a></li>
 
@@ -71,8 +71,51 @@
 					</div>
 				</div>
 				<div class="row">
-						<div id="pure_example" class="white-popup mfp-hide popup_code">
+						<div id="login_required" class="white-popup mfp-hide popup_code">
 					
+							<pre>
+
+								<code class="language-python">
+								from aiohttp import web
+								from aiohttp_auth import auth
+
+
+								async def authenticate(request):
+									user = {
+										"user_id": "5",
+										"name": "K Lars Lohn",
+									}
+									return user
+
+
+								async def public(request):
+									return web.json_response({'hello': 'anonymous'})
+
+
+								@auth.login_required
+								async def protected(request):
+									return web.json_response({'hello': 'user'})
+
+
+								def create_app():
+									app = web.Application()
+
+									app.router.add_get('/public', public)
+									app.router.add_get('/protected', protected)
+
+									auth.setup(app, authenticate, jwt_secret="test")
+									return app
+
+
+								if __name__ == '__main__':
+									app = create_app()
+									web.run_app(app)
+
+							</code>
+						</pre>
+					</div>
+					<div id="scopes" class="white-popup mfp-hide popup_code">
+
 							<pre>
 
 								<code class="language-python">
@@ -120,8 +163,12 @@
 							<small> To Get Started Fast</small>
 						</h2>
 						
-						<a href="#pure_example" class="gallery image-popup-link text-center">
-							<h4>Simple</h4>
+						<a href="#login_required" class="gallery image-popup-link text-center">
+							<h4>Login Required</h4>
+							<span><i class="icon-search3"></i></span>
+						</a>
+						<a href="#scopes" class="gallery image-popup-link text-center" >
+							<h4>Scopes</h4>
 							<span><i class="icon-search3"></i></span>
 						</a>
 						<a href="#" class="gallery image-popup-link text-center" >
