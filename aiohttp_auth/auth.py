@@ -3,8 +3,13 @@ from datetime import datetime, timedelta
 from typing import Callable, Union
 
 import jwt
+
 from aiohttp import web
 from aiohttp.web import json_response
+from aiohttp_auth.exceptions import UserDefinedException
+
+from .responses import (access_token, auth_required, error_response, forbidden,
+                        invalid_token, token_expired)
 
 
 async def generate_jwt(request: web.Request, payload: dict) -> str:
@@ -25,21 +30,15 @@ async def generate_jwt(request: web.Request, payload: dict) -> str:
 
 
 def login_required(func):
+
     def wrapper(request):
         if not isinstance(request, web.Request):
             raise TypeError(F"Invalid Type '{type(request)}'")
 
         if not hasattr(request, 'user'):
-            detail = ("You did not specify the required token information "
-                      "in headers or you provided it incorrectly.")
-            url = request.rel_url
-            return web.json_response({
-                "type": "https://mgurdal.github.io/aiohttp_auth/docs.html",
-                "title": "Authentication Required",
-                "detail": detail,
-                "instance": F"{url}",
-            }, status=401)
+            return auth_required(request)
         return func(request)
+
     return wrapper
 
 
@@ -72,15 +71,7 @@ def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
             has_permission = check_permissions(request, required_scopes)
 
             if not has_permission:
-                url = request.rel_url
-                detail = F"User scope does not meet access requests for {url}"
-                message = {
-                    "type": "https://mgurdal.github.io/aiohttp_auth/docs.html",
-                    "title": "You do not have access to this url.",
-                    "detail": detail,
-                    "instance": F"{url}",
-                }
-                return json_response(message, status=403)
+                return forbidden(request)
             else:
                 return await view(request)
 
@@ -105,34 +96,36 @@ async def auth_middleware(request: web.Request, handler: Callable):
             )
             request.user = user
             return await handler(request)
+
         except jwt.DecodeError:
-            return json_response(
-                {'message': 'Invalid Token', "errors": []},
-                status=401
-            )
+            return invalid_token(request)
+
         except jwt.ExpiredSignatureError:
-            return json_response(
-                {'message': 'Token Has Expired', "errors": []},
-                status=401
-            )
+            return token_expired(request)
+
+        except UserDefinedException as ude:
+            return error_response(request, ude)
+
+    # if view uses the scope decorator and
+    # does not have he _scoped postfix
     elif handler.__name__.endswith('_scoped'):
-        return json_response(
-            {
-                "message": "Please enter your API key.",
-                "errors": []
-            }, status=401)
+        return forbidden(request)
     else:
         return await handler(request)
 
 
 def make_auth_route(authenticator):
     async def auth_route(request: web.Request):
-        user = await authenticator(request)
+        try:
+            user = await authenticator(request)
+        except UserDefinedException as ude:
+            return error_response(request, ude)
+
         # use auth.login to generate a JWT token
         # with some unique user information
         token = await generate_jwt(request, user)
 
-        return web.json_response({'access_token': token})
+        return access_token(token)
 
     return auth_route
 
@@ -146,9 +139,7 @@ def make_me_route():
             user.pop('exp')
             return json_response(request.user)
         else:
-            return web.json_response({
-                "message": "Please login."
-            }, status=403)
+            return forbidden(request)
 
     return me_route
 

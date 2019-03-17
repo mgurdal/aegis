@@ -1,4 +1,3 @@
-import json
 from unittest.mock import patch
 
 import pytest
@@ -28,23 +27,20 @@ async def test_scopes_raises_TypeError_on_invalid_request():
 async def test_scopes_returns_403_if_not_has_permisions():
     with patch('aiohttp_auth.auth.check_permissions') as check_permissions:
         check_permissions.return_value = False
+        with patch('aiohttp_auth.auth.forbidden') as forbidden:
+            forbidden.return_value.status = 403
 
-        @auth.scopes('test_scope')
-        async def test_view(request):
-            return web.json_response({})
+            @auth.scopes('test_scope')
+            async def test_view(request):
+                return web.json_response({})
 
-        stub_request = make_mocked_request(
-            'GET', '/', headers={'authorization': 'x'}
-        )
-        response = await test_view(stub_request)
+            stub_request = make_mocked_request(
+                'GET', '/', headers={'authorization': 'x'}
+            )
+            response = await test_view(stub_request)
 
-        assert response.status == 403
-        assert json.loads(response.body) == {
-            "type": "https://mgurdal.github.io/aiohttp_auth/docs.html",
-            "title": "You do not have access to this url.",
-            "detail": F"User scope does not meet access requests for /",
-            "instance": "/",
-        }
+            assert response.status == 403
+            assert forbidden.called
 
 
 async def test_scopes_awaits_view_on_happy_path():
@@ -61,4 +57,3 @@ async def test_scopes_awaits_view_on_happy_path():
         response = await test_view(stub_request)
 
         assert response.status == 200
-        assert json.loads(response.body) == {}

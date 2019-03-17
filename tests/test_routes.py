@@ -2,6 +2,7 @@ import json
 
 from aiohttp.test_utils import make_mocked_request
 from aiohttp_auth import auth
+from aiohttp_auth.exceptions import UserDefinedException
 from asynctest import CoroutineMock, patch
 
 
@@ -32,13 +33,38 @@ async def test_auth_route_returns_access_token():
     auth_route = auth.make_auth_route(authenticator)
 
     with patch('aiohttp_auth.auth.generate_jwt') as mocked_generate_jwt:
-        mocked_generate_jwt.return_value = 'test_token'
-        token_response = await auth_route(stub_request)
-        token_payload = json.loads(token_response.body)
+        with patch('aiohttp_auth.auth.access_token') as access_token:
+            access_token.return_value.status = 200
+            access_token.return_value.body = b'{"access_token": "x"}'
 
-        assert token_payload == {
-            'access_token': 'test_token'
-        }
+            token_response = await auth_route(stub_request)
+            token_payload = json.loads(token_response.body)
+
+            mocked_generate_jwt.assert_called_with(
+                stub_request, stub_user
+            )
+            assert authenticator.awaited_once_with(stub_request)
+            assert token_payload == {
+                'access_token': 'x'
+            }
+
+
+async def test_auth_route_handles_user_exceptions():
+
+    stub_request = make_mocked_request('GET', '/')
+
+    class TestException(UserDefinedException):
+        status = 400
+        title = "test"
+        detail = "test"
+
+    authenticator = CoroutineMock(side_effect=TestException())
+    auth_route = auth.make_auth_route(authenticator)
+
+    with patch('aiohttp_auth.auth.error_response') as error_response:
+        await auth_route(stub_request)
+
+        assert error_response.called
 
 
 async def test_me_route_returns_user_information():
@@ -70,13 +96,11 @@ async def test_me_route_returns_403_if_user_is_not_authenticated():
     Test me route returns 403, Forbidden if user is not authenticated.
     """
     stub_request = make_mocked_request('GET', '/')
-
     me_route = auth.make_me_route()
+    with patch('aiohttp_auth.auth.forbidden') as forbidden:
+        forbidden.return_value.status = 403
 
-    user_response = await me_route(stub_request)
-    error_payload = json.loads(user_response.body)
+        user_response = await me_route(stub_request)
 
-    assert user_response.status == 403
-    assert error_payload == {
-        "message": "Please login."
-    }
+        assert user_response.status == 403
+        assert forbidden.called
