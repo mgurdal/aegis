@@ -15,7 +15,6 @@ isort:
 .flake: .install-deps .develop $(shell find aiohttp_auth -type f) \
                       $(shell find tests -type f)
 	@flake8 .
-	@isort -rc -c
 	@touch .flake
 
 flake: .flake
