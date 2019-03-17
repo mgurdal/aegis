@@ -17,24 +17,31 @@ aiohttp\_auth
 
 --------------
 
+Installation
+~~~~~~~~~~~~~~
+
+.. code:: bash
+
+    git clone https://github.com/mgurdal/aiohttp_auth.git
+    cd aiohttp_auth
+    python3 setup.py sdist
+    python3 -m pip install  dist/aiohttp_auth-0.0.2.tar.gz
+
 Simple Example
 ~~~~~~~~~~~~~~
 
 .. code:: python
 
-    # examples/server_simple.py
+    # examples/login_required_simple.py
     from aiohttp import web
     from aiohttp_auth import auth
 
 
-    DATABASE = {
-        'david': {'user_id': 5, 'scopes': ('regular_user', )}
-    }
-
-
     async def authenticate(request):
-        payload = await request.json()
-        user = DATABASE.get(payload['username'])
+        user = {
+            'user_id': 5,
+            'name': 'K Lars Lohn'
+        }
         return user
 
 
@@ -42,7 +49,7 @@ Simple Example
         return web.json_response({'hello': 'anonymous'})
 
 
-    @auth.scopes('regular_user')
+    @auth.login_required
     async def protected(request):
         return web.json_response({'hello': 'user'})
 
@@ -58,13 +65,3 @@ Simple Example
     if __name__ == '__main__':
         app = create_app()
         web.run_app(app)
-
---------------
-
-TODO
-~~~~
-
-- [X] unit tests
-- [ ] documentation
-- [X] CD/CI
-- [X] Web Page
