@@ -1,5 +1,4 @@
 import jwt
-
 from aiohttp import web
 from aiohttp.test_utils import make_mocked_request
 from aiohttp_auth import auth
