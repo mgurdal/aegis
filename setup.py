@@ -10,6 +10,7 @@ import sys
 from shutil import rmtree
 
 from setuptools import Command, find_packages, setup
+
 from aiohttp_auth import __version__
 
 # Package meta-data.

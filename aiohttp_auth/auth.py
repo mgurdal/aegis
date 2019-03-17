@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from typing import Callable, Union
 
 import jwt
+
 from aiohttp import web
 from aiohttp.web import json_response
 from aiohttp_auth.exceptions import UserDefinedException
