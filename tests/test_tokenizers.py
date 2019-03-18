@@ -2,7 +2,6 @@ import jwt
 
 from aiohttp import web
 from aiohttp.test_utils import make_mocked_request
-
 from aiohttp_auth import auth
 from aiohttp_auth.tokenizers import generate_jwt
 

@@ -1,9 +1,10 @@
 from unittest.mock import patch
-from asynctest import patch as asyncpatch
+
 import pytest
 from aiohttp import web
 from aiohttp.test_utils import make_mocked_request
 from aiohttp_auth import auth
+from asynctest import patch as asyncpatch
 
 
 async def test_scopes_cannot_be_initialized_withot_parameters():

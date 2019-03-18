@@ -1,4 +1,4 @@
-from typing import Iterable, Hashable
+from typing import Hashable, Iterable
 
 
 def match_any(

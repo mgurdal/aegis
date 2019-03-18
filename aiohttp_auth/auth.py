@@ -6,13 +6,12 @@ import jwt
 
 from aiohttp import web
 
-from .tokenizers import decode_jwt
 from .exceptions import UserDefinedException
-from .matching_algorithms import match_any, match_all, match_exact
-from .routes import make_auth_route, make_me_route
-
+from .matching_algorithms import match_all, match_any, match_exact
 from .responses import (auth_required, error_response, forbidden,
                         invalid_token, token_expired)
+from .routes import make_auth_route, make_me_route
+from .tokenizers import decode_jwt
 
 
 def login_required(func):

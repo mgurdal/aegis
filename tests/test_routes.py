@@ -1,8 +1,8 @@
 import json
 
 from aiohttp.test_utils import make_mocked_request
-from aiohttp_auth.routes import make_auth_route, make_me_route
 from aiohttp_auth.exceptions import UserDefinedException
+from aiohttp_auth.routes import make_auth_route, make_me_route
 from asynctest import CoroutineMock, patch
 
 

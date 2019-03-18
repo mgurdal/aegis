@@ -1,4 +1,4 @@
-from aiohttp_auth.matching_algorithms import match_any, match_all, match_exact
+from aiohttp_auth.matching_algorithms import match_all, match_any, match_exact
 
 
 async def test_match_any_matches_subset():

@@ -1,8 +1,8 @@
 from aiohttp import web
 
-from .tokenizers import generate_jwt
 from .exceptions import UserDefinedException
-from .responses import error_response, access_token, forbidden
+from .responses import access_token, error_response, forbidden
+from .tokenizers import generate_jwt
 
 
 def make_auth_route(authenticator):

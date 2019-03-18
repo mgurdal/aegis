@@ -1,8 +1,7 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from aiohttp.test_utils import make_mocked_request
-
 from aiohttp_auth import auth
 
 
