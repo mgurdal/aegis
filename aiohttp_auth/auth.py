@@ -31,11 +31,11 @@ async def check_permissions(
         request: web.Request,
         scopes: Union[set, tuple],
         algorithm: Union[str, Callable] = 'any') -> bool:
-    # if a user injected into request by the auth_middleware
+    # user injected into request by the auth_middleware
     user = getattr(request, 'user', None)
     has_permission = False
     if user:
-        # if a non-anonymous user tries to reach to a scoped endpoint
+        # non-anonymous user tries to reach to a scoped end-point
         user_is_anonymous = user['scopes'] == ('anonymous_user',)
         if not user_is_anonymous:
             if algorithm == 'any':
@@ -43,7 +43,6 @@ async def check_permissions(
                     required=scopes,
                     provided=request.user['scopes']
                 )
-
             elif algorithm == 'all':
                 has_permission = match_all(
                     required=scopes,
@@ -114,7 +113,7 @@ async def auth_middleware(request: web.Request, handler: Callable):
         except UserDefinedException as ude:
             return error_response(request, ude)
 
-    # if view uses the scope decorator and
+    # view uses the scope decorator and
     # does not have he _scoped postfix
     elif handler.__name__.endswith('_scoped'):
         return forbidden(request)
