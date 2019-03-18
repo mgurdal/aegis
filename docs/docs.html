@@ -294,7 +294,7 @@
 														<p> And thats it! You have protected one of your end-points. aiohttp_auth also automatically creates some routes such as,
 														<b> auth/ </b> to log into the system and <b> me/ </b> to get the current user information.
 														</p>
-														<p>Whole codee</p>
+														<p>Whole code</p>
 														<pre>
 															<code class="language-python">
 																	from aiohttp import web
@@ -329,7 +329,7 @@
 															</code>
 														</pre>
 														<p>
-															This is also equivalent to<b>scopes('regular_user',  algorithm='any')</b>
+															This is also equivalent to <b>scopes('regular_user',  algorithm='any')</b>
 															which opens the end-point for any user who has <b>'regular_user'</b> in his scopes. 
 														</p>
 														<p> We can use other pre-defined algorithms.
@@ -401,7 +401,6 @@
 																			</code>
 																		</pre>
 																
-																	<h4 id="token_expired">Invalid Token</h4>
 																	<label> 401, UNAUTHORIZED </label>
 																	<pre>
 																			<code class="language-json">
@@ -429,19 +428,6 @@
 																			</code>
 																	</pre>
 
-																	<h4 id="forbidden">You do not have access to this url.</h4>
-																	<label> 403, FORBIDDEN </label>
-																	<pre>
-																			<code class="language-json">
-																					{
-																						"type": "https://mgurdal.github.io/aiohttp_auth/docs.html#forbidden",
-																						"title": "You do not have access to this url.",
-																						"detail": "User scope does not meet access requirements for http://0.0.0.0:8080/protected/",
-																						"instance": "http://0.0.0.0:8080/protected/",
-																						"code": 403
-																					}
-																			</code>
-																	</pre>
 																	<h3>User Defined Error Responses</h3>
 																	<h4 id="user_defined">User Defined Exceptions</h4>
 																	<pre>

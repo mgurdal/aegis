@@ -268,10 +268,11 @@
 										     --header 'Authorization: Bearer invalid_user_token'
 
 										{
-										    "type": "https://aiohttp_auth.com/probs/wrong_permission",
-										    "title": "You do not have access to this url.",
-										    "detail": "User scope does not have permission to reach to /protected",
-										    "instance": "/protected"
+											"type": "https://mgurdal.github.io/aiohttp_auth/docs.html#forbidden",
+											"title": "You do not have access to this url.",
+											"detail": "User scope does not meet access requirements for http://0.0.0.0:8080/protected/",
+											"instance": "http://0.0.0.0:8080/protected/",
+											"code": 403
 										}
 									</code>
 								</pre>
@@ -305,7 +306,6 @@
 											 --header 'Authorization: Bearer my_jwt_token' 
 
 										{
-											"exp": "1300819380",
 										  	"user_id": "5",
 										  	"name": "K Lars Lohn",
 										  	"scopes": [
