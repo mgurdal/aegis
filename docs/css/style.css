@@ -299,13 +299,13 @@ header {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 9;
-  margin: 0 auto; }
+  z-index: 9;}
   @media screen and (max-width: 768px) {
     header {
       padding: 2em 0; } }
   header .colorlib-navbar-brand {
-    float: left; }
+    float: left; 
+    flex-grow: 18; }
     header .colorlib-navbar-brand .colorlib-logo {
       font-size: 24px;
       text-transform: uppercase;
@@ -313,8 +313,7 @@ header {
       font-family: "Playfair Display", Georgia, serif;
       font-weight: 700;
       letter-spacing: 10px;
-      display: block;
-      text-align: center; }
+      display: block;}
       header .colorlib-navbar-brand .colorlib-logo:hover {
         text-decoration: none !important; }
       header .colorlib-navbar-brand .colorlib-logo:active, header .colorlib-navbar-brand .colorlib-logo:focus {
@@ -1209,4 +1208,13 @@ input[type="text"] {
 
 .owl-direction {
   background: gray;
+}
+
+.nav-container {
+  display: flex;
+  flex-direction: row;
+  align-content: space-around;
+}
+.navbar-left-item {
+  flex-grow: 1;
 }
