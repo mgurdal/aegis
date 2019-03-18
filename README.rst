@@ -18,14 +18,11 @@ aiohttp\_auth
 --------------
 
 Installation
-~~~~~~~~~~~~~~
-
+~~~~~~~~~~~~
 .. code:: bash
 
-    git clone https://github.com/mgurdal/aiohttp_auth.git
-    cd aiohttp_auth
-    python3 setup.py sdist
-    python3 -m pip install  dist/aiohttp_auth-0.0.2.tar.gz
+     python3 -m pip install -e git://github.com/mgurdal/aiohttp_auth.git@v0.0.2#egg=aiohttp_auth
+
 
 Simple Example
 ~~~~~~~~~~~~~~
@@ -65,3 +62,12 @@ Simple Example
     if __name__ == '__main__':
         app = create_app()
         web.run_app(app)
+
+Test
+~~~~~~~~~~~~~~
+
+.. code:: bash
+
+    git clone https://github.com/mgurdal/aiohttp_auth.git
+    cd aiohttp_auth
+    make cov
