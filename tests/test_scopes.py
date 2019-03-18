@@ -1,5 +1,5 @@
 from unittest.mock import patch
-
+from asynctest import patch as asyncpatch
 import pytest
 from aiohttp import web
 from aiohttp.test_utils import make_mocked_request
@@ -25,7 +25,8 @@ async def test_scopes_raises_TypeError_on_invalid_request():
 
 
 async def test_scopes_returns_403_if_not_has_permisions():
-    with patch('aiohttp_auth.auth.check_permissions') as check_permissions:
+    with asyncpatch(
+            'aiohttp_auth.auth.check_permissions') as check_permissions:
         check_permissions.return_value = False
         with patch('aiohttp_auth.auth.forbidden') as forbidden:
             forbidden.return_value.status = 403
@@ -44,7 +45,8 @@ async def test_scopes_returns_403_if_not_has_permisions():
 
 
 async def test_scopes_awaits_view_on_happy_path():
-    with patch('aiohttp_auth.auth.check_permissions') as check_permissions:
+    with asyncpatch(
+            'aiohttp_auth.auth.check_permissions') as check_permissions:
         check_permissions.return_value = True
 
         @auth.scopes('test_scope')
