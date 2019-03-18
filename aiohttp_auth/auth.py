@@ -1,32 +1,18 @@
 import functools
-from datetime import datetime, timedelta
+import inspect
 from typing import Callable, Union
 
 import jwt
 
 from aiohttp import web
-from aiohttp.web import json_response
-from aiohttp_auth.exceptions import UserDefinedException
 
-from .responses import (access_token, auth_required, error_response, forbidden,
+from .tokenizers import decode_jwt
+from .exceptions import UserDefinedException
+from .matching_algorithms import match_any, match_all, match_exact
+from .routes import make_auth_route, make_me_route
+
+from .responses import (auth_required, error_response, forbidden,
                         invalid_token, token_expired)
-
-
-async def generate_jwt(request: web.Request, payload: dict) -> str:
-    delta_seconds = request.app['aiohttp_auth'].duration
-    jwt_data = {
-        **payload,
-        'exp': datetime.utcnow() + timedelta(seconds=delta_seconds)
-    }
-
-    jwt_token = jwt.encode(
-        jwt_data,
-        request.app['aiohttp_auth'].jwt_secret,
-        request.app['aiohttp_auth'].jwt_algorithm
-    )
-    token = jwt_token.decode('utf-8')
-
-    return token
 
 
 def login_required(func):
@@ -42,24 +28,49 @@ def login_required(func):
     return wrapper
 
 
-def check_permissions(request: web.Request, scopes: Union[set, tuple]) -> bool:
+async def check_permissions(
+        request: web.Request,
+        scopes: Union[set, tuple],
+        algorithm: Union[str, Callable] = 'any') -> bool:
     # if a user injected into request by the auth_middleware
     user = getattr(request, 'user', None)
     has_permission = False
     if user:
-        # if a non-anonymous user tries to reach to
-        # a scoped endpoint
+        # if a non-anonymous user tries to reach to a scoped endpoint
         user_is_anonymous = user['scopes'] == ('anonymous_user',)
         if not user_is_anonymous:
-            user_scopes = set(request.user['scopes'])
-            required_scopes = set(scopes)
-            if user_scopes.intersection(required_scopes):
-                has_permission = True
+            if algorithm == 'any':
+                has_permission = match_any(
+                    required=scopes,
+                    provided=request.user['scopes']
+                )
 
+            elif algorithm == 'all':
+                has_permission = match_all(
+                    required=scopes,
+                    provided=request.user['scopes']
+                )
+            elif algorithm == 'exact':
+                has_permission = match_exact(
+                    required=scopes,
+                    provided=request.user['scopes']
+                )
+            elif inspect.isfunction(algorithm):
+                has_permission = algorithm(
+                    required=scopes,
+                    provided=request.user['scopes']
+                )
+            else:
+                raise TypeError(
+                    "Invalid algorithm type. "
+                    "Options 'all', 'any', 'exact', callable"
+                )
     return has_permission
 
 
-def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
+def scopes(
+        *required_scopes: Union[set, tuple],
+        algorithm='any') -> web.json_response:
     assert required_scopes, 'Cannot be used without any scope!'
 
     def request_handler(view: Callable) -> Callable:
@@ -68,7 +79,9 @@ def scopes(*required_scopes: Union[set, tuple]) -> web.json_response:
             if not isinstance(request, web.Request):
                 raise TypeError(F"Invalid Type '{type(request)}'")
 
-            has_permission = check_permissions(request, required_scopes)
+            has_permission = await check_permissions(
+                request, required_scopes, algorithm=algorithm
+            )
 
             if not has_permission:
                 return forbidden(request)
@@ -89,11 +102,7 @@ async def auth_middleware(request: web.Request, handler: Callable):
     if jwt_token:
         try:
             jwt_token = jwt_token.replace('Bearer ', '')
-            user = jwt.decode(
-                jwt_token,
-                request.app['aiohttp_auth'].jwt_secret,
-                algorithms=[request.app['aiohttp_auth'].jwt_algorithm]
-            )
+            user = decode_jwt(request, jwt_token)
             request.user = user
             return await handler(request)
 
@@ -112,36 +121,6 @@ async def auth_middleware(request: web.Request, handler: Callable):
         return forbidden(request)
     else:
         return await handler(request)
-
-
-def make_auth_route(authenticator):
-    async def auth_route(request: web.Request):
-        try:
-            user = await authenticator(request)
-        except UserDefinedException as ude:
-            return error_response(request, ude)
-
-        # use auth.login to generate a JWT token
-        # with some unique user information
-        token = await generate_jwt(request, user)
-
-        return access_token(token)
-
-    return auth_route
-
-
-def make_me_route():
-    async def me_route(request: web.Request):
-        user_authenticated = hasattr(request, 'user')
-        if user_authenticated:
-            user = request.user
-            # remove expiration date
-            user.pop('exp')
-            return json_response(request.user)
-        else:
-            return forbidden(request)
-
-    return me_route
 
 
 class JWTAuth:
