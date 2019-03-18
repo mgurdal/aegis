@@ -242,46 +242,31 @@
 														a class instance that can be converted to dict by using <b> dict(instance) </b>.
 														To demonstrate with code samples:
 														</p>
-														<div class="row">
-															<div class="col col-md-6 col-xs-12">
+														
 																<h3> Using dict </h3>
-																<pre style="height: 250px">
+																<pre>
 																	<code class="language-python">
 																	async def authenticate(request):
-																		user = {
-																				"user_id": "5",
-																				"name": "K Lars Lohn",
-																				"scopes": [
-																					"regular_user"
-																				]
-																			}	
-
+																		user = {"user_id": "5", "name": "K Lars Lohn"}
 																		return user
 
 																	</code>
 																</pre>
-															</div>
-															<div class="col col-md-6 col-xs-12">
+															
 																<h3> Using dataclasses </h3>
-																<pre style="height: 250px">
+																<pre>
 																	<code class="language-python">
 																	@dataclass
-																	class User
+																	class User:
 																		id: int
 																		name: str
-																		scopes: list
-																	
 
 																	async def authenticate(request):
-																		user = User(id=5, name="K Lars Lohn", scopes=["regular_user"])
-
+																		user = User(id=5, name="K Lars Lohn")
 																		return user
 																	</code>
 																</pre>
 																
-															</div>
-														</div>
-														<b/>
 														
 														<h3> Initialization </h3>
 														<p> Now we can add authentication to our application using the <b> auth.setup() </b> method. </p>
@@ -309,9 +294,181 @@
 														<p> And thats it! You have protected one of your end-points. aiohttp_auth also automatically creates some routes such as,
 														<b> auth/ </b> to log into the system and <b> me/ </b> to get the current user information.
 														</p>
+														<p>Whole codee</p>
+														<pre>
+															<code class="language-python">
+																	from aiohttp import web
+																	from aiohttp_auth import auth
+																	
+																	async def authenticate(request):
+																		user = { "id": "5", "name": "K Lars Lohn"}
+																		return user
+																	
+																	async def public(request):
+																		return web.json_response({'hello': 'public'})
+																
+																	@auth.login_required
+																	async def protected(request):
+																		return web.json_response({'hello': request.user['name']})
+																	
+																	app = web.Application()
+																	app.router.add_get('/protected', protected)
+																	auth.setup(app, authenticate, jwt_secret="test")
+																	web.run_app(app)
+															</code>
+														</pre>
 														<p>
-														How convenient is it!
+														How convenient!
 														</p>
+														<h3> Scoping </h3>
+														<pre>
+															<code class="language-python">
+																@auth.scopes('regular_user')
+																async def protected(request):
+																	return web.json_response({'hello': 'protected'})
+															</code>
+														</pre>
+														<p>
+															This is also equivalent to<b>scopes('regular_user',  algorithm='any')</b>
+															which opens the end-point for any user who has <b>'regular_user'</b> in his scopes. 
+														</p>
+														<p> We can use other pre-defined algorithms.
+														<code>algorithm='all'</code> opens the end-point to users who has all of the required scopes.
+														End-point is also open for users with more scopes than its required with <b>all</b> algorithm.
+														If you want to open the end-point for the users who have the same scopes with the end-point
+														you can use the <code>algorithm='exact'</code> .
+														</p>
+														<pre>
+																<code class="language-python">
+																	# match all users who has a superset of required scopes
+																	@auth.scopes('regular_user', algorithm='all')
+																	async def protected(request):
+																		return web.json_response({'hello': 'protected'})
+																	
+																	# match all users who has the exact scopes
+																	@auth.scopes('regular_user', algorithm='exact')
+																	async def protected(request):
+																		return web.json_response({'hello': 'protected'})
+															
+																</code>
+															</pre>
+															<p> You can also define your own matching algorithm.</p>
+															<pre>
+																	<code class="language-python">
+																		user = {
+																			'scopes': ('jack',)
+																		}
+																		
+																		def jacks_algorithm(required_scopes: Iterable, user_scopes: Iterable) -> bool:
+																			# required_scopes -> ('user', 'admin')
+																			# You can match the required and the provided (user's) scopes
+																			# however you want
+																			has_permission = 'jack' in user_scopes
+																			return has_permission
+																		
+																		@auth.scopes('user', 'admin', algorithm=jacks_algorithm)
+																		async def protected(request):
+																			return web.json_response({'hello': 'jack'})
+																
+																	</code>
+																</pre>
+																<h3>Built-in Error Responses</h3>
+																<h4 id="unauthorized">Authentication Required</h4>
+																<label> 401, UNAUTHORIZED </label>
+																<pre>
+																		<code class="language-json">
+																				{
+																					"type": "https://mgurdal.github.io/aiohttp_auth/docs.html#unauthorized",
+																					"title": "Authentication Required",
+																					"detail": "You did not specify the required token information in headers or you provided it incorrectly.",
+																					"instance": "http://0.0.0.0:8080/protected/",
+																					"code": 401
+																				}
+																		</code>
+																	</pre>
+
+																	<h4 id="invalid_token">Invalid Token</h4>
+																	<label> 400, BAD REQUEST </label>
+																	<pre>
+																			<code class="language-json">
+																					{
+																						"type": "https://mgurdal.github.io/aiohttp_auth/docs.html#invalid_token",
+																						"title": "Invalid Token",
+																						"detail": "You provided an invalid JWT signature.",
+																						"instance": "http://0.0.0.0:8080/protected/",
+																						"code": 400
+																					}
+																			</code>
+																		</pre>
+																
+																	<h4 id="token_expired">Invalid Token</h4>
+																	<label> 401, UNAUTHORIZED </label>
+																	<pre>
+																			<code class="language-json">
+																					{
+																						"type": "https://mgurdal.github.io/aiohttp_auth/docs.html#token_expired",
+																						"title": "Invalid Token",
+																						"detail": "The access token provided has expired.",
+																						"instance": "http://0.0.0.0:8080/protected/",
+																						"code": 401
+																					}
+																			</code>
+																		</pre>
+																	
+																	<h4 id="forbidden">You do not have access to this url.</h4>
+																	<label> 403, FORBIDDEN </label>
+																	<pre>
+																			<code class="language-json">
+																					{
+																						"type": "https://mgurdal.github.io/aiohttp_auth/docs.html#forbidden",
+																						"title": "You do not have access to this url.",
+																						"detail": "User scope does not meet access requirements for http://0.0.0.0:8080/protected/",
+																						"instance": "http://0.0.0.0:8080/protected/",
+																						"code": 403
+																					}
+																			</code>
+																	</pre>
+
+																	<h4 id="forbidden">You do not have access to this url.</h4>
+																	<label> 403, FORBIDDEN </label>
+																	<pre>
+																			<code class="language-json">
+																					{
+																						"type": "https://mgurdal.github.io/aiohttp_auth/docs.html#forbidden",
+																						"title": "You do not have access to this url.",
+																						"detail": "User scope does not meet access requirements for http://0.0.0.0:8080/protected/",
+																						"instance": "http://0.0.0.0:8080/protected/",
+																						"code": 403
+																					}
+																			</code>
+																	</pre>
+																	<h3>User Defined Error Responses</h3>
+																	<h4 id="user_defined">User Defined Exceptions</h4>
+																	<pre>
+																			<code class="language-python">
+																					class UserDoesNotExistsError(UserDefinedException):
+																						status = 404
+																						title = "User does not exists."
+																						detail = "We could not find the user with {name}"
+																					
+																					async def authenticate(request):
+																						raise UserDoesNotExistsError(name="K Lars Lohn")
+																					
+																			</code>
+
+																	</pre>
+																	<pre>
+
+																			<code class="language-json">
+																					{
+																						"type": "https://mgurdal.github.io/aiohttp_auth/docs.html#user_defined",
+																						"title": "User does not exists.",
+																						"detail": "We could not find the user with K Lars Lohn",
+																						"instance": "http://0.0.0.0:8080/protected/",
+																						"code": 404
+																					}
+																			</code>
+																	</pre>
 													</div>
 												</div>
 											</div>
