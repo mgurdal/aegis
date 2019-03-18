@@ -2,7 +2,9 @@ import jwt
 
 from aiohttp import web
 from aiohttp.test_utils import make_mocked_request
+
 from aiohttp_auth import auth
+from aiohttp_auth.tokenizers import generate_jwt
 
 
 async def test_generate_jwt_adds_expiration_date():
@@ -19,7 +21,7 @@ async def test_generate_jwt_adds_expiration_date():
     )
 
     payload = {'user_id': 4}
-    token = await auth.generate_jwt(
+    token = await generate_jwt(
         stub_request, payload
     )
 
