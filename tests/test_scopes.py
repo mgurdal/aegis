@@ -4,7 +4,7 @@ import pytest
 from aiohttp import web
 from aiohttp.test_utils import make_mocked_request
 from aiohttp_auth import auth
-from asynctest import patch as asyncpatch
+from asynctest import CoroutineMock
 
 
 async def test_scopes_cannot_be_initialized_withot_parameters():
@@ -26,37 +26,54 @@ async def test_scopes_raises_TypeError_on_invalid_request():
 
 
 async def test_scopes_returns_403_if_not_has_permisions():
-    with asyncpatch(
-            'aiohttp_auth.auth.check_permissions') as check_permissions:
-        check_permissions.return_value = False
-        with patch('aiohttp_auth.auth.forbidden') as forbidden:
-            forbidden.return_value.status = 403
+    with patch(
+            'aiohttp_auth.auth.ForbiddenException.make_response') as forbidden:
+        required_scopes = ('test_scope',)
+        provided_scopes = ()
 
-            @auth.scopes('test_scope')
-            async def test_view(request):
-                return web.json_response({})
-
-            stub_request = make_mocked_request(
-                'GET', '/', headers={'authorization': 'x'}
-            )
-            response = await test_view(stub_request)
-
-            assert response.status == 403
-            assert forbidden.called
-
-
-async def test_scopes_awaits_view_on_happy_path():
-    with asyncpatch(
-            'aiohttp_auth.auth.check_permissions') as check_permissions:
-        check_permissions.return_value = True
-
-        @auth.scopes('test_scope')
+        @auth.scopes(*required_scopes, algorithm='any')
         async def test_view(request):
             return web.json_response({})
 
         stub_request = make_mocked_request(
             'GET', '/', headers={'authorization': 'x'}
         )
-        response = await test_view(stub_request)
+        authenticator = CoroutineMock()
+        stub_request.app['aiohttp_auth'] = authenticator
+        authenticator.get_scopes = CoroutineMock(return_value=provided_scopes)
+        authenticator.check_permissions = CoroutineMock(return_value=False)
 
-        assert response.status == 200
+        await test_view(stub_request)
+
+        assert forbidden.awaited_once_with(stub_request)
+        assert authenticator.get_scopes.awaited_once_with(stub_request)
+        assert authenticator.get_scopes.awaited_once_with(
+            provided_scopes, required_scopes, 'any'
+        )
+
+
+async def test_scopes_awaits_view_on_happy_path():
+    with patch(
+            'aiohttp_auth.auth.ForbiddenException.make_response') as forbidden:
+        required_scopes = ('test_scope',)
+        provided_scopes = ()
+
+        @auth.scopes(*required_scopes)
+        async def test_view(request):
+            return web.json_response({})
+
+        stub_request = make_mocked_request(
+            'GET', '/', headers={'authorization': 'x'}
+        )
+        authenticator = CoroutineMock()
+        stub_request.app['aiohttp_auth'] = authenticator
+        authenticator.get_scopes = CoroutineMock(return_value=provided_scopes)
+        authenticator.check_permissions = CoroutineMock(return_value=True)
+
+        await test_view(stub_request)
+
+        assert authenticator.get_scopes.awaited_once_with(stub_request)
+        assert authenticator.get_scopes.awaited_once_with(
+            provided_scopes, required_scopes, 'any'
+        )
+        assert forbidden.not_awaited
