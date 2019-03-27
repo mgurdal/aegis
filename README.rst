@@ -68,6 +68,21 @@ Simple Example
        app = create_app()
        web.run_app(app)
 
+
+Get access token
+
+.. code:: bash
+
+   curl -X POST http://0.0.0.0:8080/auth -d '{"username": "david"}'
+
+Get user
+
+.. code:: bash
+
+   curl http://0.0.0.0:8080/me -H 'Authorization: Bearer <access_token>'
+
+
+
 Test
 ~~~~~~~~~~~~~~
 
@@ -76,3 +91,15 @@ Test
     git clone https://github.com/mgurdal/aiohttp_auth.git
     cd aiohttp_auth
     make cov
+
+Requirements
+~~~~~~~~~~~~
+
+- Python >= 3.6
+- aiohttp
+- PyJWT
+
+License
+~~~~~~~~
+
+``aiohttp_auth`` is offered under the Apache 2 license.
