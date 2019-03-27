@@ -76,3 +76,15 @@ Test
     git clone https://github.com/mgurdal/aiohttp_auth.git
     cd aiohttp_auth
     make cov
+
+Requirements
+~~~~~~~~~~~~
+
+- Python >= 3.6
+- aiohttp
+- PyJWT
+
+License
+~~~~~~~~
+
+``aiohttp_auth`` is offered under the Apache 2 license.
