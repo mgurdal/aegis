@@ -29,7 +29,7 @@ Simple Example
 
 .. code:: python
 
-    # examples/login_required.py
+   # examples/login_required.py
    from aiohttp_auth import auth
    from aiohttp_auth.authenticators.jwt import JWTAuth
 
