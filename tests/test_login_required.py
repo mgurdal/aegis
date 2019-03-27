@@ -19,15 +19,16 @@ async def test_login_required_raises_TypeError_on_invalid_request():
 
 
 async def test_login_required_handles_no_user():
+    with patch(
+            'aiohttp_auth.auth.AuthRequiredException.make_response'
+    ) as auth_required:
+        @auth.login_required
+        async def test_view(request):
+            return web.json_response({})
 
-    @auth.login_required
-    async def test_view(request):
-        return web.json_response({})
-
-    stub_request = make_mocked_request(
-        'GET', '/', headers={'authorization': 'x'}
-    )
-    with patch('aiohttp_auth.auth.auth_required') as auth_required:
+        stub_request = make_mocked_request(
+            'GET', '/', headers={'authorization': 'x'}
+        )
         auth_required.return_value.status = 401
         response = test_view(stub_request)
 
@@ -36,7 +37,6 @@ async def test_login_required_handles_no_user():
 
 
 async def test_login_required_returns_200_if_request_has_user():
-
     @auth.login_required
     async def test_view(request):
         return web.json_response({})
