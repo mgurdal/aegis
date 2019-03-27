@@ -29,39 +29,44 @@ Simple Example
 
 .. code:: python
 
-    # examples/login_required_simple.py
-    from aiohttp import web
-    from aiohttp_auth import auth
+    # examples/login_required.py
+   from aiohttp_auth import auth
+   from aiohttp_auth.authenticators.jwt import JWTAuth
 
 
-    async def authenticate(request):
-        user = {
-            'user_id': 5,
-            'name': 'K Lars Lohn'
-        }
-        return user
+   class MyAuth(JWTAuth):
+       jwt_secret = "test"
+
+       async def authenticate(self, request):
+           user = {
+               "user_id": "5",
+               "name": "K Lars Lohn",
+           }
+           return user
 
 
-    async def public(request):
-        return web.json_response({'hello': 'anonymous'})
+   async def public(request):
+       return web.json_response({'hello': 'anonymous'})
 
 
-    @auth.login_required
-    async def protected(request):
-        return web.json_response({'hello': 'user'})
+   @auth.login_required
+   async def protected(request):
+       return web.json_response({'hello': 'user'})
 
 
-    def create_app():
-        app = web.Application()
-        app.router.add_get('/public', public)
-        app.router.add_get('/protected', protected)
-        auth.setup(app, authenticate, jwt_secret="secret_token")
-        return app
+   def create_app():
+       app = web.Application()
+
+       app.router.add_get('/public', public)
+       app.router.add_get('/protected', protected)
+
+       MyAuth.setup(app)
+       return app
 
 
-    if __name__ == '__main__':
-        app = create_app()
-        web.run_app(app)
+   if __name__ == '__main__':
+       app = create_app()
+       web.run_app(app)
 
 Test
 ~~~~~~~~~~~~~~
