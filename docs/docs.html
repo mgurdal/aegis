@@ -382,7 +382,7 @@
 																					"title": "Authentication Required",
 																					"detail": "You did not specify the required token information in headers or you provided it incorrectly.",
 																					"instance": "http://0.0.0.0:8080/protected/",
-																					"code": 401
+																					"status": 401
 																				}
 																		</code>
 																	</pre>
@@ -396,11 +396,11 @@
 																						"title": "Invalid Token",
 																						"detail": "You provided an invalid JWT signature.",
 																						"instance": "http://0.0.0.0:8080/protected/",
-																						"code": 400
+																						"status": 400
 																					}
 																			</code>
 																		</pre>
-																
+
 																	<label> 401, UNAUTHORIZED </label>
 																	<pre>
 																			<code class="language-json">
@@ -409,11 +409,11 @@
 																						"title": "Invalid Token",
 																						"detail": "The access token provided has expired.",
 																						"instance": "http://0.0.0.0:8080/protected/",
-																						"code": 401
+																						"status": 401
 																					}
 																			</code>
 																		</pre>
-																	
+
 																	<h4 id="forbidden">You do not have access to this url.</h4>
 																	<label> 403, FORBIDDEN </label>
 																	<pre>
@@ -423,7 +423,7 @@
 																						"title": "You do not have access to this url.",
 																						"detail": "User scope does not meet access requirements for http://0.0.0.0:8080/protected/",
 																						"instance": "http://0.0.0.0:8080/protected/",
-																						"code": 403
+																						"status": 403
 																					}
 																			</code>
 																	</pre>
@@ -436,10 +436,10 @@
 																						status = 404
 																						title = "User does not exists."
 																						detail = "We could not find the user with {name}"
-																					
+
 																					async def authenticate(request):
 																						raise UserDoesNotExistsError(name="K Lars Lohn")
-																					
+
 																			</code>
 
 																	</pre>
@@ -451,7 +451,7 @@
 																						"title": "User does not exists.",
 																						"detail": "We could not find the user with K Lars Lohn",
 																						"instance": "http://0.0.0.0:8080/protected/",
-																						"code": 404
+																						"status": 404
 																					}
 																			</code>
 																	</pre>
