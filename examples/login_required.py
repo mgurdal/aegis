@@ -1,23 +1,24 @@
 from aiohttp import web
 from aiohttp_auth import auth
-
-DATABASE = {
-    'david': {'user_id': 5, 'scopes': ('regular_user', )}
-}
+from aiohttp_auth.authenticators.jwt import JWTAuth
 
 
-async def authenticate(request):
-    payload = await request.json()
-    user = DATABASE.get(payload['username'])
+class MyAuth(JWTAuth):
+    jwt_secret = "test"
 
-    return user
+    async def authenticate(self, request):
+        user = {
+            "user_id": "5",
+            "name": "K Lars Lohn",
+        }
+        return user
 
 
 async def public(request):
     return web.json_response({'hello': 'anonymous'})
 
 
-@auth.scopes('regular_user')
+@auth.login_required
 async def protected(request):
     return web.json_response({'hello': 'user'})
 
@@ -28,7 +29,7 @@ def create_app():
     app.router.add_get('/public', public)
     app.router.add_get('/protected', protected)
 
-    auth.setup(app, authenticate, jwt_secret="test")
+    MyAuth.setup(app)
     return app
 
 
