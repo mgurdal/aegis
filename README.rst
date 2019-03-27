@@ -68,6 +68,21 @@ Simple Example
        app = create_app()
        web.run_app(app)
 
+
+Get access token
+
+.. code:: bash
+
+   curl -X POST http://0.0.0.0:8080/auth -d '{"username": "david"}'
+
+Get user
+
+.. code:: bash
+
+   curl http://0.0.0.0:8080/me -H 'Authorization: Bearer <access_token>'
+
+
+
 Test
 ~~~~~~~~~~~~~~
 
