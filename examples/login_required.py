@@ -3,14 +3,17 @@ from aiohttp_auth import auth
 from aiohttp_auth.authenticators.jwt import JWTAuth
 
 
+DATABASE = {
+    'david': {'user_id': 5, 'scopes': ('regular_user',)}
+}
+
+
 class MyAuth(JWTAuth):
     jwt_secret = "test"
 
-    async def authenticate(self, request):
-        user = {
-            "user_id": "5",
-            "name": "K Lars Lohn",
-        }
+    async def authenticate(self, request: web.Request) -> dict:
+        payload = await request.json()
+        user = DATABASE.get(payload['username'])
         return user
 
 

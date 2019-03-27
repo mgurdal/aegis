@@ -1,22 +1,27 @@
 from aiohttp import web
-from aiohttp_auth import auth
-from aiohttp_auth.exceptions import UserDefinedException
+from aiohttp_auth.exceptions import AuthException
+from aiohttp_auth.authenticators.jwt import JWTAuth
 
 
-class UserDoesNotExistsError(UserDefinedException):
+class UserDoesNotExistsError(AuthException):
     status = 404
-    title = "User does not exists."
-    detail = "We could not find the user with {name}"
+
+    @staticmethod
+    def get_schema() -> dict:
+        return {"message":  "User does not exists."}
 
 
-async def authenticate(request):
-    raise UserDoesNotExistsError(name="K Lars Lohn")
+class MyAuth(JWTAuth):
+    jwt_secret = "secret"
+
+    async def authenticate(self, request):
+        raise UserDoesNotExistsError()
 
 
 def create_app():
     app = web.Application()
 
-    auth.setup(app, authenticate, jwt_secret="test")
+    MyAuth.setup(app)
     return app
 
 
