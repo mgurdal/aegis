@@ -9,9 +9,9 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import Command, find_packages, setup
-
 from aiohttp_auth import __version__
+
+from setuptools import Command, find_packages, setup
 
 # Package meta-data.
 NAME = 'aiohttp_auth'
@@ -22,7 +22,7 @@ AUTHOR = 'Mehmet Gurdal'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = __version__
 
-REQUIRED = ['aiohttp', ]
+REQUIRED = ['aiohttp', 'PyJWT']
 
 here = os.path.abspath(os.path.dirname(__file__))
 
