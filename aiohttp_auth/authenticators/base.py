@@ -48,7 +48,7 @@ class BaseAuthenticator(metaclass=ABCMeta):
 
     @abstractmethod
     async def decode(self, token: str) -> dict:
-        """Takes token and returns the user information as dict"""
+        """Rreturns the user information as dict"""
 
     @abstractmethod
     async def authenticate(self, request: web.Request):
@@ -56,13 +56,12 @@ class BaseAuthenticator(metaclass=ABCMeta):
 
     @abstractmethod
     async def get_scopes(self, request: web.Request):
-        """Takes returns user's permissions"""
+        """Returns user's permissions"""
 
     @classmethod
     def setup(cls, app, name='aiohttp_auth'):
         app.middlewares.append(auth_middleware)
         authenticator = cls()
-        print(authenticator)
         auth_route = make_auth_route(authenticator)
         me_route = make_me_route()
         app.router.add_post('/auth', auth_route)
