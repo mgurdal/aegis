@@ -30,18 +30,22 @@ Simple Example
 .. code:: python
 
    # examples/login_required.py
+   from aiohttp import web
    from aiohttp_auth import auth
    from aiohttp_auth.authenticators.jwt import JWTAuth
+
+
+   DATABASE = {
+       'david': {'id': 5, 'scopes': ('user',)}
+   }
 
 
    class MyAuth(JWTAuth):
        jwt_secret = "test"
 
-       async def authenticate(self, request):
-           user = {
-               "user_id": "5",
-               "name": "K Lars Lohn",
-           }
+       async def authenticate(self, request: web.Request) -> dict:
+           payload = await request.json()
+           user = DATABASE.get(payload['username'])
            return user
 
 
@@ -75,11 +79,17 @@ Get access token
 
    curl -X POST http://0.0.0.0:8080/auth -d '{"username": "david"}'
 
+
+   {"access_token": "<access_token>"}
+
 Get user
 
 .. code:: bash
 
    curl http://0.0.0.0:8080/me -H 'Authorization: Bearer <access_token>'
+
+
+   {"id": 5, "scopes": ["user"], "exp": 1553753859}
 
 
 
