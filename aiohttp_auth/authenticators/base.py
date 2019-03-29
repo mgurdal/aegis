@@ -48,7 +48,7 @@ class BaseAuthenticator(metaclass=ABCMeta):
 
     @abstractmethod
     async def decode(self, token: str) -> dict:
-        """Rreturns the user information as dict"""
+        """Returns the user information as dict"""
 
     @abstractmethod
     async def authenticate(self, request: web.Request):
