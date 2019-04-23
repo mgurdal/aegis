@@ -57,3 +57,9 @@ async def test_format_schema_formats_values():
 
     assert 'test_key' in result
     assert result['test_key'] == 'test_value'
+
+
+async def test_invalid_refresh_token_schema_returns_expected_fields():
+    expected_fields = {"type", "title", "detail", "instance", "status"}
+    schema = InvalidRefreshTokenException.get_schema()
+    assert set(schema) == expected_fields

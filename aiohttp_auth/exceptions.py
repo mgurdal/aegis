@@ -97,3 +97,20 @@ class ForbiddenException(AuthException):
             "instance": "{url}",
             "status": "{status}"
         }
+
+
+class InvalidRefreshTokenException(AuthException):
+    status = 400
+
+    @staticmethod
+    def get_schema() -> dict:
+        detail = "You provided an invalid refresh token."
+        doctype = ("https://mgurdal.github.io/aiohttp_auth/docs.html"
+                   "#invalid_token")
+        return {
+            "type": doctype,
+            "title": "Invalid Token",
+            "detail": detail,
+            "instance": "{url}",
+            "status": "{status}"
+        }
