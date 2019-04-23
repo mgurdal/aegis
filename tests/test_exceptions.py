@@ -1,27 +1,35 @@
 from unittest.mock import MagicMock, patch
 
 from aiohttp.test_utils import make_mocked_request
-from aiohttp_auth.exceptions import AuthException
+from aiohttp_auth.exceptions import AuthException, InvalidRefreshTokenException
 
 
-@patch('aiohttp_auth.exceptions.AuthException.get_schema')
-@patch('aiohttp_auth.exceptions.AuthException._format_schema')
-async def test_make_response_uses_get_schema(get_schema, _format_schema):
-    get_schema.return_value = {"test": True}
+async def test_make_response_uses_get_schema():
     # make a mock request
+    with patch(
+            'aiohttp_auth.exceptions.AuthException.get_schema'
+    ) as get_schema:
+        with patch(
+                'aiohttp_auth.exceptions.AuthException._format_schema'
+        ) as _format_schema:
+            with patch(
+                    'aiohttp_auth.exceptions.web'
+            ):
 
-    request = make_mocked_request('GET', '/')
+                get_schema.return_value = {"test": True}
 
-    class CustomException(AuthException):
-        status = 501
+                request = make_mocked_request('GET', '/')
 
-    CustomException.make_response(request)
-    assert get_schema.called
-    _format_schema.assert_called_with(
-        {"test": True},
-        url='/',
-        status=501
-    )
+                class CustomException(AuthException):
+                    status = 501
+
+                CustomException.make_response(request)
+                assert get_schema.called
+                _format_schema.assert_called_with(
+                    {"test": True},
+                    url=request.url,
+                    status=501
+                )
 
 
 async def test_format_schema_handles_keyerror():
