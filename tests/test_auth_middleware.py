@@ -144,3 +144,26 @@ async def test_auth_middleware_awaits_non_scope_views():
     )
     assert handler.awaited_once_with(stub_request)
     assert response
+
+
+async def test_auth_middleware_decodes_expired_refresh_token():
+
+    authenticator = CoroutineMock()
+    authenticator.refresh_token = True
+    authenticator.decode = CoroutineMock()
+
+    app = {'aiohttp_auth': authenticator}
+    # make a mock request for auth/refresh route
+    stub_request = make_mocked_request(
+        'POST', '/auth/refresh', app=app, headers={
+            "Authorization": "Bearer token"
+        }
+    )
+
+    handler = CoroutineMock(return_value='test')
+    response = await middlewares.auth_middleware(
+        stub_request, handler
+    )
+    assert handler.awaited_once_with(stub_request)
+    assert response
+    authenticator.decode.assert_called_with("Bearer token", verify=False)
