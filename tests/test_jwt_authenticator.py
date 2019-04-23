@@ -62,7 +62,9 @@ async def test_decode_removes_token_type_and_decodes_token():
         await auth.decode(token)
 
         decode.assert_called_once_with(
-            "test", auth.jwt_secret, algorithms=(auth.jwt_algorithm,)
+            "test", auth.jwt_secret,
+            algorithms=(auth.jwt_algorithm,),
+            options={'verify_exp': True}
         )
 
 
