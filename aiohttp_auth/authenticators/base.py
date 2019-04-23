@@ -4,13 +4,15 @@ from typing import Callable, Hashable, Iterable, Union
 
 from aiohttp import web
 
+from aiohttp_auth.middlewares import auth_middleware
+from aiohttp_auth.routes import make_auth_route, make_me_route
 from ..matching_algorithms import match_all, match_any, match_exact
-from ..middlewares import auth_middleware
-from ..routes import make_auth_route, make_me_route
 
 
 class BaseAuthenticator(metaclass=ABCMeta):
     type: str
+    me_endpoint = "/me"
+    auth_endpoint = "/auth"
 
     @staticmethod
     async def check_permissions(
@@ -62,8 +64,10 @@ class BaseAuthenticator(metaclass=ABCMeta):
     def setup(cls, app, name='aiohttp_auth'):
         app.middlewares.append(auth_middleware)
         authenticator = cls()
+
         auth_route = make_auth_route(authenticator)
         me_route = make_me_route()
-        app.router.add_post('/auth', auth_route)
-        app.router.add_get('/me', me_route)
+        app.router.add_post(authenticator.auth_endpoint, auth_route)
+        app.router.add_get(authenticator.me_endpoint, me_route)
+
         app[name] = authenticator
