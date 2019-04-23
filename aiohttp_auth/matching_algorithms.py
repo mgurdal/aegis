@@ -2,7 +2,7 @@ from typing import Hashable, Iterable
 
 
 def match_any(
-        required: Iterable[Hashable], provided: Iterable[Hashable])-> bool:
+        required: Iterable[Hashable], provided: Iterable[Hashable]) -> bool:
     required_scopes = set(required)
     provided_scopes = set(provided)
 
