@@ -88,8 +88,8 @@ async def test_check_permissions_returns_calls_custom_algorithm():
 
     assert has_permissions
     custom_mock.assert_called_once_with(
-        required=required_permissions,
-        provided=user_permissions
+        required_permissions,
+        user_permissions
     )
 
 
