@@ -56,8 +56,8 @@ class MyAuth(JWTAuth):
         # Generate refresh token for user
         refresh_token = str(uuid4()).replace("-", "")
 
-        # Register user's refresh token
         user = request.user
+        # Hold user's refresh token in somewhere persistent
         user = find_user_with_name(DATABASE, user["name"])
         user["refresh_token"] = refresh_token
 

@@ -21,7 +21,7 @@ Installation
 ~~~~~~~~~~~~
 .. code:: bash
 
-     pip install -e git://github.com/mgurdal/aiohttp_auth.git@v0.1.0#egg=aiohttp_auth
+     pip install -e git://github.com/mgurdal/aiohttp_auth.git@v0.2.0#egg=aiohttp_auth
 
 
 Simple Example
