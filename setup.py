@@ -14,9 +14,9 @@ from aegis import __version__
 from setuptools import Command, find_packages, setup
 
 # Package meta-data.
-NAME = 'aiohttp_auth'
+NAME = 'aegis'
 DESCRIPTION = "Authentication library for aiohttp"
-URL = 'https://github.com/mgurdal/aiohttp_auth'
+URL = 'https://github.com/mgurdal/aegis'
 EMAIL = 'mgurdal@protonmail.com'
 AUTHOR = 'Mehmet Gurdal'
 REQUIRES_PYTHON = '>=3.6.0'
