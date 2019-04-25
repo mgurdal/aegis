@@ -21,7 +21,7 @@ Installation
 ~~~~~~~~~~~~
 .. code:: bash
 
-     pip install -e git://github.com/mgurdal/aegis.git@v0.3.0#egg=aegis
+     pip install aegis
 
 
 Simple Example
