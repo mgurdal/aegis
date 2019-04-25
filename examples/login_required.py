@@ -1,6 +1,6 @@
 from aiohttp import web
-from aiohttp_auth import auth
-from aiohttp_auth.authenticators.jwt import JWTAuth
+from aegis import auth
+from aegis.authenticators.jwt import JWTAuth
 
 
 DATABASE = {

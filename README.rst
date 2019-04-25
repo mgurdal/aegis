@@ -1,18 +1,18 @@
-aiohttp\_auth
+aegis
 =============
 
 |Python 3.6| |travis-badge| |coveralls| |codefactor grade|
 
 .. |Python 3.6| image:: https://img.shields.io/badge/python-3.6-brightgreen.svg
    :target: https://www.python.org/downloads/release/python-360
-.. |codefactor grade| image:: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge
-   :target: https://www.codefactor.io/repository/github/mgurdal/aiohttp_auth/badge
-.. |travis-badge| image:: https://travis-ci.org/mgurdal/aiohttp_auth.svg?branch=master
-   :target: https://travis-ci.org/mgurdal/aiohttp_auth
-.. |coveralls| image:: https://coveralls.io/repos/github/mgurdal/aiohttp_auth/badge.svg?branch=master
-   :target: https://coveralls.io/github/mgurdal/aiohttp_auth?branch=master
+.. |codefactor grade| image:: https://www.codefactor.io/repository/github/mgurdal/aegis/badge
+   :target: https://www.codefactor.io/repository/github/mgurdal/aegis/badge
+.. |travis-badge| image:: https://travis-ci.org/mgurdal/aegis.svg?branch=master
+   :target: https://travis-ci.org/mgurdal/aegis
+.. |coveralls| image:: https://coveralls.io/repos/github/mgurdal/aegis/badge.svg?branch=master
+   :target: https://coveralls.io/github/mgurdal/aegis?branch=master
    
-**aiohttp\_auth** allows to **protect endpoints** and also provides
+**aegis** allows to **protect endpoints** and also provides
 **authentication scoping**.
 
 --------------
@@ -21,7 +21,7 @@ Installation
 ~~~~~~~~~~~~
 .. code:: bash
 
-     pip install -e git://github.com/mgurdal/aiohttp_auth.git@v0.3.0#egg=aiohttp_auth
+     pip install -e git://github.com/mgurdal/aegis.git@v0.3.0#egg=aegis
 
 
 Simple Example
@@ -31,8 +31,8 @@ Simple Example
 
    # examples/login_required.py
    from aiohttp import web
-   from aiohttp_auth import auth
-   from aiohttp_auth.authenticators.jwt import JWTAuth
+   from aegis import auth
+   from aegis.authenticators.jwt import JWTAuth
 
 
    DATABASE = {
@@ -98,8 +98,8 @@ Test
 
 .. code:: bash
 
-    git clone https://github.com/mgurdal/aiohttp_auth.git
-    cd aiohttp_auth
+    git clone https://github.com/mgurdal/aegis.git
+    cd aegis
     make cov
 
 Requirements
@@ -112,4 +112,4 @@ Requirements
 License
 ~~~~~~~~
 
-``aiohttp_auth`` is offered under the Apache 2 license.
+``aegis`` is offered under the Apache 2 license.

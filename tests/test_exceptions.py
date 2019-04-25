@@ -1,19 +1,19 @@
 from unittest.mock import MagicMock, patch
 
 from aiohttp.test_utils import make_mocked_request
-from aiohttp_auth.exceptions import AuthException, InvalidRefreshTokenException
+from aegis.exceptions import AuthException, InvalidRefreshTokenException
 
 
 async def test_make_response_uses_get_schema():
     # make a mock request
     with patch(
-            'aiohttp_auth.exceptions.AuthException.get_schema'
+            'aegis.exceptions.AuthException.get_schema'
     ) as get_schema:
         with patch(
-                'aiohttp_auth.exceptions.AuthException._format_schema'
+                'aegis.exceptions.AuthException._format_schema'
         ) as _format_schema:
             with patch(
-                    'aiohttp_auth.exceptions.web'
+                    'aegis.exceptions.web'
             ):
 
                 get_schema.return_value = {"test": True}

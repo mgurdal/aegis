@@ -1,7 +1,7 @@
 from aiohttp.test_utils import make_mocked_request
-from aiohttp_auth.exceptions import (AuthException, AuthRequiredException,
-                                     ForbiddenException, InvalidTokenException,
-                                     TokenExpiredException)
+from aegis.exceptions import (AuthException, AuthRequiredException,
+                              ForbiddenException, InvalidTokenException,
+                              TokenExpiredException)
 
 
 async def test_auth_required():

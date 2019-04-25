@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 from aiohttp import web
 from aiohttp.test_utils import make_mocked_request
-from aiohttp_auth import auth
+from aegis import auth
 
 
 async def test_login_required_raises_TypeError_on_invalid_request():
@@ -20,7 +20,7 @@ async def test_login_required_raises_TypeError_on_invalid_request():
 
 async def test_login_required_handles_no_user():
     with patch(
-            'aiohttp_auth.auth.AuthRequiredException.make_response'
+            'aegis.auth.AuthRequiredException.make_response'
     ) as auth_required:
         @auth.login_required
         async def test_view(request):

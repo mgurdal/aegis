@@ -1,6 +1,6 @@
 from aiohttp import web
-from aiohttp_auth.exceptions import AuthException
-from aiohttp_auth.authenticators.jwt import JWTAuth
+from aegis.exceptions import AuthException
+from aegis.authenticators.jwt import JWTAuth
 
 
 class UserDoesNotExistsError(AuthException):

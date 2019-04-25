@@ -5,7 +5,7 @@ from typing import Dict, Any
 
 from aiohttp import web
 
-from aiohttp_auth.exceptions import InvalidTokenException
+from aegis.exceptions import InvalidTokenException
 from .base import BaseAuthenticator
 
 

@@ -3,13 +3,13 @@ from unittest.mock import MagicMock, patch
 
 import jwt
 import pytest
-from aiohttp_auth.authenticators.jwt import JWTAuth
-from aiohttp_auth.exceptions import (InvalidTokenException,
-                                     TokenExpiredException)
+from aegis.authenticators.jwt import JWTAuth
+from aegis.exceptions import (InvalidTokenException,
+                              TokenExpiredException)
 
 
 async def test_decode_raises_invalid_token_exception_on_decode_error():
-    with patch('aiohttp_auth.authenticators.jwt.jwt.decode') as decode:
+    with patch('aegis.authenticators.jwt.jwt.decode') as decode:
         decode.side_effect = jwt.DecodeError()
 
         class TestJWTAuth(JWTAuth):
@@ -29,7 +29,7 @@ async def test_decode_raises_invalid_token_exception_on_decode_error():
 
 
 async def test_decode_raises_token_expired_exception_expired_signature():
-    with patch('aiohttp_auth.authenticators.jwt.jwt.decode') as decode:
+    with patch('aegis.authenticators.jwt.jwt.decode') as decode:
         decode.side_effect = jwt.ExpiredSignatureError()
 
         class TestJWTAuth(JWTAuth):
@@ -49,7 +49,7 @@ async def test_decode_raises_token_expired_exception_expired_signature():
 
 
 async def test_decode_removes_token_type_and_decodes_token():
-    with patch('aiohttp_auth.authenticators.jwt.jwt.decode') as decode:
+    with patch('aegis.authenticators.jwt.jwt.decode') as decode:
         class TestJWTAuth(JWTAuth):
             jwt_secret = ""
 
@@ -69,8 +69,8 @@ async def test_decode_removes_token_type_and_decodes_token():
 
 
 async def test_encode_encodes_payload_with_expiration_date():
-    with patch('aiohttp_auth.authenticators.jwt.jwt.encode') as encode:
-        with patch('aiohttp_auth.authenticators.jwt.datetime') as mockdate:
+    with patch('aegis.authenticators.jwt.jwt.encode') as encode:
+        with patch('aegis.authenticators.jwt.datetime') as mockdate:
             mockdate.utcnow.return_value = datetime(2017, 1, 1)
             mockdate.side_effect = lambda *args, **kw: mockdate(*args, **kw)
 

@@ -3,11 +3,11 @@ requires = ["flit"]
 build-backend = "flit.buildapi"
 
 [tool.flit.metadata]
-module = "aiohttp_auth"
+module = "aegis"
 author = "Mehmet Gurdal"
 author-email = "mgurdal@protonmail.com"
-home-page = "https://github.com/mgurdal/aiohttp_auth"
-requires=["aiohttp >= 3.2.0"]
+home-page = "https://github.com/mgurdal/aegis"
+requires=["aiohttp >= 3.2.0", "PyJWT == 1.7.1"]
 requires-python=">=3.5"
 description-file="README.rst"
 classifiers = ["License :: OSI Approved :: Apache Software License",
@@ -23,7 +23,7 @@ classifiers = ["License :: OSI Approved :: Apache Software License",
 ]
 
 [tool.towncrier]
-package = "aiohttp_auth"
+package = "aegis"
 filename = "CHANGES.rst"
 directory = "CHANGES/"
 title_format = "{version} ({project_date})"

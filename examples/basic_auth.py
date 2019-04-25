@@ -1,7 +1,7 @@
 from aiohttp import web
-from aiohttp_auth import auth
-from aiohttp_auth.authenticators.basic import BasicAuth
-from aiohttp_auth.exceptions import AuthRequiredException
+from aegis import auth
+from aegis.authenticators.basic import BasicAuth
+from aegis.exceptions import AuthRequiredException
 
 DATABASE = {
     'david': {

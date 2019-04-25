@@ -4,8 +4,8 @@ from typing import Callable, Hashable, Iterable, Union
 
 from aiohttp import web
 
-from aiohttp_auth.middlewares import auth_middleware
-from aiohttp_auth.routes import make_auth_route, make_me_route
+from aegis.middlewares import auth_middleware
+from aegis.routes import make_auth_route, make_me_route
 from ..matching_algorithms import match_all, match_any, match_exact
 
 
@@ -60,7 +60,7 @@ class BaseAuthenticator(metaclass=ABCMeta):
         """Returns user's permissions"""
 
     @classmethod
-    def setup(cls, app, name='aiohttp_auth'):
+    def setup(cls, app, name='authenticator'):
         app.middlewares.append(auth_middleware)
         authenticator = cls()
         if authenticator.auth_endpoint:

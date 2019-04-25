@@ -1,5 +1,5 @@
 """
-aiohttp_auth allows to protect endpoints
+aegis allows to protect endpoints
 and also provides authentication scoping.
 """
 

@@ -3,8 +3,8 @@ from unittest.mock import MagicMock
 
 from aiohttp import web
 from aiohttp.test_utils import make_mocked_request
-from aiohttp_auth.exceptions import AuthException
-from aiohttp_auth.routes import make_auth_route, make_me_route, \
+from aegis.exceptions import AuthException
+from aegis.routes import make_auth_route, make_me_route, \
     make_refresh_route
 from asynctest import CoroutineMock, patch
 
@@ -103,7 +103,7 @@ async def test_me_route_uses_forbidden_exception_if_not_authenticated():
     """
     stub_request = make_mocked_request('GET', '/')
     me_route = make_me_route()
-    with patch('aiohttp_auth.routes.ForbiddenException.make_response') as fe:
+    with patch('aegis.routes.ForbiddenException.make_response') as fe:
         fe.return_value.status = 403
 
         await me_route(stub_request)
@@ -152,7 +152,7 @@ async def test_refresh_route_renews_access_token():
     )
 
     # bypass login
-    with patch('aiohttp_auth.routes.login_required', lambda x: x):
+    with patch('aegis.routes.login_required', lambda x: x):
         refresh_route = make_refresh_route(authenticator)
         token_payload = await refresh_route(stub_request)
 
@@ -182,9 +182,9 @@ async def test_refresh_returns_bad_request_if_refresh_token_invalid():
         return_value=False
     )
 
-    with patch('aiohttp_auth.routes.InvalidRefreshTokenException') as irte:
+    with patch('aegis.routes.InvalidRefreshTokenException') as irte:
         # bypass login
-        with patch('aiohttp_auth.routes.login_required', lambda x: x):
+        with patch('aegis.routes.login_required', lambda x: x):
             irte.make_response = MagicMock()
             refresh_route = make_refresh_route(authenticator)
             await refresh_route(stub_request)

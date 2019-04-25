@@ -9,7 +9,7 @@ import os
 import sys
 from shutil import rmtree
 
-from aiohttp_auth import __version__
+from aegis import __version__
 
 from setuptools import Command, find_packages, setup
 

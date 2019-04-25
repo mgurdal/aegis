@@ -30,7 +30,7 @@ def scopes(
             if not isinstance(request, web.Request):
                 raise TypeError(F"Invalid Type '{type(request)}'")
 
-            authenticator = request.app['aiohttp_auth']
+            authenticator = request.app['authenticator']
 
             provided_scopes = await authenticator.get_scopes(request)
             has_permission = await authenticator.check_permissions(

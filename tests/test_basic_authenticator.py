@@ -3,12 +3,12 @@ from unittest.mock import patch
 
 import pytest
 
-from aiohttp_auth.authenticators.basic import BasicAuth
-from aiohttp_auth.exceptions import InvalidTokenException
+from aegis.authenticators.basic import BasicAuth
+from aegis.exceptions import InvalidTokenException
 
 
 async def test_decode_raises_invalid_token_exception_on_decode_error():
-    with patch('aiohttp_auth.authenticators.basic.base64.b64decode') as decode:
+    with patch('aegis.authenticators.basic.base64.b64decode') as decode:
         decode.side_effect = binascii.Error()
 
         class TestBasicAuth(BasicAuth):
@@ -28,7 +28,7 @@ async def test_decode_raises_invalid_token_exception_on_decode_error():
 
 
 async def test_decode_returns_credentials_with_default_keys():
-    with patch('aiohttp_auth.authenticators.basic.base64.b64decode') as decode:
+    with patch('aegis.authenticators.basic.base64.b64decode') as decode:
         credentials = b"test:test"
         decode.return_value = credentials
 
@@ -49,7 +49,7 @@ async def test_decode_returns_credentials_with_default_keys():
 
 
 async def test_decode_returns_credentials_with_altered_keys():
-    with patch('aiohttp_auth.authenticators.basic.base64.b64decode') as decode:
+    with patch('aegis.authenticators.basic.base64.b64decode') as decode:
         credentials = b"test:test"
         decode.return_value = credentials
 
@@ -72,7 +72,7 @@ async def test_decode_returns_credentials_with_altered_keys():
 
 
 async def test_decode_passes_verify_parameter_into_decoder():
-    with patch('aiohttp_auth.authenticators.basic.base64.b64decode') as decode:
+    with patch('aegis.authenticators.basic.base64.b64decode') as decode:
         credentials = b"test:test"
         decode.return_value = credentials
 

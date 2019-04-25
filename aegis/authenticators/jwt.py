@@ -61,7 +61,7 @@ class JWTAuth(BaseAuthenticator):
         """Returns JSON serializable user"""
 
     @classmethod
-    def setup(cls, app, name='aiohttp_auth'):
+    def setup(cls, app, name='authenticator'):
         super().setup(app, name=name)
         authenticator = app[name]
 

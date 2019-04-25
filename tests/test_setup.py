@@ -1,6 +1,6 @@
 import pytest
 from aiohttp import web
-from aiohttp_auth.authenticators.jwt import JWTAuth
+from aegis.authenticators.jwt import JWTAuth
 
 
 async def test_setup_requires_authenticate_method():
@@ -25,7 +25,7 @@ async def test_setup_injects_jwt_auth():
 
     TestAuth.setup(app)
 
-    assert 'aiohttp_auth' in app
+    assert 'authenticator' in app
 
 
 async def test_setup_raises_error_if_refresh_token_true_and_no_method():

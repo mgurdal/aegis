@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 from aiohttp import web
 from aiohttp.test_utils import make_mocked_request
-from aiohttp_auth import auth
+from aegis import auth
 from asynctest import CoroutineMock
 
 
@@ -27,7 +27,7 @@ async def test_scopes_raises_TypeError_on_invalid_request():
 
 async def test_scopes_returns_403_if_not_has_permisions():
     with patch(
-            'aiohttp_auth.auth.ForbiddenException.make_response') as forbidden:
+            'aegis.auth.ForbiddenException.make_response') as forbidden:
         required_scopes = ('test_scope',)
         provided_scopes = ()
 
@@ -39,7 +39,7 @@ async def test_scopes_returns_403_if_not_has_permisions():
             'GET', '/', headers={'authorization': 'x'}
         )
         authenticator = CoroutineMock()
-        stub_request.app['aiohttp_auth'] = authenticator
+        stub_request.app['authenticator'] = authenticator
         authenticator.get_scopes = CoroutineMock(return_value=provided_scopes)
         authenticator.check_permissions = CoroutineMock(return_value=False)
 
@@ -54,7 +54,7 @@ async def test_scopes_returns_403_if_not_has_permisions():
 
 async def test_scopes_awaits_view_on_happy_path():
     with patch(
-            'aiohttp_auth.auth.ForbiddenException.make_response') as forbidden:
+            'aegis.auth.ForbiddenException.make_response') as forbidden:
         required_scopes = ('test_scope',)
         provided_scopes = ()
 
@@ -66,7 +66,7 @@ async def test_scopes_awaits_view_on_happy_path():
             'GET', '/', headers={'authorization': 'x'}
         )
         authenticator = CoroutineMock()
-        stub_request.app['aiohttp_auth'] = authenticator
+        stub_request.app['authenticator'] = authenticator
         authenticator.get_scopes = CoroutineMock(return_value=provided_scopes)
         authenticator.check_permissions = CoroutineMock(return_value=True)
 

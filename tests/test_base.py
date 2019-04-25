@@ -1,14 +1,14 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from aiohttp_auth.authenticators.base import BaseAuthenticator
+from aegis.authenticators.base import BaseAuthenticator
 
 
 async def test_check_permissions_returns_uses_any_match_as_default():
     user_permissions = ('super_user',)
 
     required_permissions = ('super_user',)
-    with patch('aiohttp_auth.authenticators.base.match_any') as match_any:
+    with patch('aegis.authenticators.base.match_any') as match_any:
         has_permissions = await BaseAuthenticator.check_permissions(
             user_permissions, required_permissions
         )
@@ -24,7 +24,7 @@ async def test_check_permissions_returns_with_calls_any_match_algorithm():
     user_permissions = ('regular_user',)
 
     required_permissions = ('super_user', 'regular_user')
-    with patch('aiohttp_auth.authenticators.base.match_any') as match_any:
+    with patch('aegis.authenticators.base.match_any') as match_any:
         has_permissions = await BaseAuthenticator.check_permissions(
             user_permissions, required_permissions, algorithm='any'
         )
@@ -41,7 +41,7 @@ async def test_check_permissions_returns_calls_all_match_algorithm():
 
     required_permissions = ('super_user', 'regular_user')
 
-    with patch('aiohttp_auth.authenticators.base.match_all') as match_all:
+    with patch('aegis.authenticators.base.match_all') as match_all:
         match_all.return_value = True
         has_permissions = await BaseAuthenticator.check_permissions(
             user_permissions, required_permissions, algorithm='all'
@@ -59,7 +59,7 @@ async def test_check_permissions_returns_calls_exact_match_algorithm():
 
     required_permissions = ('super_user', 'regular_user')
 
-    with patch('aiohttp_auth.authenticators.base.match_exact') as match_exact:
+    with patch('aegis.authenticators.base.match_exact') as match_exact:
         match_exact.return_value = True
         has_permissions = await BaseAuthenticator.check_permissions(
             user_permissions, required_permissions, algorithm='exact'
