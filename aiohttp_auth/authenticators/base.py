@@ -10,9 +10,8 @@ from ..matching_algorithms import match_all, match_any, match_exact
 
 
 class BaseAuthenticator(metaclass=ABCMeta):
-    type: str
-    me_endpoint = "/me"
-    auth_endpoint = "/auth"
+    me_endpoint: Union[str, None] = "/me"
+    auth_endpoint: Union[str, None] = "/auth"
 
     @staticmethod
     async def check_permissions(
@@ -38,8 +37,8 @@ class BaseAuthenticator(metaclass=ABCMeta):
             )
         elif inspect.isfunction(algorithm):
             has_permission = algorithm(
-                required=required_scopes,
-                provided=user_scopes
+                required_scopes,
+                user_scopes
             )
         else:
             raise TypeError(
@@ -64,10 +63,12 @@ class BaseAuthenticator(metaclass=ABCMeta):
     def setup(cls, app, name='aiohttp_auth'):
         app.middlewares.append(auth_middleware)
         authenticator = cls()
+        if authenticator.auth_endpoint:
+            auth_route = make_auth_route(authenticator)
+            app.router.add_post(authenticator.auth_endpoint, auth_route)
 
-        auth_route = make_auth_route(authenticator)
-        me_route = make_me_route()
-        app.router.add_post(authenticator.auth_endpoint, auth_route)
-        app.router.add_get(authenticator.me_endpoint, me_route)
+        if authenticator.me_endpoint:
+            me_route = make_me_route()
+            app.router.add_get(authenticator.me_endpoint, me_route)
 
         app[name] = authenticator
