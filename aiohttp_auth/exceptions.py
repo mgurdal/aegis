@@ -52,7 +52,7 @@ class InvalidTokenException(AuthException):
 
     @staticmethod
     def get_schema() -> dict:
-        detail = "You provided an invalid JWT signature."
+        detail = "You have provided an invalid token signature."
         doctype = ("https://mgurdal.github.io/aiohttp_auth/docs.html"
                    "#invalid_token")
         return {
@@ -104,7 +104,7 @@ class InvalidRefreshTokenException(AuthException):
 
     @staticmethod
     def get_schema() -> dict:
-        detail = "You provided an invalid refresh token."
+        detail = "You have provided an invalid refresh token."
         doctype = ("https://mgurdal.github.io/aiohttp_auth/docs.html"
                    "#invalid_token")
         return {
