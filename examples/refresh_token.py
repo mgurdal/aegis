@@ -1,8 +1,7 @@
 from uuid import uuid4
 
 from aiohttp import web
-from aegis import decorators
-from aegis.authenticators.jwt import JWTAuth
+from aegis import decorators, JWTAuth
 
 
 def find_user_with_name(database: dict, name: str) -> dict:
@@ -16,7 +15,7 @@ def find_user_with_name(database: dict, name: str) -> dict:
 
 
 class MyAuth(JWTAuth):
-    jwt_secret: str = "test"
+    jwt_secret: str = "<secret>"
     refresh_token: bool = True
     duration: int = 5  # short expiration date
 

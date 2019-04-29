@@ -1,7 +1,5 @@
 from aiohttp import web
-from aegis import decorators
-from aegis.authenticators.basic import BasicAuth
-from aegis.exceptions import AuthRequiredException
+from aegis import decorators, BasicAuth, AuthRequiredException
 
 
 class AuthenticationFailedException(AuthRequiredException):

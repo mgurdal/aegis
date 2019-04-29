@@ -19,7 +19,7 @@ implement authentication logic, decorate routes.
 
 Create an authenticator:
 ```python
-from aegis.authenticators.jwt import JWTAuth
+from aegis import JWTAuth
 
 class JWTAuthenticator(JWTAuth):
     jwt_secret = "<secret>"
@@ -56,8 +56,7 @@ Let's collect it altogether into very small but still functional
 example:
 ```python
     from aiohttp import web
-    from aegis.decorators import login_required
-    from aegis.authenticators.jwt import JWTAuth
+    from aegis import login_required, JWTAuth
 
 
     class JWTAuthenticator(JWTAuth):

@@ -21,7 +21,7 @@ credentials.
 * *staticmethod* **`get_schema() -> dict`**
 
 ```python
-from aegis.exceptions import AuthRequiredException
+from aegis import AuthRequiredException
 
 schema = AuthRequiredException.get_schema()
 
@@ -52,7 +52,7 @@ Raise exception if user uses an invalid access token.
 * *staticmethod* **`get_schema() -> dict`**
 
 ```python
-from aegis.exceptions import InvalidTokenException
+from aegis import InvalidTokenException
 
 schema = InvalidTokenException.get_schema()
 
@@ -83,7 +83,7 @@ Raise exception if user uses an expired access token.
 * *staticmethod* **`get_schema() -> dict`**
 
 ```python
-from aegis.exceptions import TokenExpiredException
+from aegis import TokenExpiredException
 
 schema = TokenExpiredException.get_schema()
 
@@ -113,7 +113,7 @@ Raise exception if user uses an invalid refresh token.
 * *staticmethod* **`get_schema() -> dict`**
 
 ```python
-from aegis.exceptions import InvalidRefreshTokenException
+from aegis import InvalidRefreshTokenException
 
 schema = InvalidRefreshTokenException.get_schema()
 
@@ -144,7 +144,7 @@ Raise exception if user tries to authenticate with invalid credentials.
 * *staticmethod* **`get_schema() -> dict`**
 
 ```python
-from aegis.exceptions import AuthenticationFailedException
+from aegis import AuthenticationFailedException
 
 schema = AuthenticationFailedException.get_schema()
 
@@ -176,7 +176,7 @@ Raise exception if user tries to reach to an end-point without permissions.
 * *staticmethod* **`get_schema() -> dict`**
 
 ```python
-from aegis.exceptions import ForbiddenException
+from aegis import ForbiddenException
 
 schema = ForbiddenException.get_schema()
 

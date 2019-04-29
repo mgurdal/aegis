@@ -1,10 +1,9 @@
 from aiohttp import web
-from aegis import decorators
-from aegis.authenticators.jwt import JWTAuth
+from aegis import decorators, JWTAuth
 
 
 class MyAuth(JWTAuth):
-    jwt_secret = "test"
+    jwt_secret = "<secret>"
 
     async def authenticate(self, request: web.Request) -> dict:
         payload = await request.json()

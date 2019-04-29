@@ -1,10 +1,9 @@
 from aiohttp import web
-from aegis.exceptions import AuthException
-from aegis.authenticators.jwt import JWTAuth
+from aegis import AuthException, JWTAuth
 
 
 class UserDoesNotExistsError(AuthException):
-    status = 404
+    status = 401
 
     @staticmethod
     def get_schema() -> dict:
@@ -12,7 +11,7 @@ class UserDoesNotExistsError(AuthException):
 
 
 class MyAuth(JWTAuth):
-    jwt_secret = "secret"
+    jwt_secret = "<secret>"
 
     async def authenticate(self, request):
         raise UserDoesNotExistsError()

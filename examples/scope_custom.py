@@ -1,6 +1,5 @@
 from aiohttp import web
-from aegis import decorators
-from aegis.authenticators.jwt import JWTAuth
+from aegis import decorators, JWTAuth
 
 
 class MyAuth(JWTAuth):

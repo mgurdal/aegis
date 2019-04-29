@@ -11,7 +11,7 @@ If not authenticated user tries to reach to a `login_required` end-point returns
 
 ```python
 # server
-from aegis.decorators import login_required
+from aegis import login_required
 
 @login_required
 async def protected(request):
@@ -49,7 +49,7 @@ In this case end-point is also open for users who has a superset of required per
 You can also implement your own matching algorithm and use with scopes.
 
 ```python
-from aegis.decorators import scopes
+from aegis import scopes
 
 def lenght_algorithm(required_scopes: Iterable, user_scopes: Iterable) -> bool:
     """

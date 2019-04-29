@@ -3,7 +3,7 @@
 **aegis** provides endpoint protection and authentication scoping for
 aiohttp.
 
-Current version is 0.3.1.
+Current version is 0.4.0.
 
 ## Installation
 
@@ -16,8 +16,7 @@ $ pip3 install aegis
 ### Basic Authentication
 ```python
 from aiohttp import web
-from aegis.decorators import login_required
-from aegis.authenticators.basic import BasicAuth
+from aegis import login_required, BasicAuth
 
 class BasicAuthenticator(BasicAuth):
 
@@ -42,8 +41,7 @@ web.run_app(app)
 
 ```python
 from aiohttp import web
-from aegis.decorators import login_required
-from aegis.authenticators.jwt import JWTAuth
+from aegis import login_required, JWTAuth
 
 
 class JWTAuthenticator(JWTAuth):
