@@ -1,0 +1,18 @@
+site_name: Aegis
+site_description: Authentication and permission scoping for aiohttp.
+
+nav:
+    - Home: index.md
+    - Quick Start: quickstart.md
+    - Authenticators: authenticators.md
+    - Decorators: decorators.md
+    - Exceptions: exceptions.md
+    - Routes: routes.md
+    - Middlewares: middlewares.md
+    - Testing: testing.md
+
+theme:
+  name: 'material'
+
+markdown_extensions:
+  - codehilite

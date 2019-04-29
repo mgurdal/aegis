@@ -22,12 +22,7 @@ flake: .flake
 test: flake
 	@pytest tests
 
-
 cov: flake
 	@PYTHONASYNCIODEBUG=1 pytest --cov=aegis tests
 	@pytest --cov=aegis --cov-append --cov-report=html --cov-report=term tests
 	@echo "open file://`pwd`/htmlcov/index.html"
-
-doc:
-	@make -C docs html SPHINXOPTS="-W -E"
-	@echo "open file://`pwd`/docs/_build/html/index.html"
