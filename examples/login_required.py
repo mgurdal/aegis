@@ -1,41 +1,41 @@
 from aiohttp import web
-from aegis import auth
+from aegis import decorators
 from aegis.authenticators.jwt import JWTAuth
 
 
-DATABASE = {
-    'david': {'user_id': 5, 'scopes': ('regular_user',)}
-}
-
-
-class MyAuth(JWTAuth):
+class JWTAuthenticator(JWTAuth):
     jwt_secret = "test"
 
     async def authenticate(self, request: web.Request) -> dict:
+        # You can get the request payload of the /auth route
         payload = await request.json()
-        user = DATABASE.get(payload['username'])
+
+        # Assuming the name parameter send in the request payload
+        searched_name = payload["name"]
+
+        # fetch the user from your storage
+        db = request.app["db"]
+        user = db.get(searched_name, None)
+
+        # return the JSON serializable user
         return user
 
 
-async def public(request):
-    return web.json_response({'hello': 'anonymous'})
-
-
-@auth.login_required
+@decorators.login_required
 async def protected(request):
     return web.json_response({'hello': 'user'})
 
 
-def create_app():
+if __name__ == "__main__":
     app = web.Application()
 
-    app.router.add_get('/public', public)
-    app.router.add_get('/protected', protected)
+    database = {
+        'david': {'id': 5}
+    }
+    app["db"] = database
 
-    MyAuth.setup(app)
-    return app
+    app.router.add_get('/', protected)
 
+    JWTAuthenticator.setup(app)
 
-if __name__ == '__main__':
-    app = create_app()
     web.run_app(app)

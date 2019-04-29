@@ -1,15 +1,8 @@
 from uuid import uuid4
 
 from aiohttp import web
-from aegis import auth
+from aegis import decorators
 from aegis.authenticators.jwt import JWTAuth
-
-DATABASE = {
-    5: {
-        'name': 'david',
-        'refresh_token': None
-    }
-}
 
 
 def find_user_with_name(database: dict, name: str) -> dict:
@@ -29,7 +22,7 @@ class MyAuth(JWTAuth):
 
     async def authenticate(self, request: web.Request) -> dict:
         payload = await request.json()
-        user = find_user_with_name(DATABASE, payload["name"])
+        user = find_user_with_name(request.app["db"], payload["name"])
         return user
 
     async def validate_refresh_token(
@@ -45,7 +38,7 @@ class MyAuth(JWTAuth):
         user = request.user
 
         # Get user's refresh token from database
-        user = find_user_with_name(DATABASE, user["name"])
+        user = find_user_with_name(request.app["db"], user["name"])
         expected_token = user["refresh_token"]
 
         if provided_token != expected_token:
@@ -58,7 +51,7 @@ class MyAuth(JWTAuth):
 
         user = request.user
         # Hold user's refresh token in somewhere persistent
-        user = find_user_with_name(DATABASE, user["name"])
+        user = find_user_with_name(request.app["db"], user["name"])
         user["refresh_token"] = refresh_token
 
         return refresh_token
@@ -68,13 +61,21 @@ async def public(request):
     return web.json_response({'hello': 'anonymous'})
 
 
-@auth.login_required
+@decorators.login_required
 async def protected(request):
     return web.json_response({'hello': 'user'})
 
 
 def create_app():
     app = web.Application()
+
+    database = {
+        5: {
+            'name': 'david',
+            'refresh_token': None
+        }
+    }
+    app["db"] = database
 
     app.router.add_get('/public', public)
     app.router.add_get('/protected', protected)

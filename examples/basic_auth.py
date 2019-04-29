@@ -1,15 +1,7 @@
 from aiohttp import web
-from aegis import auth
+from aegis import decorators
 from aegis.authenticators.basic import BasicAuth
 from aegis.exceptions import AuthRequiredException
-
-DATABASE = {
-    'david': {
-        'user_id': 5,
-        'scopes': ('regular_user',),
-        'password': 'test'
-    }
-}
 
 
 class AuthenticationFailedException(AuthRequiredException):
@@ -39,7 +31,7 @@ class MyAuth(BasicAuth):
         username = credentials.get("username")
         password = credentials.get("password")
 
-        user = DATABASE.get(username)
+        user = request.app["db"].get(username)
         if not user or user["password"] != password:
             raise AuthenticationFailedException()
 
@@ -52,13 +44,22 @@ async def public(request):
     return web.json_response({'hello': 'anonymous'})
 
 
-@auth.login_required
+@decorators.login_required
 async def protected(request):
     return web.json_response({'hello': 'user'})
 
 
 def create_app():
     app = web.Application()
+
+    database = {
+        'david': {
+            'user_id': 5,
+            'scopes': ('regular_user',),
+            'password': 'test'
+        }
+    }
+    app["db"] = database
 
     app.router.add_get('/public', public)
     app.router.add_get('/protected', protected)

@@ -1,10 +1,6 @@
 from aiohttp import web
-from aegis import auth
+from aegis import decorators
 from aegis.authenticators.jwt import JWTAuth
-
-DATABASE = {
-    'david': {'user_id': 5, 'scopes': ('regular_user',)}
-}
 
 
 class MyAuth(JWTAuth):
@@ -12,7 +8,7 @@ class MyAuth(JWTAuth):
 
     async def authenticate(self, request: web.Request) -> dict:
         payload = await request.json()
-        user = DATABASE.get(payload['username'])
+        user = request.app["db"].get(payload['username'])
         return user
 
 
@@ -20,13 +16,18 @@ async def public(request):
     return web.json_response({'hello': 'anonymous'})
 
 
-@auth.scopes('regular_user')
+@decorators.scopes('regular_user')
 async def protected(request):
     return web.json_response({'hello': 'user'})
 
 
 def create_app():
     app = web.Application()
+
+    database = {
+        'david': {'user_id': 5, 'scopes': ('user',)}
+    }
+    app["db"] = database
 
     app.router.add_get('/public', public)
     app.router.add_get('/protected', protected)
