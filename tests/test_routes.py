@@ -9,6 +9,26 @@ from aegis.routes import make_auth_route, make_me_route, \
 from asynctest import CoroutineMock, patch
 
 
+async def test_auth_route_returns_auth_failed_if_not_user():
+    with patch(
+            'aegis.routes.AuthException.make_response'
+    ) as auth_required:
+        stub_request = make_mocked_request('GET', '/')
+
+        stub_user = {}
+        authenticator = CoroutineMock()
+        authenticator.refresh_token = False
+        authenticator.authenticate = CoroutineMock(return_value=stub_user)
+        encoder = authenticator.encode = CoroutineMock(return_value="token")
+
+        auth_route = make_auth_route(authenticator)
+        await auth_route(stub_request)
+
+        assert encoder.encode.awaited_once_with(stub_user)
+        assert authenticator.authenticate.awaited_once_with(stub_request)
+        assert auth_required.called_once_with(stub_request)
+
+
 async def test_auth_route_only_returns_access_token_if_not_refresh():
     stub_request = make_mocked_request('GET', '/')
 
@@ -95,20 +115,6 @@ async def test_me_route_returns_user_information():
 
     assert user_response.status == 200
     assert user_payload == stub_user
-
-
-async def test_me_route_uses_forbidden_exception_if_not_authenticated():
-    """
-    Test me route returns 403, Forbidden if user is not authenticated.
-    """
-    stub_request = make_mocked_request('GET', '/')
-    me_route = make_me_route()
-    with patch('aegis.routes.ForbiddenException.make_response') as fe:
-        fe.return_value.status = 403
-
-        await me_route(stub_request)
-
-        assert fe.awaited_once_with(stub_request)
 
 
 async def test_auth_route_adds_refresh_token_if_activated():

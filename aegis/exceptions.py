@@ -6,6 +6,9 @@ class AuthException(Exception):
 
     @classmethod
     def make_response(cls, request: web.Request):
+        """
+        Creates a response based on exception schema.
+        """
         schema = cls.get_schema()
         payload = cls._format_schema(schema, url=request.url,
                                      status=cls.status)
@@ -19,6 +22,9 @@ class AuthException(Exception):
 
     @staticmethod
     def _format_schema(schema: dict, **kwargs) -> dict:
+        """
+        Formats response schema placeholders with given key-word arguments.
+        """
         result = {}
         for name, value in schema.items():
             try:
@@ -48,7 +54,8 @@ class AuthRequiredException(AuthException):
 
 
 class InvalidTokenException(AuthException):
-    status = 400
+    """Raise exception if user uses an invalid token."""
+    status = 401
 
     @staticmethod
     def get_schema() -> dict:
@@ -65,6 +72,7 @@ class InvalidTokenException(AuthException):
 
 
 class TokenExpiredException(AuthException):
+    """Raise exception if user uses an expired token."""
     status = 401
 
     @staticmethod
@@ -92,7 +100,7 @@ class ForbiddenException(AuthException):
 
         return {
             "type": doctype,
-            "title": "You do not have access to this url.",
+            "title": "Forbidden Access",
             "detail": detail,
             "instance": "{url}",
             "status": "{status}"
@@ -110,6 +118,23 @@ class InvalidRefreshTokenException(AuthException):
         return {
             "type": doctype,
             "title": "Invalid Token",
+            "detail": detail,
+            "instance": "{url}",
+            "status": "{status}"
+        }
+
+
+class AuthenticationFailedException(AuthException):
+    status = 401
+
+    @staticmethod
+    def get_schema() -> dict:
+        detail = "The credentials you supplied were not correct."
+        doctype = ("https://mgurdal.github.io/aiohttp_auth/docs.html"
+                   "#unauthorized")
+        return {
+            "type": doctype,
+            "title": "Authentication failed.",
             "detail": detail,
             "instance": "{url}",
             "status": "{status}"

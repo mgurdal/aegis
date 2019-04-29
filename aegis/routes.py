@@ -1,30 +1,33 @@
 from aiohttp import web
 
-from .auth import login_required
-from .exceptions import (AuthException, ForbiddenException,
-                         InvalidRefreshTokenException)
+from .decorators import login_required
+from .exceptions import (AuthException, InvalidRefreshTokenException,
+                         AuthenticationFailedException)
 
 
 def make_auth_route(authenticator):
     async def auth_route(request: web.Request):
+        """
+        User authentication route.
+        """
         try:
             user = await authenticator.authenticate(request)
+            if not user:
+                raise AuthenticationFailedException()
             request.user = user
+            token = await authenticator.encode(user)
+            token_payload = {
+                "access_token": token
+            }
+            if authenticator.refresh_token:
+                token_payload["refresh_token"] = (
+                    await authenticator.get_refresh_token(request)
+                )
+
+            return web.json_response(token_payload, status=200)
+
         except AuthException as ae:
             return ae.make_response(request)
-
-        # use auth.login to generate a JWT token
-        # with some unique user information
-        token = await authenticator.encode(user)
-        token_payload = {
-            "access_token": token
-        }
-        if authenticator.refresh_token:
-            token_payload[
-                "refresh_token"] = await authenticator.get_refresh_token(
-                request)
-
-        return web.json_response(token_payload, status=200)
 
     return auth_route
 
