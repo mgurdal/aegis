@@ -7,7 +7,10 @@ from .exceptions import AuthRequiredException, ForbiddenException
 
 
 def login_required(func):
-
+    """
+    If not authenticated user tries to reach to a `login_required` end-point
+    returns UNAUTHORIZED response.
+    """
     def wrapper(request):
         if not isinstance(request, web.Request):
             raise TypeError(F"Invalid Type '{type(request)}'")
@@ -22,6 +25,10 @@ def login_required(func):
 def scopes(
         *required_scopes: Union[set, tuple],
         algorithm='any') -> web.json_response:
+
+    """
+    Open the end-point for any user who has the permission to access.
+    """
     assert required_scopes, 'Cannot be used without any scope!'
 
     def request_handler(view: Callable) -> Callable:
