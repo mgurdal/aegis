@@ -19,7 +19,7 @@ async def test_invalid_token():
     )
     resp = InvalidTokenException.make_response(stub_request)
 
-    assert resp.status == 400
+    assert resp.status == 401
 
 
 async def test_token_expired():
