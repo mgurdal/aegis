@@ -33,12 +33,9 @@ def make_auth_route(authenticator):
 
 
 def make_me_route():
+    @login_required
     async def me_route(request: web.Request):
-        user_authenticated = hasattr(request, 'user')
-        if user_authenticated:
-            return web.json_response(request.user)
-        else:
-            return ForbiddenException.make_response(request)
+        return web.json_response(request.user)
 
     return me_route
 
