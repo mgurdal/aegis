@@ -1,5 +1,12 @@
 site_name: Aegis
 site_description: Authentication and permission scoping for aiohttp.
+site_author: Mehmet Gürdal
+site_url: https://mgurdal.github.io/aegis/
+
+# Repository
+repo_name: mgurdal/aegis
+repo_url: https://github.com/mgurdal/aegis
+edit_uri: ""
 
 nav:
     - Home: index.md
@@ -10,6 +17,15 @@ nav:
     - Routes: routes.md
     - Middlewares: middlewares.md
     - Testing: testing.md
+
+extra:
+  social:
+    - type: github-alt
+      link: https://github.com/mgurdal
+    - type: twitter
+      link: https://twitter.com/mgurdal_
+    - type: linkedin
+      link: https://linkedin.com/in/mgurdal
 
 theme:
   name: 'material'
