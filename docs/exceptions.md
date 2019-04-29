@@ -4,7 +4,7 @@ Exceptions
 Pre-defined authentication and authorization exceptions.
 
 ---------
-AuthRequiredException
+[AuthRequiredException](#AuthRequiredException)
 ---------
 
 ``aegis.exceptions.AuthRequiredException``
@@ -26,7 +26,7 @@ from aegis.exceptions import AuthRequiredException
 schema = AuthRequiredException.get_schema()
 
 assert schema == {
-    "type": "https://mgurdal.github.io/aegis/api.html#AuthRequiredException",
+    "type": "https://mgurdal.github.io/aegis/exceptions/#AuthRequiredException",
     "title": "Authentication Required",
     "detail": "You did not specify the required token information in headers or you provided it incorrectly.",
     "instance": "{url}",
@@ -36,7 +36,7 @@ assert schema == {
 
 
 ---------
-InvalidTokenException
+[InvalidTokenException](#InvalidTokenException)
 ---------
 
 ``aegis.exceptions.InvalidTokenException``
@@ -57,7 +57,7 @@ from aegis.exceptions import InvalidTokenException
 schema = InvalidTokenException.get_schema()
 
 assert schema == {
-    "type": "https://mgurdal.github.io/aegis/api.html#InvalidTokenException",
+    "type": "https://mgurdal.github.io/aegis/exceptions/#InvalidTokenException",
     "title": "Invalid Token",
     "detail": "You have provided an invalid token signature.",
     "instance": "{url}",
@@ -67,7 +67,7 @@ assert schema == {
 
 
 ---------
-TokenExpiredException
+[TokenExpiredException](#TokenExpiredException)
 ---------
 
 ``aegis.exceptions.TokenExpiredException``
@@ -88,7 +88,7 @@ from aegis.exceptions import TokenExpiredException
 schema = TokenExpiredException.get_schema()
 
 assert schema == {
-    "type": "https://mgurdal.github.io/aegis/api.html#TokenExpiredException",
+    "type": "https://mgurdal.github.io/aegis/exceptions/#TokenExpiredException",
     "title": "Invalid Token",
     "detail": "The access token provided has expired.",
     "instance": "{url}",
@@ -96,9 +96,8 @@ assert schema == {
  }
 ```
 
-
 ---------
-InvalidRefreshTokenException
+[InvalidRefreshTokenException](#InvalidRefreshTokenException)
 ---------
 
 ``aegis.exceptions.InvalidRefreshTokenException``
@@ -119,7 +118,7 @@ from aegis.exceptions import InvalidRefreshTokenException
 schema = InvalidRefreshTokenException.get_schema()
 
 assert schema == {
-    "type": "https://mgurdal.github.io/aegis/api.html#InvalidRefreshTokenException",
+    "type": "https://mgurdal.github.io/aegis/exceptions/#InvalidRefreshTokenException",
     "title": "Invalid Token",
     "detail": "You have provided an invalid refresh token.",
     "instance": "{url}",
@@ -129,7 +128,7 @@ assert schema == {
 
 
 ---------
-AuthenticationFailedException
+[AuthenticationFailedException](#AuthenticationFailedException)
 ---------
 
 ``aegis.exceptions.AuthenticationFailedException``
@@ -150,7 +149,7 @@ from aegis.exceptions import AuthenticationFailedException
 schema = AuthenticationFailedException.get_schema()
 
 assert schema == {
-    "type": "https://mgurdal.github.io/aegis/api.html#AuthenticationFailedException",
+    "type": "https://mgurdal.github.io/aegis/exceptions/#AuthenticationFailedException",
     "title": "Authentication Failed",
     "detail": "The credentials you supplied were not correct.",
     "instance": "{url}",
@@ -160,7 +159,7 @@ assert schema == {
 
 
 ---------
-ForbiddenException
+[ForbiddenException](#ForbiddenException)
 ---------
 
 ``aegis.exceptions.ForbiddenException``
@@ -182,7 +181,7 @@ from aegis.exceptions import ForbiddenException
 schema = ForbiddenException.get_schema()
 
 assert schema == {
-    "type": "https://mgurdal.github.io/aegis/api.html#ForbiddenException",
+    "type": "https://mgurdal.github.io/aegis/exceptions/#ForbiddenException",
     "title": "Forbidden Access",
     "detail": "User permissions does not meet access requests for {url}",
     "instance": "{url}",

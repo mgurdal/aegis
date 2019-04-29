@@ -42,8 +42,8 @@ class AuthRequiredException(AuthException):
     def get_schema() -> dict:
         detail = ("You did not specify the required token information "
                   "in headers or you provided it incorrectly.")
-        doctype = ("https://mgurdal.github.io/aiohttp_auth/docs.html"
-                   "#unauthorized")
+        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
+                   "#AuthRequiredException")
         return {
             "type": doctype,
             "title": "Authentication Required",
@@ -60,8 +60,8 @@ class InvalidTokenException(AuthException):
     @staticmethod
     def get_schema() -> dict:
         detail = "You have provided an invalid token signature."
-        doctype = ("https://mgurdal.github.io/aiohttp_auth/docs.html"
-                   "#invalid_token")
+        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
+                   "#InvalidTokenException")
         return {
             "type": doctype,
             "title": "Invalid Token",
@@ -78,8 +78,8 @@ class TokenExpiredException(AuthException):
     @staticmethod
     def get_schema() -> dict:
         detail = "The access token provided has expired."
-        doctype = ("https://mgurdal.github.io/aiohttp_auth/docs.html"
-                   "#token_expired")
+        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
+                   "#TokenExpiredException")
 
         return {
             "type": doctype,
@@ -96,7 +96,8 @@ class ForbiddenException(AuthException):
     @staticmethod
     def get_schema() -> dict:
         detail = "User scope does not meet access requests for {url}"
-        doctype = "https://mgurdal.github.io/aiohttp_auth/docs.html#forbidden"
+        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
+                   "#ForbiddenException")
 
         return {
             "type": doctype,
@@ -113,8 +114,8 @@ class InvalidRefreshTokenException(AuthException):
     @staticmethod
     def get_schema() -> dict:
         detail = "You have provided an invalid refresh token."
-        doctype = ("https://mgurdal.github.io/aiohttp_auth/docs.html"
-                   "#invalid_token")
+        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
+                   "#InvalidRefreshTokenException")
         return {
             "type": doctype,
             "title": "Invalid Token",
@@ -130,8 +131,8 @@ class AuthenticationFailedException(AuthException):
     @staticmethod
     def get_schema() -> dict:
         detail = "The credentials you supplied were not correct."
-        doctype = ("https://mgurdal.github.io/aiohttp_auth/docs.html"
-                   "#unauthorized")
+        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
+                   "#AuthenticationFailedException")
         return {
             "type": doctype,
             "title": "Authentication failed.",
