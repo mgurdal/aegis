@@ -18,7 +18,8 @@ class JWTAuth(BaseAuthenticator):
     refresh_endpoint = "/auth/refresh"
 
     async def decode(self, jwt_token: str, verify=True) -> dict:
-
+        """Decodes the given token and returns as a dict.
+        Raises validation exceptions if verify is set to True."""
         try:
             jwt_token = jwt_token.replace('Bearer ', '')
             payload = jwt.decode(
@@ -37,6 +38,7 @@ class JWTAuth(BaseAuthenticator):
             raise TokenExpiredException()
 
     async def encode(self, payload: dict) -> str:
+        """Encodes the given payload and returns as a string."""
         delta_seconds = self.duration
         jwt_data = {
             **payload,
@@ -61,9 +63,9 @@ class JWTAuth(BaseAuthenticator):
         """Returns JSON serializable user"""
 
     @classmethod
-    def setup(cls, app, name='authenticator'):
-        super().setup(app, name=name)
-        authenticator = app[name]
+    def setup(cls, app):
+        super().setup(app)
+        authenticator = app["authenticator"]
 
         if authenticator.refresh_token:
             if not hasattr(authenticator, 'get_refresh_token'):

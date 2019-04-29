@@ -7,7 +7,8 @@ from .exceptions import AuthException
 
 @web.middleware
 async def auth_middleware(request: web.Request, handler: Callable):
-    authenticator = request.app.get('aiohttp_auth')
+    """Handles token decoding, failed authorization responses,  """
+    authenticator = request.app.get('authenticator')
     if not authenticator:
         raise AttributeError('Please initialize aiohttp_auth first.')
 

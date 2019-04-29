@@ -30,7 +30,7 @@ async def test_auth_middleware_uses_auth_exception_if_token_invalid():
     authenticator = CoroutineMock()
     authenticator.decode = CoroutineMock(side_effect=auth_exception)
 
-    app = {'aiohttp_auth': authenticator}
+    app = {'authenticator': authenticator}
     token = 'x'
     # make a mock request
     stub_request = make_mocked_request(
@@ -56,7 +56,7 @@ async def test_auth_middleware_handles_non_scope_views():
     authenticator = CoroutineMock()
     authenticator.decode = CoroutineMock()
 
-    app = {'aiohttp_auth': authenticator}
+    app = {'authenticator': authenticator}
     token = 'x'
     # make a mock request
     stub_request = make_mocked_request(
@@ -81,7 +81,7 @@ async def test_auth_middleware_awaits_scoped_views():
     authenticator = CoroutineMock()
     authenticator.decode = CoroutineMock()
 
-    app = {'aiohttp_auth': authenticator}
+    app = {'authenticator': authenticator}
     token = 'x'
     # make a mock request
     stub_request = make_mocked_request(
@@ -106,7 +106,7 @@ async def test_auth_middleware_injects_user():
     authenticator = CoroutineMock()
     authenticator.decode = CoroutineMock(return_value=user)
 
-    app = {'aiohttp_auth': authenticator}
+    app = {'authenticator': authenticator}
     token = 'x'
     # make a mock request
     stub_request = make_mocked_request(
@@ -132,7 +132,7 @@ async def test_auth_middleware_awaits_non_scope_views():
     authenticator = CoroutineMock()
     authenticator.decode = CoroutineMock(side_effect=auth_exception)
 
-    app = {'aiohttp_auth': authenticator}
+    app = {'authenticator': authenticator}
     # make a mock request
     stub_request = make_mocked_request(
         'GET', '/', app=app
@@ -152,7 +152,7 @@ async def test_auth_middleware_decodes_expired_refresh_token():
     authenticator.refresh_token = True
     authenticator.decode = CoroutineMock()
 
-    app = {'aiohttp_auth': authenticator}
+    app = {'authenticator': authenticator}
     # make a mock request for auth/refresh route
     stub_request = make_mocked_request(
         'POST', '/auth/refresh', app=app, headers={

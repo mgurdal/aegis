@@ -60,7 +60,7 @@ class BaseAuthenticator(metaclass=ABCMeta):
         """Returns user's permissions"""
 
     @classmethod
-    def setup(cls, app, name='authenticator'):
+    def setup(cls, app):
         app.middlewares.append(auth_middleware)
         authenticator = cls()
         if authenticator.auth_endpoint:
@@ -71,4 +71,4 @@ class BaseAuthenticator(metaclass=ABCMeta):
             me_route = make_me_route()
             app.router.add_get(authenticator.me_endpoint, me_route)
 
-        app[name] = authenticator
+        app["authenticator"] = authenticator
