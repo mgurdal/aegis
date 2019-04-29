@@ -47,21 +47,21 @@ Implement the authentication logic:
 
 Decorate route:
 ```python
-    @auth.login_required
-    async def protected(request):
-        return web.json_response({'hello': 'user'})
+@login_required
+async def protected(request):
+    return web.json_response({'hello': 'user'})
 ```
 
 Let's collect it altogether into very small but still functional
 example:
 ```python
     from aiohttp import web
-    from aegis import auth
+    from aegis.decorators import login_required
     from aegis.authenticators.jwt import JWTAuth
 
 
     class JWTAuthenticator(JWTAuth):
-        jwt_secret = "test"
+        jwt_secret = "<secret>"
 
         async def authenticate(self, request: web.Request) -> dict:
             # You can get the request payload of the /auth route
@@ -77,7 +77,7 @@ example:
             # return the JSON serializable user
             return user
 
-    @auth.login_required
+    @login_required
     async def protected(request):
         return web.json_response({'hello': 'user'})
 
@@ -117,7 +117,7 @@ If everything goes OK we will get the access\_token as response.
 }
 ```
 
-Otherwise we will get one of the pre-defined UNAUTHORIZED response. :
+Otherwise we will get one of the pre-defined UNAUTHORIZED responses:
 ```json
 {
     "type": "https://mgurdal.github.io/aiohttp_auth/docs.html#unauthorized",
@@ -127,18 +127,12 @@ Otherwise we will get one of the pre-defined UNAUTHORIZED response. :
     "status": "401"
 }
 ```
-We can use the access token to reach to the protected route. :
+We can use the access token to reach to the protected route:
 ```bash
 curl http://0.0.0.0:8080/ -H 'Authorization: Bearer eyJ...'
 ```
 ```json
 {"hello": "user"}
 ```
+
 That's pretty much it.
-
-Future reading
---------------
-
-For more info about library design and principles read aegis-intro.
-
-API reference is here: aegis-api.
