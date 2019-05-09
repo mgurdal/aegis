@@ -33,54 +33,50 @@ Simple Example
 
 .. code:: python
 
-   # examples/login_required.py
    from aiohttp import web
-   from aegis import decorators
-   from aegis.authenticators.jwt import JWTAuth
+   from aegis import login_required, JWTAuth
 
 
    class JWTAuthenticator(JWTAuth):
-       jwt_secret = "test"
+       jwt_secret = "<secret>"
 
        async def authenticate(self, request: web.Request) -> dict:
-           # You can get the request payload of the /auth route
-           payload = await request.json()
-
-           # Assuming the name parameter send in the request payload
-           searched_name = payload["name"]
-
-           # fetch the user from your storage
            db = request.app["db"]
-           user = db.get(searched_name, None)
-
-           # return the JSON serializable user
+           credentials = await request.json()
+           id_ = credentials["id"]
+           user = db.get(id_)
            return user
 
 
-   @decorators.login_required
+   @login_required
    async def protected(request):
        return web.json_response({'hello': 'user'})
 
 
-   if __name__ == "__main__":
+   def create_app():
        app = web.Application()
-
-       database = {
-           'david': {'id': 5}
+       app["db"] = {
+           5: {
+               "name": "test"
+           }
        }
-       app["db"] = database
-
-       app.router.add_get('/', protected)
+       app.router.add_get('/protected', protected)
 
        JWTAuthenticator.setup(app)
 
+       return app
+
+
+   if __name__ == "__main__":
+       app = create_app()
        web.run_app(app)
+
 
 Get access token
 
 .. code:: bash
 
-   curl -X POST http://0.0.0.0:8080/auth -d '{"username": "david"}'
+   curl -X POST http://0.0.0.0:8080/auth -d '{"id": 5}'
 
 
    {"access_token": "<access_token>"}
@@ -89,10 +85,10 @@ Get user
 
 .. code:: bash
 
-   curl http://0.0.0.0:8080/me -H 'Authorization: Bearer <access_token>'
+   curl http://0.0.0.0:8080/protected -H 'Authorization: Bearer <access_token>'
 
 
-   {"id": 5, "scopes": ["user"], "exp": 1553753859}
+   {'hello': 'user'}
 
 
 
