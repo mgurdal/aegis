@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from aiohttp import web
-from aegis import decorators, JWTAuth
+from aegis import JWTAuth, login_required
 
 
 def find_user_with_name(database: dict, name: str) -> dict:
@@ -14,10 +14,10 @@ def find_user_with_name(database: dict, name: str) -> dict:
         return user_query[0]
 
 
-class MyAuth(JWTAuth):
+class JWTAuthenticator(JWTAuth):
     jwt_secret: str = "<secret>"
-    refresh_token: bool = True
-    duration: int = 5  # short expiration date
+    refresh_token: bool = True  # enables refresh token feature
+    duration: int = 3  # short expiration date
 
     async def authenticate(self, request: web.Request) -> dict:
         payload = await request.json()
@@ -50,17 +50,14 @@ class MyAuth(JWTAuth):
 
         user = request.user
         # Hold user's refresh token in somewhere persistent
-        user = find_user_with_name(request.app["db"], user["name"])
+        request.app["db"][user["id"]]["refresh_token"] = refresh_token
+
         user["refresh_token"] = refresh_token
 
         return refresh_token
 
 
-async def public(request):
-    return web.json_response({'hello': 'anonymous'})
-
-
-@decorators.login_required
+@login_required
 async def protected(request):
     return web.json_response({'hello': 'user'})
 
@@ -76,10 +73,9 @@ def create_app():
     }
     app["db"] = database
 
-    app.router.add_get('/public', public)
     app.router.add_get('/protected', protected)
 
-    MyAuth.setup(app)
+    JWTAuthenticator.setup(app)
     return app
 
 

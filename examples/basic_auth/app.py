@@ -1,5 +1,5 @@
 from aiohttp import web
-from aegis import decorators, BasicAuth, AuthRequiredException
+from aegis import BasicAuth, AuthRequiredException, login_required
 
 
 class AuthenticationFailedException(AuthRequiredException):
@@ -10,15 +10,18 @@ class AuthenticationFailedException(AuthRequiredException):
         # get default schema
         schema = AuthRequiredException.get_schema()
         # alter response title and detail
-        schema["title"] = "Invalid Credentials."
-        schema["detail"] = (
-            "You have provided invalid authorization"
-            "token or user_id/password pair."
-        )
+        schema = {
+            **schema,
+            "title": "Invalid Credentials.",
+            "detail": (
+                "You have provided invalid authorization"
+                "token or user_id/password pair."
+            )
+        }
         return schema
 
 
-class MyAuth(BasicAuth):
+class BasicAuthenticator(BasicAuth):
     user_id = "username"  # default is user_id
     password = "password"
 
@@ -38,11 +41,7 @@ class MyAuth(BasicAuth):
         return user
 
 
-async def public(request):
-    return web.json_response({'hello': 'anonymous'})
-
-
-@decorators.login_required
+@login_required
 async def protected(request):
     return web.json_response({'hello': 'user'})
 
@@ -53,16 +52,15 @@ def create_app():
     database = {
         'david': {
             'user_id': 5,
-            'scopes': ('regular_user',),
+            'permissions': ('user',),
             'password': 'test'
         }
     }
     app["db"] = database
 
-    app.router.add_get('/public', public)
     app.router.add_get('/protected', protected)
 
-    MyAuth.setup(app)
+    BasicAuthenticator.setup(app)
     return app
 
 

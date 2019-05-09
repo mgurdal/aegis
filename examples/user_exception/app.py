@@ -10,7 +10,7 @@ class UserDoesNotExistsError(AuthException):
         return {"message":  "User does not exists."}
 
 
-class MyAuth(JWTAuth):
+class JWTAuthenticator(JWTAuth):
     jwt_secret = "<secret>"
 
     async def authenticate(self, request):
@@ -20,7 +20,7 @@ class MyAuth(JWTAuth):
 def create_app():
     app = web.Application()
 
-    MyAuth.setup(app)
+    JWTAuthenticator.setup(app)
     return app
 
 
