@@ -1,7 +1,9 @@
 from unittest.mock import MagicMock, patch
 
 from aiohttp.test_utils import make_mocked_request
-from aegis.exceptions import AuthException, InvalidRefreshTokenException
+from aegis.exceptions import (
+    AuthException, InvalidRefreshTokenException, AuthenticationFailedException
+)
 
 
 async def test_make_response_uses_get_schema():
@@ -70,4 +72,10 @@ async def test_format_schema_formats_values():
 async def test_invalid_refresh_token_schema_returns_expected_fields():
     expected_fields = {"type", "title", "detail", "instance", "status"}
     schema = InvalidRefreshTokenException.get_schema()
+    assert set(schema) == expected_fields
+
+
+async def test_auth_failed_schema_returns_expected_fields():
+    expected_fields = {"type", "title", "detail", "instance", "status"}
+    schema = AuthenticationFailedException.get_schema()
     assert set(schema) == expected_fields
