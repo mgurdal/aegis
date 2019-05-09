@@ -8,7 +8,7 @@ Installation
 ------------
 
 ```bash
-pip3 install aegis
+pip install aegis
 ```
 
 Simple example
@@ -55,44 +55,44 @@ async def protected(request):
 Let's collect it altogether into very small but still functional
 example:
 ```python
-    from aiohttp import web
-    from aegis import login_required, JWTAuth
+from aiohttp import web
+from aegis import login_required, JWTAuth
 
 
-    class JWTAuthenticator(JWTAuth):
-        jwt_secret = "<secret>"
+class JWTAuthenticator(JWTAuth):
+    jwt_secret = "<secret>"
 
-        async def authenticate(self, request: web.Request) -> dict:
-            # You can get the request payload of the /auth route
-            payload = await request.json()
+    async def authenticate(self, request: web.Request) -> dict:
+        # You can get the request payload of the /auth route
+        payload = await request.json()
 
-            # Assuming the name parameter send in the request payload
-            searched_name = payload["name"]
+        # Assuming the name parameter send in the request payload
+        searched_name = payload["name"]
 
-            # fetch the user from your storage
-            db = request.app["db"]
-            user = db.get(searched_name, None)
+        # fetch the user from your storage
+        db = request.app["db"]
+        user = db.get(searched_name, None)
 
-            # return the JSON serializable user
-            return user
+        # return the JSON serializable user
+        return user
 
-    @login_required
-    async def protected(request):
-        return web.json_response({'hello': 'user'})
+@login_required
+async def protected(request):
+    return web.json_response({'hello': 'user'})
 
 
-    app = web.Application()
+app = web.Application()
 
-    DATABASE = {
-        'david': {'id': 5}
-    }
-    app["db"] = DATABASE
+DATABASE = {
+    'david': {'id': 5}
+}
+app["db"] = DATABASE
 
-    app.router.add_get('/', protected)
+app.router.add_get('/', protected)
 
-    JWTAuthenticator.setup(app)
+JWTAuthenticator.setup(app)
 
-    web.run_app(app)
+web.run_app(app)
 ```
 
 We can now navigate to http://0.0.0.0:8080 to check whether its

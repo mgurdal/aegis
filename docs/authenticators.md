@@ -42,7 +42,7 @@ is forced to override.
     
     * `InvalidTokenException` will be raised if `base64.b64decode` fails to decode the token.
 
-* **`get_scopes(request: web.Request)`**
+* **`get_permissions(request: web.Request)`**
 
     Get the user from the request and return user's permissions.
 
@@ -98,7 +98,7 @@ inherits and overrides required variables and methods.
 
     Encode given payload and return as a string.
 
-* **`get_scopes(request: web.Request)`**
+* **`get_permissions(request: web.Request)`**
 
     Get the user from the request and return user's permissions.
 
@@ -150,7 +150,7 @@ Abstract base authenticator. User can implement new authenticators based on thei
     
     This is an abstract method and should be overridden.
       
-* *abstractmethod* **`get_scopes(request: web.Request)`**
+* *abstractmethod* **`get_permissions(request: web.Request)`**
 
     Decode token and return user credentials as a dict.
     
@@ -165,3 +165,70 @@ Abstract base authenticator. User can implement new authenticators based on thei
 * *classmethod* **`setup(app, name='authenticator')`**
 
     Set-up the authenticator.
+
+
+---------
+MockAuthenticator
+---------
+
+*``aegis.test_utils.MockAuthenticator``*
+
+MockAuthenticator has an almost identical API to default authenticator classes.
+You can use this authenticator in your unit tests to bypass the authentication logic.
+
+```python
+class AppTestCase(AioHTTPTestCase):
+
+    async def get_application(self):
+        app = create_app()
+        MockAuthenticator.setup(app)
+        return app
+```
+By calling the setup method, MockAuthenticator will mock the `BasicAuthenticator`
+that you have been using in your app. MockAuthenticator is almost the
+same with the previous authenticator. In addition, it also has some 
+extra features to `bypass` the authentication system.
+
+
+**Arguments**:
+
+* `user` - Injected test user. Default is `None`.
+      
+
+**Methods**:
+
+* **`bypass_auth(user: dict)`**
+
+    `bypass_auth` might be the only method you will ever need to control
+    the authentication logic. It is a `contextmanager`. So you can disable
+    the permission control multiple times in your test suite.
+    To use the `bypass_auth`, we first need to reach to our mocked authenticator
+    instance, and then, we can manipulate the authentication control by calling the 
+    `bypass_auth` method with a test user.
+    
+```python
+    @unittest_run_loop
+    async def test_protected_route_without_credentials(self):
+        mocked_authenticator = self.app["authenticator"]
+        mock_user = {"permissions": ("user",)}
+
+        with mocked_authenticator.bypass_auth(user=mock_user):
+            resp = await self.client.request("GET", "/")
+            assert resp.status == 200
+        
+        resp = await self.client.request("GET", "/")
+        assert resp.status == 401
+
+```
+
+* *classmethod* **`setup(app)`**
+    Set-up the authenticator with mocked features.
+
+```python
+class AppTestCase(AioHTTPTestCase):
+
+    async def get_application(self):
+        app = create_app()
+        MockAuthenticator.setup(app)
+        return app
+```

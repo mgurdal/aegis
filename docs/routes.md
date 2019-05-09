@@ -76,7 +76,7 @@ assert user_response.status == 200
 user = await user_response.json()
 assert user == {
     "id": 1,
-    "scopes": ["user"],
+    "permissions": ["user"],
     "exp": 1212.121
  }
 ```
@@ -138,6 +138,5 @@ assert error == {
     "detail": "You have provided an invalid refresh token.",
     "instance": "http://0.0.0.0:8080/auth/refresh",
     "status": "401"
- }
-
+}
 ```

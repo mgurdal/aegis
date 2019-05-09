@@ -34,9 +34,9 @@ assert error == {
 ```
 
 
-scopes
+permissions
 ---------
-*``aegis.decorators.scopes``*
+*``aegis.decorators.permissions``*
 Opens the end-point for any user who has the permission to access.
 
 **Matching Algorithms**:
@@ -46,22 +46,21 @@ Opens the end-point for any user who has the permission to access.
 In this case end-point is also open for users who has a superset of required permissions.
 - `algorithm='exact'` - Opens the end-point for the users who has exactly the same permissions with required permissions.
 
-You can also implement your own matching algorithm and use with scopes.
+You can also implement your own matching algorithm and use with permissions.
 
 ```python
-from aegis import scopes
+from aegis import permissions
+from aegis.matching_algorithms import match_any
 
-def lenght_algorithm(required_scopes: Iterable, user_scopes: Iterable) -> bool:
-    """
-    required_scopes: These permissions defined in the scopes  decorator.
-    
-    user_scopes: These scopes comes from authenticator.get_scopes method which
-    returns the permissions in thee authenticated user's "scopes" key by default.
-    """
-    has_permission = len(required_scopes) == len(user_scopes)
+def match_any_and_admin(required_permissions, user_permissions) -> bool:
+    # ignore the matching algorithm if user is admin
+    has_permission = (
+        "admin" in user_permissions
+        or match_any(required_permissions, user_permissions)
+    )
     return has_permission
 
-@scopes('user', 'admin', algorithm=lenght_algorithm)
+@permissions("user", algorithm=match_any_and_admin)
 async def protected(request):
     return web.json_response({'hello': 'user'})
 ```
