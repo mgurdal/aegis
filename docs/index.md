@@ -3,12 +3,17 @@
 **aegis** provides endpoint protection and authentication scoping for
 aiohttp.
 
-Current version is 0.4.0.
+[![python](https://img.shields.io/badge/python-3.6-brightgreen.svg)](https://www.python.org/downloads/release/python-360)
+[![pypi](https://badge.fury.io/py/aegis.svg)](https://badge.fury.io/py/aegis)
+[![travis](https://travis-ci.org/mgurdal/aegis.svg?branch=master)](https://travis-ci.org/mgurdal/aegis)
+[![coveralls](https://coveralls.io/repos/github/mgurdal/aegis/badge.svg?branch=master)](https://coveralls.io/github/mgurdal/aegis?branch=master)
+[![codefactor](https://www.codefactor.io/repository/github/mgurdal/aegis/badge)](https://www.codefactor.io/repository/github/mgurdal/aegis)
+[![downloads](https://img.shields.io/pypi/dm/aegis.svg)](https://pypi.python.org/pypi/aegis)
 
 ## Installation
 
 ``` bash
-$ pip3 install aegis
+pip install aegis
 ```
 
 ## Bare Minimum Examples
