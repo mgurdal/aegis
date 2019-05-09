@@ -25,7 +25,7 @@ async def auth_middleware(request: web.Request, handler: Callable):
             else:
                 user = await authenticator.decode(token)
 
-            request.user = user
+            request.user = await authenticator.get_user(credentials)
             return await handler(request)
 
         except AuthException as ae:

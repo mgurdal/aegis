@@ -18,7 +18,8 @@ async def test_auth_middleware_checks_aiohttp_auth_initialization():
         # noinspection PyTypeChecker
         await middlewares.auth_middleware(stub_request, stub_view)
 
-    assert str(error.value) == 'Please initialize aiohttp_auth first.'
+    assert str(error.value) == ("Please initialize the authenticator with "
+                                "Authenticator.setup(app) first.")
 
 
 async def test_auth_middleware_uses_auth_exception_if_token_invalid():
@@ -53,8 +54,10 @@ async def test_auth_middleware_handles_non_scope_views():
     auth_exception = AuthException()
     auth_exception.make_response = CoroutineMock()
 
+    stub_user = {}
     authenticator = CoroutineMock()
     authenticator.decode = CoroutineMock()
+    authenticator.get_user = CoroutineMock(return_value=stub_user)
 
     app = {'authenticator': authenticator}
     token = 'x'
@@ -78,8 +81,10 @@ async def test_auth_middleware_awaits_scoped_views():
     auth_exception = AuthException()
     auth_exception.make_response = CoroutineMock()
 
+    stub_user = {}
     authenticator = CoroutineMock()
     authenticator.decode = CoroutineMock()
+    authenticator.get_user = CoroutineMock(return_value=stub_user)
 
     app = {'authenticator': authenticator}
     token = 'x'
@@ -97,14 +102,15 @@ async def test_auth_middleware_awaits_scoped_views():
     assert stub_view.awaited_once_with(stub_request)
 
 
-async def test_auth_middleware_injects_user():
+async def test_auth_middleware_gets_user_from_authenticator():
     # make a mock Application
     user = {'user_id': 1}
     auth_exception = AuthException()
     auth_exception.make_response = CoroutineMock()
 
     authenticator = CoroutineMock()
-    authenticator.decode = CoroutineMock(return_value=user)
+    authenticator.decode = CoroutineMock()
+    authenticator.get_user = CoroutineMock(return_value=user)
 
     app = {'authenticator': authenticator}
     token = 'x'
@@ -147,10 +153,11 @@ async def test_auth_middleware_awaits_non_scope_views():
 
 
 async def test_auth_middleware_decodes_expired_refresh_token():
-
+    stub_user = {}
     authenticator = CoroutineMock()
     authenticator.refresh_token = True
     authenticator.decode = CoroutineMock()
+    authenticator.get_user = CoroutineMock(return_value=stub_user)
 
     app = {'authenticator': authenticator}
     # make a mock request for auth/refresh route

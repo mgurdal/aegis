@@ -20,6 +20,9 @@ class BasicAuth(BaseAuthenticator):
     async def authenticate(self, request: web.Request) -> Dict[str, Any]:
         """Returns JSON serializable user"""
 
+    async def get_user(self, credentials) -> dict:
+        """Retrieve user with credentials."""
+
     async def decode(self, token: str, verify=True) -> dict:
         """
         Decodes basic token and returns user's id and password as a dict.

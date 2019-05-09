@@ -55,9 +55,8 @@ class JWTAuth(BaseAuthenticator):
 
         return token
 
-    async def get_scopes(self, request: web.Request):
-        # TODO: handle exceptions
-        return request.user['scopes']
+    async def get_user(self, credentials) -> dict:
+        return credentials
 
     @abstractmethod
     async def authenticate(self, request: web.Request) -> Dict[str, Any]:

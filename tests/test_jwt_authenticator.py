@@ -1,5 +1,5 @@
 from datetime import datetime
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import jwt
 import pytest
@@ -99,8 +99,7 @@ async def test_encode_encodes_payload_with_expiration_date():
             encode.return_value.decode.assert_called_with('utf-8')
 
 
-async def test_get_scopes_returns_user_scopes():
-
+async def test_get_user_returns_credentials_by_default():
     class TestJWTAuth(JWTAuth):
         jwt_secret = ""
 
@@ -108,10 +107,11 @@ async def test_get_scopes_returns_user_scopes():
             pass
 
     auth = TestJWTAuth()
+    credentials = {
+        "id": 1,
+        "exp": 5
+    }
 
-    mock_request = MagicMock()
-    mock_request.user = {"scopes": ('test',)}
+    user = await auth.get_user(credentials)
 
-    scopes = await auth.get_scopes(mock_request)
-
-    assert scopes == ('test',)
+    assert user == credentials
