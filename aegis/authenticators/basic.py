@@ -14,9 +14,7 @@ class BasicAuth(BaseAuthenticator):
     password = "password"
     auth_endpoint = None
     me_endpoint = None
-
-    async def get_scopes(self, request: web.Request):
-        """:returns user's permissions"""
+    auth_schema = "Basic"
 
     @abstractmethod
     async def authenticate(self, request: web.Request) -> Dict[str, Any]:
@@ -27,7 +25,7 @@ class BasicAuth(BaseAuthenticator):
         Decodes basic token and returns user's id and password as a dict.
         """
         try:
-            basic_token = token.replace("Basic ", "").encode()
+            basic_token = token.replace(F"{self.auth_schema} ", "").encode()
 
             decoded_credentials = base64.b64decode(
                 basic_token, validate=verify

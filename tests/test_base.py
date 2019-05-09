@@ -110,3 +110,69 @@ async def test_check_permissions_handles_invalid_algorithm():
     assert str(te.value) == (
         "Invalid algorithm type. Options 'all', 'any', 'exact', callable"
     )
+
+
+async def test_get_scopes_returns_user_permissions_with_default_key():
+
+    class TestBaseAuth(BaseAuthenticator):
+        async def decode(self, token: str) -> dict:
+            pass
+
+        async def get_user(self, credentials) -> dict:
+            pass
+
+        async def authenticate(self, request):
+            pass
+
+    auth = TestBaseAuth()
+
+    mock_request = MagicMock()
+    mock_request.user = {"permissions": ('test',)}
+
+    scopes = await auth.get_permissions(mock_request)
+
+    assert scopes == ('test',)
+
+
+async def test_get_scopes_returns_user_permissions_with_altered_key():
+
+    class TestBaseAuth(BaseAuthenticator):
+        permission_key = "test_key"
+
+        async def decode(self, token: str) -> dict:
+            pass
+
+        async def get_user(self, credentials) -> dict:
+            pass
+
+        async def authenticate(self, request):
+            pass
+
+    auth = TestBaseAuth()
+
+    mock_request = MagicMock()
+    mock_request.user = MagicMock()
+
+    await auth.get_permissions(mock_request)
+
+    mock_request.user.get.assert_called_with("test_key")
+
+
+async def test_get_scopes_raises_forbidden_if_user_is_not_available():
+
+    class TestBaseAuth(BaseAuthenticator):
+
+        async def decode(self, token: str) -> dict:
+            pass
+
+        async def get_user(self, credentials) -> dict:
+            pass
+
+        async def authenticate(self, request):
+            pass
+
+    auth = TestBaseAuth()
+
+    with pytest.raises(ForbiddenException):
+        mock_request = object()
+        await auth.get_permissions(mock_request)

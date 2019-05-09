@@ -4,14 +4,17 @@ from typing import Callable, Hashable, Iterable, Union
 
 from aiohttp import web
 
-from aegis.middlewares import auth_middleware
-from aegis.routes import make_auth_route, make_me_route
+from ..exceptions import ForbiddenException
+from ..middlewares import auth_middleware
+from ..routes import make_auth_route, make_me_route
 from ..matching_algorithms import match_all, match_any, match_exact
 
 
 class BaseAuthenticator(metaclass=ABCMeta):
     me_endpoint: Union[str, None] = "/me"
     auth_endpoint: Union[str, None] = "/auth"
+    auth_schema = None
+    permission_key = "permissions"
 
     @staticmethod
     async def check_permissions(
@@ -55,9 +58,14 @@ class BaseAuthenticator(metaclass=ABCMeta):
     async def authenticate(self, request: web.Request):
         """Returns JSON serializable user"""
 
+    async def get_permissions(self, request: web.Request):
+        if not hasattr(request, "user"):
+            raise ForbiddenException()
+        return request.user.get(self.permission_key)
+
     @abstractmethod
-    async def get_scopes(self, request: web.Request):
-        """Returns user's permissions"""
+    async def get_user(self, credentials) -> dict:
+        """Retrieve user with credentials"""
 
     @classmethod
     def setup(cls, app):
