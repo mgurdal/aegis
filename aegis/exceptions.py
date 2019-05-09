@@ -95,7 +95,7 @@ class ForbiddenException(AuthException):
 
     @staticmethod
     def get_schema() -> dict:
-        detail = "User scope does not meet access requests for {url}"
+        detail = "User's does not have access permissions for {url}"
         doctype = ("https://mgurdal.github.io/aegis/exceptions/"
                    "#ForbiddenException")
 
