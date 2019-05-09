@@ -53,15 +53,15 @@ async def test_login_required_returns_200_if_request_has_user():
     assert response.status == 200
 
 
-async def test_scopes_cannot_be_initialized_withot_parameters():
+async def test_get_permissions_cannot_be_initialized_without_parameters():
     with pytest.raises(AssertionError) as error:
-        decorators.scopes()
-    assert str(error.value) == 'Cannot be used without any scope!'
+        decorators.permissions()
+    assert str(error.value) == 'Cannot be used without any permission!'
 
 
-async def test_scopes_raises_TypeError_on_invalid_request():
+async def test_permissions_raises_TypeError_on_invalid_request():
     with pytest.raises(TypeError) as error:
-        @decorators.scopes('test_scope')
+        @decorators.permissions('test_permission')
         async def test_view(request):
             return web.json_response({})
 
@@ -71,13 +71,13 @@ async def test_scopes_raises_TypeError_on_invalid_request():
     assert str(error.value) == F"Invalid Type '{type(invalid_request)}'"
 
 
-async def test_scopes_returns_403_if_not_has_permisions():
+async def test_permissions_returns_403_if_not_has_permisions():
     with patch(
             'aegis.decorators.ForbiddenException.make_response') as forbidden:
-        required_scopes = ('test_scope',)
-        provided_scopes = ()
+        required_permissions = ('test_permission',)
+        provided_permissions = ()
 
-        @decorators.scopes(*required_scopes, algorithm='any')
+        @decorators.permissions(*required_permissions, algorithm='any')
         async def test_view(request):
             return web.json_response({})
 
@@ -86,25 +86,27 @@ async def test_scopes_returns_403_if_not_has_permisions():
         )
         authenticator = CoroutineMock()
         stub_request.app['authenticator'] = authenticator
-        authenticator.get_scopes = CoroutineMock(return_value=provided_scopes)
+        authenticator.get_permissions = CoroutineMock(
+            return_value=provided_permissions
+        )
         authenticator.check_permissions = CoroutineMock(return_value=False)
 
         await test_view(stub_request)
 
         assert forbidden.awaited_once_with(stub_request)
-        assert authenticator.get_scopes.awaited_once_with(stub_request)
-        assert authenticator.get_scopes.awaited_once_with(
-            provided_scopes, required_scopes, 'any'
+        assert authenticator.get_permissions.awaited_once_with(stub_request)
+        assert authenticator.get_permissions.awaited_once_with(
+            provided_permissions, required_permissions, 'any'
         )
 
 
-async def test_scopes_awaits_view_on_happy_path():
+async def test_permissions_awaits_view_on_happy_path():
     with patch(
             'aegis.decorators.ForbiddenException.make_response') as forbidden:
-        required_scopes = ('test_scope',)
-        provided_scopes = ()
+        required_permissions = ('test_permission',)
+        provided_permissions = ()
 
-        @decorators.scopes(*required_scopes)
+        @decorators.permissions(*required_permissions)
         async def test_view(request):
             return web.json_response({})
 
@@ -113,13 +115,15 @@ async def test_scopes_awaits_view_on_happy_path():
         )
         authenticator = CoroutineMock()
         stub_request.app['authenticator'] = authenticator
-        authenticator.get_scopes = CoroutineMock(return_value=provided_scopes)
+        authenticator.get_permissions = CoroutineMock(
+            return_value=provided_permissions
+        )
         authenticator.check_permissions = CoroutineMock(return_value=True)
 
         await test_view(stub_request)
 
-        assert authenticator.get_scopes.awaited_once_with(stub_request)
-        assert authenticator.get_scopes.awaited_once_with(
-            provided_scopes, required_scopes, 'any'
+        assert authenticator.get_permissions.awaited_once_with(stub_request)
+        assert authenticator.get_permissions.awaited_once_with(
+            provided_permissions, required_permissions, 'any'
         )
         assert forbidden.not_awaited

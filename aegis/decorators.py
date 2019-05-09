@@ -3,7 +3,9 @@ from typing import Callable, Union
 
 from aiohttp import web
 
-from .exceptions import AuthRequiredException, ForbiddenException
+from .exceptions import (
+    AuthRequiredException, ForbiddenException, AuthException
+)
 
 
 def login_required(func):
@@ -22,14 +24,14 @@ def login_required(func):
     return wrapper
 
 
-def scopes(
+def permissions(
         *required_scopes: Union[set, tuple],
         algorithm='any') -> web.json_response:
 
     """
     Open the end-point for any user who has the permission to access.
     """
-    assert required_scopes, 'Cannot be used without any scope!'
+    assert required_scopes, 'Cannot be used without any permission!'
 
     def request_handler(view: Callable) -> Callable:
         @functools.wraps(view)
@@ -38,16 +40,19 @@ def scopes(
                 raise TypeError(F"Invalid Type '{type(request)}'")
 
             authenticator = request.app['authenticator']
+            try:
+                provided_scopes = await authenticator.get_permissions(request)
+                has_permission = await authenticator.check_permissions(
+                    provided_scopes, required_scopes, algorithm=algorithm
+                )
 
-            provided_scopes = await authenticator.get_scopes(request)
-            has_permission = await authenticator.check_permissions(
-                provided_scopes, required_scopes, algorithm=algorithm
-            )
+                if not has_permission:
+                    raise ForbiddenException()
+                else:
+                    return await view(request)
 
-            if not has_permission:
-                return ForbiddenException.make_response(request)
-            else:
-                return await view(request)
+            except AuthException as e:
+                return e.make_response(request)
 
         return wrapper
 

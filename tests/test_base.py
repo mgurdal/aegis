@@ -1,6 +1,8 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+
+from aegis import ForbiddenException
 from aegis.authenticators.base import BaseAuthenticator
 
 
@@ -104,7 +106,8 @@ async def test_check_permissions_handles_invalid_algorithm():
     with pytest.raises(TypeError) as te:
         # noinspection PyTypeChecker
         await BaseAuthenticator.check_permissions(
-            user_permissions, required_permissions, algorithm=invalid_algorithm
+            user_permissions, required_permissions,
+            algorithm=invalid_algorithm
         )
 
     assert str(te.value) == (
