@@ -6,7 +6,7 @@ login_required
 ---------
 *``aegis.decorators.login_required``*
 
-If not authenticated user tries to reach to a `login_required` end-point returns
+If unauthorized user tries to reach to a `login_required` end-point returns
 `UNAUTHORIZED` response.
 
 ```python

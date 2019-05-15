@@ -25,7 +25,9 @@ is forced to override.
 * `me_endpoint` - User information endpoint URI. Default route is ``/me``.
       
 * `auth_endpoint` - End-point URI for authenticating the user. If user sends a ``POST``
-      request to this end-point it triggers the :meth:`authenticate` method. Default route is ``/auth``.
+      request to this end-point it triggers the `authenticate` method.
+      Default route is ``None`` since we do not need an authentication end-point in
+      Basic authentication.
 
 * `user_id: str` - The key name to retain the user ID when the token is decoded. Default value is ``user_id``.
 
@@ -78,7 +80,7 @@ inherits and overrides required variables and methods.
 
 * **`jwt_algorithm: str`** - The algorithm that will be used to generate the tokens. Default algorithm is ``HS256``.
 
-* **`refresh_token: bool`** - The flag that activates the refresh token feature. Default value is ``Fals``.
+* **`refresh_token: bool`** - The flag that activates the refresh token feature. Default value is ``False``.
 
 * **`refresh_endpoint: str`** - Token refreshing endpoint URI. Default route is ``/auth/refresh``.
 
@@ -184,7 +186,7 @@ class AppTestCase(AioHTTPTestCase):
         MockAuthenticator.setup(app)
         return app
 ```
-By calling the setup method, MockAuthenticator will mock the `BasicAuthenticator`
+By calling the setup method, MockAuthenticator will mock the authenticator
 that you have been using in your app. MockAuthenticator is almost the
 same with the previous authenticator. In addition, it also has some 
 extra features to `bypass` the authentication system.

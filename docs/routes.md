@@ -101,7 +101,7 @@ assert error == {
 ---------
 Refresh Route
 ---------
-*``aegis.routes.make_me_route``*
+*``aegis.routes.make_refresh_route``*
 
 Retrieve a new access token with the refresh token.
 
@@ -115,8 +115,8 @@ access_token_response = await session.post(
 )
 assert access_token_response.status == 200
 
-user = await access_token_response.json()
-assert user == {
+token_payload = await access_token_response.json()
+assert token_payload == {
     "access_token": "Bearer token.."
 }
 ```

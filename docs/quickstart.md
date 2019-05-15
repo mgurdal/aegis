@@ -119,12 +119,12 @@ If everything goes OK we will get the access\_token as response.
 Otherwise we will get one of the pre-defined UNAUTHORIZED responses:
 ```json
 {
-    "type": "https://mgurdal.github.io/aiohttp_auth/docs.html#unauthorized",
-    "title": "Authentication failed.",
+    "type": "https://mgurdal.github.io/aegis/exceptions/#AuthenticationFailedException",
+    "title": "Authentication Failed",
     "detail": "The credentials you supplied were not correct.",
     "instance": "http://0.0.0.0:8080/auth",
     "status": "401"
-}
+ }
 ```
 We can use the access token to reach to the protected route:
 ```bash
