@@ -1,7 +1,7 @@
 aegis
 =============
 
-|Python 3.6| |pypi| |travis-badge| |coveralls| |codefactor grade| |downloads|
+|Python 3.6| |pypi| |travis-badge| |pyup| |coveralls| |codefactor grade| |downloads|
 
 .. |Python 3.6| image:: https://img.shields.io/badge/python-3.6-brightgreen.svg
    :target: https://www.python.org/downloads/release/python-360
@@ -9,12 +9,15 @@ aegis
    :target: https://www.codefactor.io/repository/github/mgurdal/aegis/badge
 .. |travis-badge| image:: https://travis-ci.org/mgurdal/aegis.svg?branch=master
    :target: https://travis-ci.org/mgurdal/aegis
-.. |coveralls| image:: https://coveralls.io/repos/github/mgurdal/aegis/badge.svg?branch=master
-   :target: https://coveralls.io/github/mgurdal/aegis?branch=master
+.. |coveralls| image:: https://coveralls.io/repos/github/mgurdal/aegis/badge.svg
+   :target: https://coveralls.io/github/mgurdal/aegis
 .. |pypi| image:: https://badge.fury.io/py/aegis.svg
     :target: https://badge.fury.io/py/aegis
 .. |downloads| image:: https://img.shields.io/pypi/dm/aegis.svg
     :target: https://pypi.python.org/pypi/aegis
+.. |pyup| image:: https://pyup.io/repos/github/mgurdal/aegis/shield.svg
+     :target: https://pyup.io/repos/github/mgurdal/aegis/
+     :alt: Updates
 
 **aegis** allows to **protect endpoints** and also provides
 **authentication scoping**.
