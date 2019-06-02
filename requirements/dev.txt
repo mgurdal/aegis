@@ -2,3 +2,4 @@
 -r doc.txt
 pytest-sugar==0.9.2
 flit==1.2.1
+black==19.3b0

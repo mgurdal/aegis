@@ -1,4 +1,4 @@
-# Welcome to aegis's documentation\!
+# Welcome to aegis documentation\!
 
 **aegis** provides endpoint protection and authentication scoping for
 aiohttp.
@@ -8,6 +8,7 @@ aiohttp.
 [![travis](https://travis-ci.org/mgurdal/aegis.svg?branch=master)](https://travis-ci.org/mgurdal/aegis)
 [![coveralls](https://coveralls.io/repos/github/mgurdal/aegis/badge.svg?branch=master)](https://coveralls.io/github/mgurdal/aegis?branch=master)
 [![codefactor](https://www.codefactor.io/repository/github/mgurdal/aegis/badge)](https://www.codefactor.io/repository/github/mgurdal/aegis)
+[![code-style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 [![downloads](https://img.shields.io/pypi/dm/aegis.svg)](https://pypi.python.org/pypi/aegis)
 
 ## Installation
