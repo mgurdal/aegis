@@ -19,13 +19,12 @@ async def test_setup_injects_jwt_auth():
     app = web.Application()
 
     class TestAuth(JWTAuth):
-
         async def authenticate(self, request: web.Request):
             pass
 
     TestAuth.setup(app)
 
-    assert 'authenticator' in app
+    assert "authenticator" in app
 
 
 async def test_setup_raises_error_if_refresh_token_true_and_no_method():

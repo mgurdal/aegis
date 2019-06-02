@@ -16,7 +16,7 @@ class AuthenticationFailedException(AuthRequiredException):
             "detail": (
                 "You have provided invalid authorization"
                 "token or user_id/password pair."
-            )
+            ),
         }
         return schema
 
@@ -43,27 +43,21 @@ class BasicAuthenticator(BasicAuth):
 
 @login_required
 async def protected(request):
-    return web.json_response({'hello': 'user'})
+    return web.json_response({"hello": "user"})
 
 
 def create_app():
     app = web.Application()
 
-    database = {
-        'david': {
-            'user_id': 5,
-            'permissions': ('user',),
-            'password': 'test'
-        }
-    }
+    database = {"david": {"user_id": 5, "permissions": ("user",), "password": "test"}}
     app["db"] = database
 
-    app.router.add_get('/protected', protected)
+    app.router.add_get("/protected", protected)
 
     BasicAuthenticator.setup(app)
     return app
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = create_app()
     web.run_app(app)

@@ -4,16 +4,13 @@ from unittest.mock import MagicMock
 from aiohttp import web
 from aiohttp.test_utils import make_mocked_request
 from aegis.exceptions import AuthException
-from aegis.routes import make_auth_route, make_me_route, \
-    make_refresh_route
+from aegis.routes import make_auth_route, make_me_route, make_refresh_route
 from asynctest import CoroutineMock, patch
 
 
 async def test_auth_route_returns_auth_failed_if_not_user():
-    with patch(
-            'aegis.routes.AuthException.make_response'
-    ) as auth_required:
-        stub_request = make_mocked_request('GET', '/')
+    with patch("aegis.routes.AuthException.make_response") as auth_required:
+        stub_request = make_mocked_request("GET", "/")
 
         stub_user = {}
         authenticator = CoroutineMock()
@@ -30,9 +27,9 @@ async def test_auth_route_returns_auth_failed_if_not_user():
 
 
 async def test_auth_route_only_returns_access_token_if_not_refresh():
-    stub_request = make_mocked_request('GET', '/')
+    stub_request = make_mocked_request("GET", "/")
 
-    stub_user = {'user_id': 1}
+    stub_user = {"user_id": 1}
     authenticator = CoroutineMock()
     authenticator.refresh_token = False
     authenticator.authenticate = CoroutineMock(return_value=stub_user)
@@ -43,15 +40,13 @@ async def test_auth_route_only_returns_access_token_if_not_refresh():
 
     assert encoder.encode.awaited_once_with(stub_user)
     assert authenticator.authenticate.awaited_once_with(stub_request)
-    assert json.loads(token_payload.body) == {
-        'access_token': 'token'
-    }
+    assert json.loads(token_payload.body) == {"access_token": "token"}
 
 
 async def test_auth_route_returns_access_and_refresh_token():
-    stub_request = make_mocked_request('GET', '/')
+    stub_request = make_mocked_request("GET", "/")
 
-    stub_user = {'user_id': 1}
+    stub_user = {"user_id": 1}
     refresh_token = "test_refresh"
     access_token = "test_access"
     authenticator = CoroutineMock()
@@ -67,15 +62,13 @@ async def test_auth_route_returns_access_and_refresh_token():
     assert authenticator.authenticate.awaited_once_with(stub_request)
     assert json.loads(token_payload.body) == {
         "access_token": access_token,
-        "refresh_token": refresh_token
+        "refresh_token": refresh_token,
     }
 
 
 async def test_auth_route_handles_auth_exception():
-    stub_request = make_mocked_request('GET', '/')
-    AuthException.make_response = CoroutineMock(
-        return_value=web.json_response({})
-    )
+    stub_request = make_mocked_request("GET", "/")
+    AuthException.make_response = CoroutineMock(return_value=web.json_response({}))
 
     class TestException(AuthException):
         status = 400
@@ -99,11 +92,8 @@ async def test_me_route_returns_user_information():
     Test me route returns user information except the expiration date
     if user is authenticated.
     """
-    stub_request = make_mocked_request('GET', '/')
-    stub_user = {
-        'user_id': 1,
-        'exp': 1
-    }
+    stub_request = make_mocked_request("GET", "/")
+    stub_user = {"user_id": 1, "exp": 1}
 
     # force auth
     stub_request.user = stub_user
@@ -118,16 +108,14 @@ async def test_me_route_returns_user_information():
 
 
 async def test_auth_route_adds_refresh_token_if_activated():
-    stub_request = make_mocked_request('GET', '/')
+    stub_request = make_mocked_request("GET", "/")
 
-    stub_user = {'user_id': 1}
+    stub_user = {"user_id": 1}
     authenticator = CoroutineMock()
     authenticator.authenticate = CoroutineMock(return_value=stub_user)
     authenticator.refresh_token = True
     authenticator.encode = CoroutineMock(return_value="token")
-    authenticator.get_refresh_token = CoroutineMock(
-        return_value="refresh_token"
-    )
+    authenticator.get_refresh_token = CoroutineMock(return_value="refresh_token")
 
     auth_route = make_auth_route(authenticator)
     token_payload = await auth_route(stub_request)
@@ -150,15 +138,11 @@ async def test_refresh_route_renews_access_token():
     stub_request.json = CoroutineMock(return_value=refresh_payload)
 
     authenticator = CoroutineMock()
-    authenticator.encode = CoroutineMock(
-        return_value=access_token
-    )
-    authenticator.validate_refresh_token = CoroutineMock(
-        return_value=True
-    )
+    authenticator.encode = CoroutineMock(return_value=access_token)
+    authenticator.validate_refresh_token = CoroutineMock(return_value=True)
 
     # bypass login
-    with patch('aegis.routes.login_required', lambda x: x):
+    with patch("aegis.routes.login_required", lambda x: x):
         refresh_route = make_refresh_route(authenticator)
         token_payload = await refresh_route(stub_request)
 
@@ -181,16 +165,12 @@ async def test_refresh_returns_bad_request_if_refresh_token_invalid():
     stub_request.json = CoroutineMock(return_value=refresh_payload)
 
     authenticator = CoroutineMock()
-    authenticator.renew_access_token = CoroutineMock(
-        return_value=access_token
-    )
-    authenticator.validate_refresh_token = CoroutineMock(
-        return_value=False
-    )
+    authenticator.renew_access_token = CoroutineMock(return_value=access_token)
+    authenticator.validate_refresh_token = CoroutineMock(return_value=False)
 
-    with patch('aegis.routes.InvalidRefreshTokenException') as irte:
+    with patch("aegis.routes.InvalidRefreshTokenException") as irte:
         # bypass login
-        with patch('aegis.routes.login_required', lambda x: x):
+        with patch("aegis.routes.login_required", lambda x: x):
             irte.make_response = MagicMock()
             refresh_route = make_refresh_route(authenticator)
             await refresh_route(stub_request)

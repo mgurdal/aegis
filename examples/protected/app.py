@@ -15,17 +15,13 @@ class JWTAuthenticator(JWTAuth):
 
 @login_required
 async def protected(request):
-    return web.json_response({'hello': 'user'})
+    return web.json_response({"hello": "user"})
 
 
 def create_app():
     app = web.Application()
-    app["db"] = {
-        5: {
-            "name": "test"
-        }
-    }
-    app.router.add_get('/protected', protected)
+    app["db"] = {5: {"name": "test"}}
+    app.router.add_get("/protected", protected)
 
     JWTAuthenticator.setup(app)
 

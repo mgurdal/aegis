@@ -18,8 +18,9 @@ async def test_auth_middleware_checks_aiohttp_auth_initialization():
         # noinspection PyTypeChecker
         await middlewares.auth_middleware(stub_request, stub_view)
 
-    assert str(error.value) == ("Please initialize the authenticator with "
-                                "Authenticator.setup(app) first.")
+    assert str(error.value) == (
+        "Please initialize the authenticator with " "Authenticator.setup(app) first."
+    )
 
 
 async def test_auth_middleware_uses_auth_exception_if_token_invalid():
@@ -31,18 +32,16 @@ async def test_auth_middleware_uses_auth_exception_if_token_invalid():
     authenticator = CoroutineMock()
     authenticator.decode = CoroutineMock(side_effect=auth_exception)
 
-    app = {'authenticator': authenticator}
-    token = 'x'
+    app = {"authenticator": authenticator}
+    token = "x"
     # make a mock request
     stub_request = make_mocked_request(
-        'GET', '/', headers={'authorization': token},
-        app=app
+        "GET", "/", headers={"authorization": token}, app=app
     )
     # make a mock view
     stub_view = CoroutineMock()
 
-    await middlewares.auth_middleware(stub_request,
-                                      stub_view)
+    await middlewares.auth_middleware(stub_request, stub_view)
 
     authenticator.decode.awaited_once_with(token)
     assert auth_exception.make_response.awaited_once_with(stub_request)
@@ -59,12 +58,11 @@ async def test_auth_middleware_handles_non_scope_views():
     authenticator.decode = CoroutineMock()
     authenticator.get_user = CoroutineMock(return_value=stub_user)
 
-    app = {'authenticator': authenticator}
-    token = 'x'
+    app = {"authenticator": authenticator}
+    token = "x"
     # make a mock request
     stub_request = make_mocked_request(
-        'GET', '/', headers={'authorization': token},
-        app=app
+        "GET", "/", headers={"authorization": token}, app=app
     )
 
     # make a mock view
@@ -86,12 +84,11 @@ async def test_auth_middleware_awaits_scoped_views():
     authenticator.decode = CoroutineMock()
     authenticator.get_user = CoroutineMock(return_value=stub_user)
 
-    app = {'authenticator': authenticator}
-    token = 'x'
+    app = {"authenticator": authenticator}
+    token = "x"
     # make a mock request
     stub_request = make_mocked_request(
-        'GET', '/', headers={'authorization': token},
-        app=app
+        "GET", "/", headers={"authorization": token}, app=app
     )
 
     # make a mock view
@@ -104,7 +101,7 @@ async def test_auth_middleware_awaits_scoped_views():
 
 async def test_auth_middleware_gets_user_from_authenticator():
     # make a mock Application
-    user = {'user_id': 1}
+    user = {"user_id": 1}
     auth_exception = AuthException()
     auth_exception.make_response = CoroutineMock()
 
@@ -112,12 +109,11 @@ async def test_auth_middleware_gets_user_from_authenticator():
     authenticator.decode = CoroutineMock()
     authenticator.get_user = CoroutineMock(return_value=user)
 
-    app = {'authenticator': authenticator}
-    token = 'x'
+    app = {"authenticator": authenticator}
+    token = "x"
     # make a mock request
     stub_request = make_mocked_request(
-        'GET', '/', headers={'authorization': token},
-        app=app
+        "GET", "/", headers={"authorization": token}, app=app
     )
 
     # make a mock view
@@ -126,7 +122,7 @@ async def test_auth_middleware_gets_user_from_authenticator():
 
     await middlewares.auth_middleware(stub_request, stub_view)
 
-    assert hasattr(stub_request, 'user')
+    assert hasattr(stub_request, "user")
     assert stub_request.user == {"user_id": 1}
 
 
@@ -138,16 +134,12 @@ async def test_auth_middleware_awaits_non_scope_views():
     authenticator = CoroutineMock()
     authenticator.decode = CoroutineMock(side_effect=auth_exception)
 
-    app = {'authenticator': authenticator}
+    app = {"authenticator": authenticator}
     # make a mock request
-    stub_request = make_mocked_request(
-        'GET', '/', app=app
-    )
+    stub_request = make_mocked_request("GET", "/", app=app)
 
-    handler = CoroutineMock(return_value='test')
-    response = await middlewares.auth_middleware(
-        stub_request, handler
-    )
+    handler = CoroutineMock(return_value="test")
+    response = await middlewares.auth_middleware(stub_request, handler)
     assert handler.awaited_once_with(stub_request)
     assert response
 
@@ -159,18 +151,14 @@ async def test_auth_middleware_decodes_expired_refresh_token():
     authenticator.decode = CoroutineMock()
     authenticator.get_user = CoroutineMock(return_value=stub_user)
 
-    app = {'authenticator': authenticator}
+    app = {"authenticator": authenticator}
     # make a mock request for auth/refresh route
     stub_request = make_mocked_request(
-        'POST', '/auth/refresh', app=app, headers={
-            "Authorization": "Bearer token"
-        }
+        "POST", "/auth/refresh", app=app, headers={"Authorization": "Bearer token"}
     )
 
-    handler = CoroutineMock(return_value='test')
-    response = await middlewares.auth_middleware(
-        stub_request, handler
-    )
+    handler = CoroutineMock(return_value="test")
+    response = await middlewares.auth_middleware(stub_request, handler)
     assert handler.awaited_once_with(stub_request)
     assert response
     authenticator.decode.assert_called_with("Bearer token", verify=False)

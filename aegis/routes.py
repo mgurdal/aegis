@@ -1,8 +1,11 @@
 from aiohttp import web
 
 from .decorators import login_required
-from .exceptions import (AuthException, InvalidRefreshTokenException,
-                         AuthenticationFailedException)
+from .exceptions import (
+    AuthException,
+    InvalidRefreshTokenException,
+    AuthenticationFailedException,
+)
 
 
 def make_auth_route(authenticator):
@@ -16,12 +19,10 @@ def make_auth_route(authenticator):
                 raise AuthenticationFailedException()
             request.user = user
             token = await authenticator.encode(user)
-            token_payload = {
-                "access_token": token
-            }
+            token_payload = {"access_token": token}
             if authenticator.refresh_token:
-                token_payload["refresh_token"] = (
-                    await authenticator.get_refresh_token(request)
+                token_payload["refresh_token"] = await authenticator.get_refresh_token(
+                    request
                 )
 
             return web.json_response(token_payload, status=200)
@@ -48,8 +49,6 @@ def make_refresh_route(authenticator):
             return InvalidRefreshTokenException.make_response(request)
 
         access_token = await authenticator.encode(request.user)
-        return web.json_response({
-            "access_token": access_token
-        })
+        return web.json_response({"access_token": access_token})
 
     return refresh_route

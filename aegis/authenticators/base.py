@@ -18,35 +18,22 @@ class BaseAuthenticator(metaclass=ABCMeta):
 
     @staticmethod
     async def check_permissions(
-            user_scopes: Iterable[Hashable],
-            required_scopes: Iterable[Hashable],
-            algorithm: Union[str, Callable] = 'any'
+        user_scopes: Iterable[Hashable],
+        required_scopes: Iterable[Hashable],
+        algorithm: Union[str, Callable] = "any",
     ) -> bool:
         # user tries to reach to a scoped end-point
-        if algorithm == 'any':
-            has_permission = match_any(
-                required=required_scopes,
-                provided=user_scopes
-            )
-        elif algorithm == 'all':
-            has_permission = match_all(
-                required=required_scopes,
-                provided=user_scopes
-            )
-        elif algorithm == 'exact':
-            has_permission = match_exact(
-                required=required_scopes,
-                provided=user_scopes
-            )
+        if algorithm == "any":
+            has_permission = match_any(required=required_scopes, provided=user_scopes)
+        elif algorithm == "all":
+            has_permission = match_all(required=required_scopes, provided=user_scopes)
+        elif algorithm == "exact":
+            has_permission = match_exact(required=required_scopes, provided=user_scopes)
         elif inspect.isfunction(algorithm):
-            has_permission = algorithm(
-                required_scopes,
-                user_scopes
-            )
+            has_permission = algorithm(required_scopes, user_scopes)
         else:
             raise TypeError(
-                "Invalid algorithm type. "
-                "Options 'all', 'any', 'exact', callable"
+                "Invalid algorithm type. " "Options 'all', 'any', 'exact', callable"
             )
         return has_permission
 

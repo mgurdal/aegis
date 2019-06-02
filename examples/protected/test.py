@@ -7,7 +7,6 @@ from app import create_app
 
 
 class AppTestCase(AioHTTPTestCase):
-
     async def get_application(self):
         app = create_app()
         MockAuthenticator.setup(app)
@@ -16,27 +15,23 @@ class AppTestCase(AioHTTPTestCase):
     @unittest_run_loop
     async def test_protected_route_with_headers(self):
         mocked_authenticator = self.app["authenticator"]
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         with mocked_authenticator.bypass_auth(user=stub_user):
-            resp = await self.client.request("GET", "/protected", headers={
-                "Authorization": "Bearer x"
-            })
+            resp = await self.client.request(
+                "GET", "/protected", headers={"Authorization": "Bearer x"}
+            )
             assert resp.status == 200
             text = await resp.json()
             assert text == {"hello": "user"}
 
-        resp = await self.client.request("GET", "/protected", headers={
-            "Authorization": "Bearer x"
-        })
+        resp = await self.client.request(
+            "GET", "/protected", headers={"Authorization": "Bearer x"}
+        )
         assert resp.status == 401
 
     @unittest_run_loop
     async def test_auth_route_calls_db_with_credentials(self):
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         credentials = {"id": 4}
 
         # mock database

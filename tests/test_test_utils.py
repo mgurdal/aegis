@@ -1,9 +1,7 @@
 from unittest.mock import MagicMock
 
 import pytest
-from aiohttp.test_utils import (
-    AioHTTPTestCase, unittest_run_loop, make_mocked_request
-)
+from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop, make_mocked_request
 from aiohttp import web
 from asynctest import CoroutineMock
 
@@ -12,12 +10,10 @@ from aegis.test_utils import MockAuthenticator
 
 
 class MockAuthenticatorBasicTestCase(AioHTTPTestCase):
-
     async def get_application(self):
         app = web.Application()
 
         class BasicAuthenticator(BasicAuth):
-
             async def authenticate(self, request: web.Request) -> dict:
                 pass
 
@@ -36,8 +32,10 @@ class MockAuthenticatorBasicTestCase(AioHTTPTestCase):
             # noinspection PyTypeChecker
             await MockAuthenticator.setup(stub_app)
 
-        assert str(error.value) == ("Please initialize the authenticator with "
-                                    "Authenticator.setup(app) first.")
+        assert str(error.value) == (
+            "Please initialize the authenticator with "
+            "Authenticator.setup(app) first."
+        )
 
     @unittest_run_loop
     async def test__mock_auth_middleware_injects_user(self):
@@ -46,9 +44,7 @@ class MockAuthenticatorBasicTestCase(AioHTTPTestCase):
         expected_response = "Response"
         mocked_view = CoroutineMock(return_value=expected_response)
         req = make_mocked_request("GET", "/login_required")
-        resp = await mocked_authenticator._mock_auth_middleware(
-            req, mocked_view
-        )
+        resp = await mocked_authenticator._mock_auth_middleware(req, mocked_view)
 
         mocked_authenticator._inject_user.assert_called_once_with(req)
         assert resp == expected_response
@@ -57,9 +53,7 @@ class MockAuthenticatorBasicTestCase(AioHTTPTestCase):
     async def test__inject_user_adds_user_into_request(self):
         mocked_authenticator = self.app["authenticator"]
 
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         mocked_authenticator.user = stub_user
 
         req = make_mocked_request("GET", "/login_required")
@@ -73,9 +67,7 @@ class MockAuthenticatorBasicTestCase(AioHTTPTestCase):
         mocked_authenticator = self.app["authenticator"]
         mocked_authenticator.authenticator.get_user = CoroutineMock()
 
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         mocked_authenticator.user = stub_user
 
         req = make_mocked_request("GET", "/login_required")
@@ -87,26 +79,22 @@ class MockAuthenticatorBasicTestCase(AioHTTPTestCase):
     @unittest_run_loop
     async def test_get_user_returns_default_user_if_not_injected(self):
         mocked_authenticator = self.app["authenticator"]
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         mocked_authenticator.authenticator.get_user = CoroutineMock(
-            return_value=stub_user)
+            return_value=stub_user
+        )
 
         req = make_mocked_request("GET", "/")
         us = await mocked_authenticator.get_user(req)
         assert us == stub_user
-        assert mocked_authenticator.authenticator.get_user.awaited_once_with(
-            req)
+        assert mocked_authenticator.authenticator.get_user.awaited_once_with(req)
 
     @unittest_run_loop
     async def test_decode_returns_injected_user(self):
         mocked_authenticator = self.app["authenticator"]
         mocked_authenticator.authenticator.decode = CoroutineMock()
 
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         mocked_authenticator.user = stub_user
 
         req = make_mocked_request("GET", "/")
@@ -118,9 +106,7 @@ class MockAuthenticatorBasicTestCase(AioHTTPTestCase):
     @unittest_run_loop
     async def test_decode_uses_default_decode_if_not_injected(self):
         mocked_authenticator = self.app["authenticator"]
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         mocked_authenticator.authenticator.decode = CoroutineMock(
             return_value=stub_user
         )
@@ -143,12 +129,10 @@ class MockAuthenticatorBasicTestCase(AioHTTPTestCase):
 
 
 class MockAuthenticatorJWTTestCase(AioHTTPTestCase):
-
     async def get_application(self):
         app = web.Application()
 
         class JWTAuthenticator(JWTAuth):
-
             async def authenticate(self, request: web.Request) -> dict:
                 pass
 
@@ -167,8 +151,10 @@ class MockAuthenticatorJWTTestCase(AioHTTPTestCase):
             # noinspection PyTypeChecker
             await MockAuthenticator.setup(stub_app)
 
-        assert str(error.value) == ("Please initialize the authenticator with "
-                                    "Authenticator.setup(app) first.")
+        assert str(error.value) == (
+            "Please initialize the authenticator with "
+            "Authenticator.setup(app) first."
+        )
 
     @unittest_run_loop
     async def test__mock_auth_middleware_injects_user(self):
@@ -177,9 +163,7 @@ class MockAuthenticatorJWTTestCase(AioHTTPTestCase):
         expected_response = "Response"
         mocked_view = CoroutineMock(return_value=expected_response)
         req = make_mocked_request("GET", "/login_required")
-        resp = await mocked_authenticator._mock_auth_middleware(
-            req, mocked_view
-        )
+        resp = await mocked_authenticator._mock_auth_middleware(req, mocked_view)
 
         mocked_authenticator._inject_user.assert_called_once_with(req)
         assert resp == expected_response
@@ -188,9 +172,7 @@ class MockAuthenticatorJWTTestCase(AioHTTPTestCase):
     async def test__inject_user_adds_user_into_request(self):
         mocked_authenticator = self.app["authenticator"]
 
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         mocked_authenticator.user = stub_user
 
         req = make_mocked_request("GET", "/login_required")
@@ -204,9 +186,7 @@ class MockAuthenticatorJWTTestCase(AioHTTPTestCase):
         mocked_authenticator = self.app["authenticator"]
         mocked_authenticator.authenticator.get_user = CoroutineMock()
 
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         mocked_authenticator.user = stub_user
 
         req = make_mocked_request("GET", "/login_required")
@@ -218,26 +198,22 @@ class MockAuthenticatorJWTTestCase(AioHTTPTestCase):
     @unittest_run_loop
     async def test_get_user_returns_default_user_if_not_injected(self):
         mocked_authenticator = self.app["authenticator"]
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         mocked_authenticator.authenticator.get_user = CoroutineMock(
-            return_value=stub_user)
+            return_value=stub_user
+        )
 
         req = make_mocked_request("GET", "/")
         us = await mocked_authenticator.get_user(req)
         assert us == stub_user
-        assert mocked_authenticator.authenticator.get_user.awaited_once_with(
-            req)
+        assert mocked_authenticator.authenticator.get_user.awaited_once_with(req)
 
     @unittest_run_loop
     async def test_decode_returns_injected_user(self):
         mocked_authenticator = self.app["authenticator"]
         mocked_authenticator.authenticator.decode = CoroutineMock()
 
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         mocked_authenticator.user = stub_user
 
         req = make_mocked_request("GET", "/")
@@ -249,9 +225,7 @@ class MockAuthenticatorJWTTestCase(AioHTTPTestCase):
     @unittest_run_loop
     async def test_decode_uses_default_decode_if_not_injected(self):
         mocked_authenticator = self.app["authenticator"]
-        stub_user = {
-            "permissions": ("user",)
-        }
+        stub_user = {"permissions": ("user",)}
         mocked_authenticator.authenticator.decode = CoroutineMock(
             return_value=stub_user
         )
@@ -263,7 +237,6 @@ class MockAuthenticatorJWTTestCase(AioHTTPTestCase):
 
     @unittest_run_loop
     async def test_setup_initializes_app_with_mock(self):
-
         async def auth_middleware():
             pass
 

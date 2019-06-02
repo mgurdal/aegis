@@ -9,8 +9,8 @@ CANNOT_ACCESS = False
 
 async def login(session, credentials: dict) -> str:
     """Retrieve token with credentials"""
-    resp = await session.post(F"{BASE_URL}/auth", json=credentials)
-    assert resp.status == 200, F"Authentication Failed, {resp.reason}"
+    resp = await session.post(f"{BASE_URL}/auth", json=credentials)
+    assert resp.status == 200, f"Authentication Failed, {resp.reason}"
 
     token_payload = await resp.json()
     return token_payload["access_token"]
@@ -19,8 +19,7 @@ async def login(session, credentials: dict) -> str:
 async def fetch_page(session, page: str, access_token: str) -> int:
     """Fetch data from the protected route"""
     resp = await session.get(
-        F"{BASE_URL}/{page}",
-        headers={"Authorization": F"Bearer {access_token}"}
+        f"{BASE_URL}/{page}", headers={"Authorization": f"Bearer {access_token}"}
     )
     return resp.status == 200
 
@@ -37,19 +36,17 @@ async def main():
         test_results = [
             # Try to fetch user page with user token
             CAN_ACCESS == await fetch_page(session, "user", user_token),
-
             # Try to fetch admin page with admin token
             CAN_ACCESS == await fetch_page(session, "admin", admin_token),
-
             # Try to fetch user page with admin token
             CAN_ACCESS == await fetch_page(session, "user", admin_token),
-
             # Try to fetch admin page with user token
-            CANNOT_ACCESS == await fetch_page(session, "admin", user_token)
+            CANNOT_ACCESS == await fetch_page(session, "admin", user_token),
         ]
 
         assert all(test_results), "Test suite failed."
         print("All tests passed.")
+
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

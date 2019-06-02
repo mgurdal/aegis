@@ -40,53 +40,54 @@ class AuthRequiredException(AuthException):
 
     @staticmethod
     def get_schema() -> dict:
-        detail = ("You did not specify the required token information "
-                  "in headers or you provided it incorrectly.")
-        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
-                   "#AuthRequiredException")
+        detail = (
+            "You did not specify the required token information "
+            "in headers or you provided it incorrectly."
+        )
+        doctype = "https://mgurdal.github.io/aegis/exceptions/#AuthRequiredException"
         return {
             "type": doctype,
             "title": "Authentication Required",
             "detail": detail,
             "instance": "{url}",
-            "status": "{status}"
+            "status": "{status}",
         }
 
 
 class InvalidTokenException(AuthException):
     """Raise exception if user uses an invalid token."""
+
     status = 401
 
     @staticmethod
     def get_schema() -> dict:
         detail = "You have provided an invalid token signature."
-        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
-                   "#InvalidTokenException")
+        doctype = "https://mgurdal.github.io/aegis/exceptions/#InvalidTokenException"
         return {
             "type": doctype,
             "title": "Invalid Token",
             "detail": detail,
             "instance": "{url}",
-            "status": "{status}"
+            "status": "{status}",
         }
 
 
 class TokenExpiredException(AuthException):
     """Raise exception if user uses an expired token."""
+
     status = 401
 
     @staticmethod
     def get_schema() -> dict:
         detail = "The access token provided has expired."
-        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
-                   "#TokenExpiredException")
+        doctype = "https://mgurdal.github.io/aegis/exceptions/#TokenExpiredException"
 
         return {
             "type": doctype,
             "title": "Invalid Token",
             "detail": detail,
             "instance": "{url}",
-            "status": "{status}"
+            "status": "{status}",
         }
 
 
@@ -96,15 +97,14 @@ class ForbiddenException(AuthException):
     @staticmethod
     def get_schema() -> dict:
         detail = "User's does not have access permissions for {url}"
-        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
-                   "#ForbiddenException")
+        doctype = "https://mgurdal.github.io/aegis/exceptions/#ForbiddenException"
 
         return {
             "type": doctype,
             "title": "Forbidden Access",
             "detail": detail,
             "instance": "{url}",
-            "status": "{status}"
+            "status": "{status}",
         }
 
 
@@ -114,14 +114,16 @@ class InvalidRefreshTokenException(AuthException):
     @staticmethod
     def get_schema() -> dict:
         detail = "You have provided an invalid refresh token."
-        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
-                   "#InvalidRefreshTokenException")
+        doctype = (
+            "https://mgurdal.github.io/aegis/exceptions/"
+            "#InvalidRefreshTokenException"
+        )
         return {
             "type": doctype,
             "title": "Invalid Token",
             "detail": detail,
             "instance": "{url}",
-            "status": "{status}"
+            "status": "{status}",
         }
 
 
@@ -131,12 +133,14 @@ class AuthenticationFailedException(AuthException):
     @staticmethod
     def get_schema() -> dict:
         detail = "The credentials you supplied were not correct."
-        doctype = ("https://mgurdal.github.io/aegis/exceptions/"
-                   "#AuthenticationFailedException")
+        doctype = (
+            "https://mgurdal.github.io/aegis/exceptions/"
+            "#AuthenticationFailedException"
+        )
         return {
             "type": doctype,
             "title": "Authentication failed.",
             "detail": detail,
             "instance": "{url}",
-            "status": "{status}"
+            "status": "{status}",
         }

@@ -1,8 +1,7 @@
 from typing import Hashable, Iterable
 
 
-def match_any(
-        required: Iterable[Hashable], provided: Iterable[Hashable]) -> bool:
+def match_any(required: Iterable[Hashable], provided: Iterable[Hashable]) -> bool:
     required_scopes = set(required)
     provided_scopes = set(provided)
 
@@ -11,8 +10,7 @@ def match_any(
     return scopes_matches
 
 
-def match_exact(
-        required: Iterable[Hashable], provided: Iterable[Hashable]) -> bool:
+def match_exact(required: Iterable[Hashable], provided: Iterable[Hashable]) -> bool:
     required_scopes = set(required)
     provided_scopes = set(provided)
 
@@ -21,8 +19,7 @@ def match_exact(
     return scopes_matches
 
 
-def match_all(
-        required: Iterable[Hashable], provided: Iterable[Hashable]) -> bool:
+def match_all(required: Iterable[Hashable], provided: Iterable[Hashable]) -> bool:
     required_scopes = set(required)
     provided_scopes = set(provided)
 

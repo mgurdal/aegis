@@ -22,12 +22,12 @@ class JWTAuth(BaseAuthenticator):
         """Decodes the given token and returns as a dict.
         Raises validation exceptions if verify is set to True."""
         try:
-            jwt_token = jwt_token.replace(F"{self.auth_schema} ", "")
+            jwt_token = jwt_token.replace(f"{self.auth_schema} ", "")
             payload = jwt.decode(
                 jwt_token,
                 self.jwt_secret,
                 algorithms=(self.jwt_algorithm,),
-                options={"verify_exp": verify}
+                options={"verify_exp": verify},
             )
 
             return payload
@@ -46,11 +46,7 @@ class JWTAuth(BaseAuthenticator):
             "exp": datetime.utcnow() + timedelta(seconds=delta_seconds),
         }
 
-        jwt_token = jwt.encode(
-            jwt_data,
-            self.jwt_secret,
-            self.jwt_algorithm
-        )
+        jwt_token = jwt.encode(jwt_data, self.jwt_secret, self.jwt_algorithm)
         token = jwt_token.decode("utf-8")
 
         return token
@@ -70,11 +66,11 @@ class JWTAuth(BaseAuthenticator):
         if authenticator.refresh_token:
             if not hasattr(authenticator, "get_refresh_token"):
                 raise NotImplementedError(
-                    ("get_refresh_token method needs to be implemented"
-                     "in order to use the refresh token feature."
-                     )
+                    (
+                        "get_refresh_token method needs to be implemented"
+                        "in order to use the refresh token feature."
+                    )
                 )
             app.router.add_post(
-                authenticator.refresh_endpoint,
-                make_refresh_route(authenticator)
+                authenticator.refresh_endpoint, make_refresh_route(authenticator)
             )

@@ -8,11 +8,10 @@ from aegis.exceptions import InvalidTokenException
 
 
 async def test_decode_raises_invalid_token_exception_on_decode_error():
-    with patch('aegis.authenticators.basic.base64.b64decode') as decode:
+    with patch("aegis.authenticators.basic.base64.b64decode") as decode:
         decode.side_effect = binascii.Error()
 
         class TestBasicAuth(BasicAuth):
-
             async def authenticate(self, request):
                 pass
 
@@ -28,12 +27,11 @@ async def test_decode_raises_invalid_token_exception_on_decode_error():
 
 
 async def test_decode_returns_credentials_with_default_keys():
-    with patch('aegis.authenticators.basic.base64.b64decode') as decode:
+    with patch("aegis.authenticators.basic.base64.b64decode") as decode:
         credentials = b"test:test"
         decode.return_value = credentials
 
         class TestBasicAuth(BasicAuth):
-
             async def authenticate(self, request):
                 pass
 
@@ -41,15 +39,12 @@ async def test_decode_returns_credentials_with_default_keys():
         token = "test=="
 
         decoded_credentials = await auth.decode(token)
-        expected_credentials = {
-            "user_id": "test",
-            "password": "test"
-        }
+        expected_credentials = {"user_id": "test", "password": "test"}
         assert decoded_credentials == expected_credentials
 
 
 async def test_decode_returns_credentials_with_altered_keys():
-    with patch('aegis.authenticators.basic.base64.b64decode') as decode:
+    with patch("aegis.authenticators.basic.base64.b64decode") as decode:
         credentials = b"test:test"
         decode.return_value = credentials
 
@@ -64,20 +59,16 @@ async def test_decode_returns_credentials_with_altered_keys():
         token = "test=="
 
         decoded_credentials = await auth.decode(token)
-        expected_credentials = {
-            "email": "test",
-            "password": "test"
-        }
+        expected_credentials = {"email": "test", "password": "test"}
         assert decoded_credentials == expected_credentials
 
 
 async def test_decode_passes_verify_parameter_into_decoder():
-    with patch('aegis.authenticators.basic.base64.b64decode') as decode:
+    with patch("aegis.authenticators.basic.base64.b64decode") as decode:
         credentials = b"test:test"
         decode.return_value = credentials
 
         class TestBasicAuth(BasicAuth):
-
             async def authenticate(self, request):
                 pass
 

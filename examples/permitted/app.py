@@ -15,30 +15,26 @@ class JWTAuthenticator(JWTAuth):
         return user
 
 
-@permissions('user', 'admin')
+@permissions("user", "admin")
 async def user_page(request):
-    return web.json_response({'hello': 'user'})
+    return web.json_response({"hello": "user"})
 
 
-@permissions('admin')
+@permissions("admin")
 async def admin_page(request):
-    return web.json_response({'hello': 'admin'})
+    return web.json_response({"hello": "admin"})
 
 
 def create_app():
     app = web.Application()
     database = {
-        "user": {
-            "permissions": ["user"]
-        },
-        "admin": {
-            "permissions": ["user", "admin"]
-        }
+        "user": {"permissions": ["user"]},
+        "admin": {"permissions": ["user", "admin"]},
     }
     app["db"] = database
 
-    app.router.add_get('/user', user_page)
-    app.router.add_get('/admin', admin_page)
+    app.router.add_get("/user", user_page)
+    app.router.add_get("/admin", admin_page)
 
     JWTAuthenticator.setup(app)
 

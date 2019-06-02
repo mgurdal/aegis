@@ -8,20 +8,21 @@ from .exceptions import AuthException
 @web.middleware
 async def auth_middleware(request: web.Request, handler: Callable):
     """Handles token decoding, failed authorization responses,  """
-    authenticator = request.app.get('authenticator')
+    authenticator = request.app.get("authenticator")
     if not authenticator:
         raise AttributeError(
-            ("Please initialize the authenticator with "
-             "Authenticator.setup(app) first.")
+            (
+                "Please initialize the authenticator with "
+                "Authenticator.setup(app) first."
+            )
         )
 
-    token = request.headers.get('authorization')
+    token = request.headers.get("authorization")
 
     if token:
         try:
             user_trying_to_refresh = (
-                    str(request.rel_url) == "/auth/refresh"
-                    and authenticator.refresh_token
+                str(request.rel_url) == "/auth/refresh" and authenticator.refresh_token
             )
             if user_trying_to_refresh:
                 credentials = await authenticator.decode(token, verify=False)

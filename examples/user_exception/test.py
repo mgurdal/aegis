@@ -5,7 +5,6 @@ from app import create_app
 
 
 class AppTestCase(AioHTTPTestCase):
-
     async def get_application(self):
         app = create_app()
         MockAuthenticator.setup(app)
@@ -19,4 +18,4 @@ class AppTestCase(AioHTTPTestCase):
         assert resp.status == 401
 
         error_message = await resp.json()
-        assert error_message == {"message":  "User does not exists."}
+        assert error_message == {"message": "User does not exists."}

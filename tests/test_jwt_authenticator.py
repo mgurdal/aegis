@@ -4,12 +4,11 @@ from unittest.mock import patch
 import jwt
 import pytest
 from aegis.authenticators.jwt import JWTAuth
-from aegis.exceptions import (InvalidTokenException,
-                              TokenExpiredException)
+from aegis.exceptions import InvalidTokenException, TokenExpiredException
 
 
 async def test_decode_raises_invalid_token_exception_on_decode_error():
-    with patch('aegis.authenticators.jwt.jwt.decode') as decode:
+    with patch("aegis.authenticators.jwt.jwt.decode") as decode:
         decode.side_effect = jwt.DecodeError()
 
         class TestJWTAuth(JWTAuth):
@@ -29,7 +28,7 @@ async def test_decode_raises_invalid_token_exception_on_decode_error():
 
 
 async def test_decode_raises_token_expired_exception_expired_signature():
-    with patch('aegis.authenticators.jwt.jwt.decode') as decode:
+    with patch("aegis.authenticators.jwt.jwt.decode") as decode:
         decode.side_effect = jwt.ExpiredSignatureError()
 
         class TestJWTAuth(JWTAuth):
@@ -49,7 +48,8 @@ async def test_decode_raises_token_expired_exception_expired_signature():
 
 
 async def test_decode_removes_token_type_and_decodes_token():
-    with patch('aegis.authenticators.jwt.jwt.decode') as decode:
+    with patch("aegis.authenticators.jwt.jwt.decode") as decode:
+
         class TestJWTAuth(JWTAuth):
             jwt_secret = ""
 
@@ -62,15 +62,16 @@ async def test_decode_removes_token_type_and_decodes_token():
         await auth.decode(token)
 
         decode.assert_called_once_with(
-            "test", auth.jwt_secret,
+            "test",
+            auth.jwt_secret,
             algorithms=(auth.jwt_algorithm,),
-            options={'verify_exp': True}
+            options={"verify_exp": True},
         )
 
 
 async def test_encode_encodes_payload_with_expiration_date():
-    with patch('aegis.authenticators.jwt.jwt.encode') as encode:
-        with patch('aegis.authenticators.jwt.datetime') as mockdate:
+    with patch("aegis.authenticators.jwt.jwt.encode") as encode:
+        with patch("aegis.authenticators.jwt.datetime") as mockdate:
             mockdate.utcnow.return_value = datetime(2017, 1, 1)
             mockdate.side_effect = lambda *args, **kw: mockdate(*args, **kw)
 
@@ -88,15 +89,12 @@ async def test_encode_encodes_payload_with_expiration_date():
             await auth.encode(payload)
 
             encode.assert_called_once_with(
-                {
-                    "test": 12,
-                    "exp": datetime(2017, 1, 1)
-                },
+                {"test": 12, "exp": datetime(2017, 1, 1)},
                 auth.jwt_secret,
-                auth.jwt_algorithm
+                auth.jwt_algorithm,
             )
 
-            encode.return_value.decode.assert_called_with('utf-8')
+            encode.return_value.decode.assert_called_with("utf-8")
 
 
 async def test_get_user_returns_credentials_by_default():
@@ -107,10 +105,7 @@ async def test_get_user_returns_credentials_by_default():
             pass
 
     auth = TestJWTAuth()
-    credentials = {
-        "id": 1,
-        "exp": 5
-    }
+    credentials = {"id": 1, "exp": 5}
 
     user = await auth.get_user(credentials)
 

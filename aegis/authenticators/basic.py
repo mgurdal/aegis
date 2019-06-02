@@ -28,17 +28,14 @@ class BasicAuth(BaseAuthenticator):
         Decodes basic token and returns user's id and password as a dict.
         """
         try:
-            basic_token = token.replace(F"{self.auth_schema} ", "").encode()
+            basic_token = token.replace(f"{self.auth_schema} ", "").encode()
 
             decoded_credentials = base64.b64decode(
                 basic_token, validate=verify
             ).decode()
             user_id, password = decoded_credentials.split(":")
             # create payload with pre-defined keys
-            payload = {
-                self.user_id: user_id,
-                self.password: password
-            }
+            payload = {self.user_id: user_id, self.password: password}
             return payload
         except binascii.Error:
             raise InvalidTokenException()

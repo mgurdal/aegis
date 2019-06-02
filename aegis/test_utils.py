@@ -11,22 +11,24 @@ class MockAuthenticator:
     authenticator classes. You can use this authenticator in your unit tests
     to bypass the authentication logic.
     """
+
     user = None
     auth_endpoint = None
     me_endpoint = None
 
     def __init__(self, app):
-        authenticator = app.get('authenticator')
+        authenticator = app.get("authenticator")
         if not authenticator:
             raise AttributeError(
-                ("Please initialize the authenticator with "
-                 "Authenticator.setup(app) first.")
+                (
+                    "Please initialize the authenticator with "
+                    "Authenticator.setup(app) first."
+                )
             )
 
         # Replace auth middleware with mocked one
         self.auth_middleware = [
-            m for m in app.middlewares
-            if m.__name__ == "auth_middleware"
+            m for m in app.middlewares if m.__name__ == "auth_middleware"
         ][0]
         app.middlewares.append(self._mock_auth_middleware)
 
