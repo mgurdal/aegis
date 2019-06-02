@@ -34,6 +34,27 @@ async def test_make_response_uses_get_schema():
                 )
 
 
+async def test_make_response_formats_with_kwargs():
+    with patch("aegis.exceptions.web"):
+        with patch("aegis.exceptions.AuthException._format_schema") as _format_schema:
+
+            request = make_mocked_request("GET", "/")
+
+            class CustomException(AuthException):
+                status = 501
+
+                @staticmethod
+                def get_schema():
+                    return {}
+
+            kwargs = {"test": "test_info"}
+            CustomException.make_response(request, **kwargs)
+
+            _format_schema.assert_called_with(
+                {"test": "test_info"}, url=request.url, status=501
+            )
+
+
 async def test_format_schema_handles_keyerror():
     # make a mock request
 

@@ -5,13 +5,13 @@ class AuthException(Exception):
     status: int
 
     @classmethod
-    def make_response(cls, request: web.Request):
+    def make_response(cls, request: web.Request, **kwargs):
         """
         Creates a response based on exception schema.
         """
         schema = cls.get_schema()
-        payload = cls._format_schema(schema, url=request.url,
-                                     status=cls.status)
+        schema.update(kwargs)
+        payload = cls._format_schema(schema, url=request.url, status=cls.status)
         return web.json_response(payload, status=cls.status)
 
     @staticmethod
