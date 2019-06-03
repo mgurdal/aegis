@@ -3,7 +3,7 @@ aegis allows to protect endpoints
 and also provides authentication scoping.
 """
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 __all__ = [
     "BaseAuthenticator",
