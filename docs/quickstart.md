@@ -66,7 +66,7 @@ class JWTAuthenticator(JWTAuth):
         # You can get the request payload of the /auth route
         payload = await request.json()
 
-        # Assuming the name parameter send in the request payload
+        # Assuming the name parameter sent in the request payload
         searched_name = payload["name"]
 
         # fetch the user from your storage
@@ -98,8 +98,8 @@ web.run_app(app)
 We can now navigate to http://0.0.0.0:8080 to check whether its
 protected or not.
 
-In order to get to the route. We first need to get an access token. We
-can do it by sending the required credentials to the pre-defined /auth/
+In order to get to the route. We first need to get an **access token**. We
+can do it by sending the required credentials to the pre-defined `/auth/
 route.
 
 Authentication request:
@@ -134,4 +134,4 @@ curl http://0.0.0.0:8080/ -H 'Authorization: Bearer eyJ...'
 {"hello": "user"}
 ```
 
-That's pretty much it.
+That's pretty much it.`

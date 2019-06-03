@@ -1,13 +1,12 @@
 Routes
 ==========
-Pre-defined authentication and user routes.
+**aegis** has built-in authentication and user routes to save your time.
 
 Authentication Route
 ---------
 *``aegis.routes.make_auth_route``*
 
-User authentication route that returns the access token. Uses **`authenticator.authenticate()`**
-to authenticate the user. 
+This function sets-up the `/auth/` route which uses **`authenticator.authenticate()`** to generate an **access token** for the user. 
 
 ```python
 credentials = {"username": "test", "password": "test"}
