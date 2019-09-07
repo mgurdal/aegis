@@ -1,2 +1,2 @@
 aegis==1.0.0
-aiohttp==3.5.4
+aiohttp==3.6.0
