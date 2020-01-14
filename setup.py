@@ -7,10 +7,8 @@
 import io
 import os
 import re
-import sys
-from shutil import rmtree
 
-from setuptools import Command, find_packages, setup
+from setuptools import find_packages, setup
 
 # Package meta-data.
 NAME = "aegis"
@@ -41,43 +39,6 @@ def read_version():
             raise RuntimeError("Cannot find version in aegis/__init__.py")
 
 
-class UploadCommand(Command):
-    """Support setup.py upload."""
-
-    description = "Build and publish the package."
-    user_options = []
-
-    @staticmethod
-    def status(s):
-        """Prints things in bold."""
-        print("\033[1m{0}\033[0m".format(s))
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        try:
-            self.status("Removing previous builds…")
-            rmtree(os.path.join(here, "dist"))
-        except OSError:
-            pass
-
-        self.status("Building Source and Wheel (universal) distribution…")
-        os.system(f"{sys.executable} setup.py sdist bdist_wheel --universal")
-
-        self.status("Uploading the package to PyPi via Twine…")
-        os.system("twine upload dist/*")
-
-        self.status("Pushing git tags…")
-        os.system("git tag v{0}".format(read_version()))
-        os.system("git push --tags")
-
-        sys.exit()
-
-
 # Where the magic happens:
 setup(
     name=NAME,
@@ -91,7 +52,7 @@ setup(
     packages=find_packages(exclude=("tests", "tests")),
     install_requires=REQUIRED,
     include_package_data=True,
-    license='Apache 2',
+    license="Apache 2",
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -106,6 +67,4 @@ setup(
         "Framework :: AsyncIO",
         "License :: OSI Approved :: Apache Software License",
     ],
-    # $ setup.py publish support.
-    cmdclass={"upload": UploadCommand},
 )
