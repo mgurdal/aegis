@@ -47,8 +47,8 @@ def permissions(
 
                 if not has_permission:
                     raise ForbiddenException()
-                else:
-                    return await view(request)
+
+                return await view(request)
 
             except AuthException as e:
                 return e.make_response(request)
