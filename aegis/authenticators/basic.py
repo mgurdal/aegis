@@ -22,6 +22,7 @@ class BasicAuth(BaseAuthenticator):
 
     async def get_user(self, credentials) -> dict:
         """Retrieve user with credentials."""
+        return credentials
 
     async def decode(self, token: str, verify=True) -> dict:
         """

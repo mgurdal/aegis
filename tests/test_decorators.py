@@ -34,6 +34,20 @@ async def test_login_required_handles_no_user():
         assert response.status == 401
         auth_required.assert_called_once_with(stub_request)
 
+async def test_login_required_returns_401_if_request_user_is_invalid():
+    with patch("aegis.decorators.AuthRequiredException.make_response") as auth_required:
+
+        @decorators.login_required
+        async def test_view(request):
+            return web.json_response({})
+
+        stub_request = make_mocked_request("GET", "/", headers={"authorization": "x"})
+        stub_request.user = None
+        auth_required.return_value.status = 401
+        response = test_view(stub_request)
+
+        assert response.status == 401
+        auth_required.assert_called_once_with(stub_request)
 
 async def test_login_required_returns_200_if_request_has_user():
     @decorators.login_required

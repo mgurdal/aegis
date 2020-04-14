@@ -16,7 +16,7 @@ def login_required(func):
         if not isinstance(request, web.Request):
             raise TypeError(f"Invalid Type '{type(request)}'")
 
-        if not hasattr(request, "user"):
+        if not getattr(request, "user", None):
             return AuthRequiredException.make_response(request)
         return func(request)
 
