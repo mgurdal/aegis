@@ -20,11 +20,11 @@ nav:
 
 extra:
   social:
-    - type: github-alt
+    - icon: fontawesome/brands/github-alt
       link: https://github.com/mgurdal
-    - type: twitter
+    - icon: fontawesome/brands/twitter
       link: https://twitter.com/mgurdal_
-    - type: linkedin
+    - icon: fontawesome/brands/linkedin
       link: https://linkedin.com/in/mgurdal
 
 theme:
