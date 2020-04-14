@@ -17,7 +17,7 @@ URL = "https://github.com/mgurdal/aegis"
 EMAIL = "mgurdal@protonmail.com"
 AUTHOR = "Mehmet Gurdal"
 REQUIRES_PYTHON = ">=3.6.0"
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 
 REQUIRED = ["aiohttp", "PyJWT"]
 
