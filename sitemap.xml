@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
+     <loc>https://mgurdal.github.io/aegis/</loc>
+     <lastmod>2020-04-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://mgurdal.github.io/aegis/quickstart/</loc>
+     <lastmod>2020-04-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://mgurdal.github.io/aegis/authenticators/</loc>
+     <lastmod>2020-04-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://mgurdal.github.io/aegis/decorators/</loc>
+     <lastmod>2020-04-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://mgurdal.github.io/aegis/exceptions/</loc>
+     <lastmod>2020-04-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://mgurdal.github.io/aegis/routes/</loc>
+     <lastmod>2020-04-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://mgurdal.github.io/aegis/middlewares/</loc>
+     <lastmod>2020-04-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://mgurdal.github.io/aegis/testing/</loc>
+     <lastmod>2020-04-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+</urlset>

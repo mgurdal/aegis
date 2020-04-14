@@ -1,0 +1,730 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Authentication and permission scoping for aiohttp.">
+      
+      
+        <link rel="canonical" href="https://mgurdal.github.io/aegis/authenticators/">
+      
+      
+        <meta name="author" content="Mehmet Gürdal">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1, mkdocs-material-5.0.1">
+    
+    
+      
+        <title>Authenticators - Aegis</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.c3000690.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#authenticators" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://mgurdal.github.io/aegis/" title="Aegis" class="md-header-nav__button md-logo" aria-label="Aegis">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,8A3,3 0 0,0 15,5A3,3 0 0,0 12,2A3,3 0 0,0 9,5A3,3 0 0,0 12,8M12,11.54C9.64,9.35 6.5,8 3,8V19C6.5,19 9.64,20.35 12,22.54C14.36,20.35 17.5,19 21,19V8C17.5,8 14.36,9.35 12,11.54Z" /></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            Aegis
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Authenticators
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" /></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/mgurdal/aegis" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mgurdal/aegis
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://mgurdal.github.io/aegis/" title="Aegis" class="md-nav__button md-logo" aria-label="Aegis">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,8A3,3 0 0,0 15,5A3,3 0 0,0 12,2A3,3 0 0,0 9,5A3,3 0 0,0 12,8M12,11.54C9.64,9.35 6.5,8 3,8V19C6.5,19 9.64,20.35 12,22.54C14.36,20.35 17.5,19 21,19V8C17.5,8 14.36,9.35 12,11.54Z" /></svg>
+
+    </a>
+    Aegis
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/mgurdal/aegis" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mgurdal/aegis
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../quickstart/" title="Quick Start" class="md-nav__link">
+      Quick Start
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Authenticators
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,9H17V7H3V9M3,13H17V11H3V13M3,17H17V15H3V17M19,17H21V15H19V17M19,7V9H21V7H19M19,13H21V11H19V13Z" /></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="Authenticators" class="md-nav__link md-nav__link--active">
+      Authenticators
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basicauth" class="md-nav__link">
+    BasicAuth
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jwtauth" class="md-nav__link">
+    JWTAuth
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#baseauth" class="md-nav__link">
+    BaseAuth
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mockauthenticator" class="md-nav__link">
+    MockAuthenticator
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../decorators/" title="Decorators" class="md-nav__link">
+      Decorators
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../exceptions/" title="Exceptions" class="md-nav__link">
+      Exceptions
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../routes/" title="Routes" class="md-nav__link">
+      Routes
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../middlewares/" title="Middlewares" class="md-nav__link">
+      Middlewares
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../testing/" title="Testing" class="md-nav__link">
+      Testing
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basicauth" class="md-nav__link">
+    BasicAuth
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jwtauth" class="md-nav__link">
+    JWTAuth
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#baseauth" class="md-nav__link">
+    BaseAuth
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mockauthenticator" class="md-nav__link">
+    MockAuthenticator
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="authenticators">Authenticators</h1>
+<p>Default authenticators.</p>
+<hr />
+<h2 id="basicauth">BasicAuth</h2>
+<p><code>aegis.authenticators.basic.BasicAuth</code></p>
+<p>Base authenticator for Basic authentication.</p>
+<p>Authenticator is set-up by <code>setup()</code>.</p>
+<p>The class implements <code>aegis.authenticators.base.BaseAuth</code>.</p>
+<p>User should never instantiate the class but create a new class that
+inherits and overrides required variables and methods.
+<code>user_id</code>, <code>password</code> and <code>authenticate</code>
+is forced to override.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li>
+<p><code>me_endpoint</code> - User information endpoint URI. Default route is <code>/me</code>.</p>
+</li>
+<li>
+<p><code>auth_endpoint</code> - End-point URI for authenticating the user. If user sends a <code>POST</code>
+      request to this end-point it triggers the <code>authenticate</code> method.
+      Default route is <code>None</code> since we do not need an authentication end-point in
+      Basic authentication.</p>
+</li>
+<li>
+<p><code>user_id: str</code> - The key name to retain the user ID when the token is decoded. Default value is <code>user_id</code>.</p>
+</li>
+<li>
+<p><code>password: str</code>- The key name to retain the password when the token is decoded. Default value is <code>password</code>.</p>
+</li>
+</ul>
+<p><strong>Methods</strong>:</p>
+<ul>
+<li>
+<p><strong><code>decode(jwt_token: str, verify=True) -&gt; dict</code></strong></p>
+<p>Decode basic token and return user's id and password as a dict.</p>
+<p><strong>Exceptions</strong>:</p>
+<ul>
+<li><code>InvalidTokenException</code> will be raised if <code>base64.b64decode</code> fails to decode the token.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>get_permissions(request: web.Request)</code></strong></p>
+<p>Get the user from the request and return user's permissions.</p>
+</li>
+<li>
+<p><strong><code>authenticate(self, request: web.Request) -&gt; Dict[str, Any]</code></strong></p>
+<p>Return JSON serializable user. This is an abstract method and should be overridden.</p>
+</li>
+<li>
+<p><em>classmethod</em> <strong><code>setup(app, name='authenticator')</code></strong></p>
+<p>Set-up the authenticator.</p>
+</li>
+</ul>
+<hr />
+<h2 id="jwtauth">JWTAuth</h2>
+<p><code>aegis.authenticators.jwt.JWTAuth</code></p>
+<p>Base authenticator for JSON Web Token authentication.</p>
+<p>Authenticator is set-up by :meth:<code>setup</code>.</p>
+<p>The class implements :class:<code>aegis.authenticators.base.BaseAuth</code>.</p>
+<p>User should never instantiate the class but create a new class that
+inherits and overrides required variables and methods.
+:attr:<code>jwt_secret</code> and :meth:<code>authenticator</code> is forced to override.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li>
+<p><strong><code>jwt_secret: str</code></strong> - The secret key for encoding and decoding unique tokens.</p>
+</li>
+<li>
+<p><strong><code>duration: int</code></strong> - Access token expiration limit. Default limit is <code>25_000</code>.</p>
+</li>
+<li>
+<p><strong><code>jwt_algorithm: str</code></strong> - The algorithm that will be used to generate the tokens. Default algorithm is <code>HS256</code>.</p>
+</li>
+<li>
+<p><strong><code>refresh_token: bool</code></strong> - The flag that activates the refresh token feature. Default value is <code>False</code>.</p>
+</li>
+<li>
+<p><strong><code>refresh_endpoint: str</code></strong> - Token refreshing endpoint URI. Default route is <code>/auth/refresh</code>.</p>
+</li>
+</ul>
+<p><strong>Methods</strong>:</p>
+<ul>
+<li>
+<p><strong><code>decode(jwt_token: str, verify=True) -&gt; dict</code></strong></p>
+<p>Decode the given token and return as a <code>dict</code>. Raise validation exceptions if verify is set to <code>True</code>.</p>
+<p><strong>Exceptions</strong>:</p>
+<ul>
+<li>
+<p><code>InvalidTokenException</code> will be raised if PyJWT fails to decode the access token.</p>
+</li>
+<li>
+<p><code>TokenExpiredException</code> will be raised if access token has expired.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>encode(payload: dict) -&gt; str</code></strong></p>
+<p>Encode given payload and return as a string.</p>
+</li>
+<li>
+<p><strong><code>get_permissions(request: web.Request)</code></strong></p>
+<p>Get the user from the request and return user's permissions.</p>
+</li>
+<li>
+<p><strong><code>authenticate(self, request: web.Request) -&gt; Dict[str, Any]</code></strong></p>
+<p>Return JSON serializable user. This is an abstract method and should be overridden.</p>
+</li>
+<li>
+<p><em>classmethod</em> <strong><code>setup(app, name='authenticator')</code></strong></p>
+<p>Set-up the authenticator.</p>
+</li>
+</ul>
+<hr />
+<h2 id="baseauth">BaseAuth</h2>
+<p><code>aegis.authenticators.base.BaseAuth</code></p>
+<p>Abstract base authenticator. User can implement new authenticators based on their needs.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li>
+<p><code>me_endpoint</code> - User information endpoint URI. Default route is <code>/me</code>.</p>
+</li>
+<li>
+<p><code>auth_endpoint</code> - End-point URI for authenticating the user. If user sends a <code>POST</code>
+      request to this end-point it triggers the :meth:<code>authenticate</code> method. Default route is <code>/auth</code>.</p>
+</li>
+</ul>
+<p><strong>Methods</strong>:</p>
+<ul>
+<li>
+<p><strong><code>check_permissions(user_scopes, required_scopes, algorithm='any') -&gt; bool</code></strong></p>
+<p>Check whether user's permissions matches with required permissions to
+reach to the end-point.</p>
+<p>By default check_permissions uses the <code>any</code> algorithm opens the end-point
+for any user who has any of the required permissions.</p>
+<p>We can use other pre-defined algorithms. <code>algorithm='all'</code> opens the
+end-point to users who has all of the required permissions. End-point will
+also be open for users with more permissions than its required with <code>all</code>
+algorithm.</p>
+<p>If you want to open the end-point for the users who have exactly the same
+permissions with the end-point` you can use the <code>algorithm='exact'</code>.</p>
+</li>
+<li>
+<p><em>abstractmethod</em> <strong><code>decode(jwt_token: str, verify=True) -&gt; dict</code></strong></p>
+<p>Decode token and return user credentials as a dict.</p>
+<p>This is an abstract method and should be overridden.</p>
+</li>
+<li>
+<p><em>abstractmethod</em> <strong><code>get_permissions(request: web.Request)</code></strong></p>
+<p>Decode token and return user credentials as a dict.</p>
+<p>This is an abstract method and should be overridden.</p>
+</li>
+<li>
+<p><em>abstractmethod</em> <strong><code>authenticate(self, request: web.Request) -&gt; Dict[str, Any]</code></strong></p>
+<p>Return JSON serializable user.</p>
+<p>This is an abstract method and should be overridden.</p>
+</li>
+<li>
+<p><em>classmethod</em> <strong><code>setup(app, name='authenticator')</code></strong></p>
+<p>Set-up the authenticator.</p>
+</li>
+</ul>
+<hr />
+<h2 id="mockauthenticator">MockAuthenticator</h2>
+<p><em><code>aegis.test_utils.MockAuthenticator</code></em></p>
+<p>MockAuthenticator has an almost identical API to default authenticator classes.
+You can use this authenticator in your unit tests to bypass the authentication logic.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">AppTestCase</span><span class="p">(</span><span class="n">AioHTTPTestCase</span><span class="p">):</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_application</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+        <span class="n">MockAuthenticator</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">app</span>
+</code></pre></div>
+
+
+<p>By calling the setup method, MockAuthenticator will mock the authenticator
+that you have been using in your app. MockAuthenticator is almost the
+same with the previous authenticator. In addition, it also has some 
+extra features to <code>bypass</code> the authentication system.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>user</code> - Injected test user. Default is <code>None</code>.</li>
+</ul>
+<p><strong>Methods</strong>:</p>
+<ul>
+<li>
+<p><strong><code>bypass_auth(user: dict)</code></strong></p>
+<p><code>bypass_auth</code> might be the only method you will ever need to control
+the authentication logic. It is a <code>contextmanager</code>. So you can disable
+the permission control multiple times in your test suite.
+To use the <code>bypass_auth</code>, we first need to reach to our mocked authenticator
+instance, and then, we can manipulate the authentication control by calling the 
+<code>bypass_auth</code> method with a test user.</p>
+</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>    <span class="nd">@unittest_run_loop</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">test_protected_route_without_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mocked_authenticator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">[</span><span class="s2">&quot;authenticator&quot;</span><span class="p">]</span>
+        <span class="n">mock_user</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,)}</span>
+
+        <span class="k">with</span> <span class="n">mocked_authenticator</span><span class="o">.</span><span class="n">bypass_auth</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">mock_user</span><span class="p">):</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span>
+
+        <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">401</span>
+</code></pre></div>
+
+
+<ul>
+<li><em>classmethod</em> <strong><code>setup(app)</code></strong>
+    Set-up the authenticator with mocked features.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">AppTestCase</span><span class="p">(</span><span class="n">AioHTTPTestCase</span><span class="p">):</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_application</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+        <span class="n">MockAuthenticator</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">app</span>
+</code></pre></div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../quickstart/" title="Quick Start" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Quick Start
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../decorators/" title="Decorators" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Decorators
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" /></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+      <a href="https://github.com/mgurdal" target="_blank" rel="noopener" title="github.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://twitter.com/mgurdal_" target="_blank" rel="noopener" title="twitter.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://linkedin.com/in/mgurdal" target="_blank" rel="noopener" title="linkedin.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.f45d2d8d.min.js"></script>
+      <script src="../assets/javascripts/bundle.74d0b805.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: [],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.7f7c8775.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
