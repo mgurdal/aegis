@@ -1,4 +1,4 @@
-pytest-aiohttp==0.3.0
+pytest-aiohttp==1.0.2
 pytest-cov==2.10.0
 flake8==3.8.2
 isort==4.3.21
